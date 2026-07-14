@@ -1,0 +1,120 @@
+{
+  "t0Iso": "2026-07-11T20:49:07.297Z",
+  "data": {
+    "email": "Gaboloko@gmail.com",
+    "curso": "Gestão de recursos humanos",
+    "nomeCompleto": "Gabo LOKO",
+    "primeiroNome": "Gabo",
+    "ultimoNome": "LOKO",
+    "telefone": "11987124916",
+    "cep": "05001200",
+    "estado": "São Paulo",
+    "cidade": "São Paulo",
+    "poloPrefix": "São Paulo - Freguesia",
+    "cpf": "509.281.520-57",
+    "nascimentoIso": "1999-09-09",
+    "nascimentoBr": "09/09/1999"
+  },
+  "timeline": [
+    {
+      "tSec": 0,
+      "step": "START"
+    },
+    {
+      "tSec": 47,
+      "step": "NAV_GRADUACAO",
+      "href": "https://cruzeirodosul.myvtex.com/graduacao",
+      "tab": "t34"
+    },
+    {
+      "tSec": 64,
+      "step": "LOGIN_EMAIL",
+      "msg": "{\"ok\":true,\"value\":\"Gaboloko@gmail.com\",\"clickedEnter\":true}"
+    },
+    {
+      "tSec": 78,
+      "step": "LOGIN_CHECK",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/graduacao\",\"header\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\"}"
+    },
+    {
+      "tSec": 90,
+      "step": "SEARCH",
+      "msg": "{\"ok\":false,\"inputs\":[{\"ph\":\"O que você procura?\",\"t\":\"text\",\"aria\":null},{\"ph\":\"\",\"t\":\"checkbox\",\"aria\":null},{\"ph\":\"\",\"t\":\"checkbox\",\"aria\":null},{\"ph\":\"\",\"t\":\"checkbox\",\"aria\":null},{\"ph\":\"\",\"t\":\"checkbox\",\"aria\":null},{\"ph\":\"\",\"t\":\"checkbox\",\"aria\":null},{\"ph\":\"\",\"t\":\"checkbox\",\"aria\":null},{\"ph\":\"\",\"t\":\"checkbox\",\"aria\":null}]}"
+    },
+    {
+      "tSec": 107,
+      "step": "OPEN_PDP_EVAL",
+      "msg": "{\"ok\":false,\"samples\":[\"Administração Início Imediato8 semestresBachareladoEAD\",\"Gestão Financeira TecnológicoInício Imediato4 semestresEAD\",\"7ºgestão\",\"administração\"]}"
+    },
+    {
+      "tSec": 117,
+      "step": "PDP",
+      "href": "https://cruzeirodosul.myvtex.com/graduacao",
+      "msg": "Graduação - Cruzeiro do Sul Virtual"
+    },
+    {
+      "tSec": 123,
+      "step": "LEAD_FILL",
+      "msg": "{\"name\":true,\"email\":true,\"phone\":true,\"terms\":true,\"values\":{\"name\":\"Gabo LOKO\",\"email\":\"Gaboloko@gmail.com\",\"phone\":\"(11) 98712-4916\",\"terms\":true}}"
+    },
+    {
+      "tSec": 136,
+      "step": "LEAD_SUBMIT_DOM",
+      "msg": "{\"ok\":false}"
+    },
+    {
+      "tSec": 174,
+      "step": "POLO_FAIL",
+      "msg": "line=none"
+    },
+    {
+      "tSec": 219,
+      "step": "CHECKOUT_PROFILE",
+      "href": "https://cruzeirodosul.myvtex.com/graduacao/engenharia-e-tecnologia?initialMap=c&initialQuery=graduacao&map=category-1,category-2"
+    },
+    {
+      "tSec": 254,
+      "step": "PROFILE_FILL",
+      "msg": "{\"first\":\"Gabo\",\"last\":\"LOKO\",\"cpf\":\"509.281.520-57\",\"phone\":\"(11) 98712-4916\",\"birth\":\"1999-09-09\",\"birthClass\":\"input-xlarge success\"}"
+    },
+    {
+      "tSec": 272,
+      "step": "SHIPPING",
+      "href": "https://cruzeirodosul.myvtex.com/checkout/#/cart"
+    },
+    {
+      "tSec": 309,
+      "step": "PAYMENT",
+      "href": "https://cruzeirodosul.myvtex.com/checkout/#/cart",
+      "msg": "gratis?false"
+    },
+    {
+      "tSec": 331,
+      "step": "ORDER",
+      "href": "https://cruzeirodosul.myvtex.com/checkout/#/cart",
+      "msg": "Ambiente seguro\nMeu Carrinho\nSeu carrinho está vazio.\nEscolher produtos\nAmbiente seguro\nCondições Comerciais:\nabrir todas as condições vigentes\n*Para a Graduação EAD 100% on-line, as matrículas serão "
+    },
+    {
+      "tSec": 386,
+      "step": "MINHAS_INSCRICOES",
+      "href": "https://cruzeirodosul.myvtex.com/login?returnUrl=%2Faccount%23%2Fminhas-inscricoes%2F"
+    },
+    {
+      "tSec": 399,
+      "step": "PROVA_URL_CAPTURED",
+      "msg": "MISSING",
+      "href": null
+    },
+    {
+      "tSec": 399,
+      "step": "DONE",
+      "msg": "{\"provaUrl\":null,\"all\":[],\"capturedAt\":\"2026-07-11T20:55:46.492Z\",\"elapsedSec\":399}"
+    }
+  ],
+  "artifact": {
+    "provaUrl": null,
+    "all": [],
+    "capturedAt": "2026-07-11T20:55:46.492Z",
+    "elapsedSec": 399
+  }
+}

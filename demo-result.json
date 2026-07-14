@@ -1,0 +1,742 @@
+{
+  "n8n": {
+    "resultado": "Sucesso",
+    "candidato": {
+      "nome": "Gabriel Lkonte",
+      "email": "homolog984267@gmail.com"
+    },
+    "curso": "Gestão Financeira",
+    "modalidade": "Graduação: Virtual",
+    "numeroInscricao": "1646733959831-01",
+    "linkProva": "https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQwNDkzODEsImlhdCI6MTc4NDA0NzU4MSwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYnJpZWwgTGtvbnRlIiwibnVtZXJvSW5zY3JpY2FvIjoiMjY1ODMwNTkwIiwidGlwb1Byb3ZhIjoiVkVTVElCVUxBUl9NVUxUSVBMQV9FU0NPTEhBIiwiZW1haWwiOiJob21vbG9nOTg0MjY3QGdtYWlsLmNvbSJ9fQ.91XOYaAhfT8beT55-AOOFnYnpIlYAp104YsyxGJBvOI",
+    "tempoTotalSec": 650,
+    "browserToolCalls": 83,
+    "logout": {
+      "status": "ok",
+      "detalhe": "logout via Sair"
+    },
+    "browser": {
+      "status": "mantido_aberto",
+      "detalhe": "closeOnFinish=false — nenhum browser encerrado (opt-in necessário)"
+    },
+    "auth": {
+      "attempts": 1,
+      "tempoGastoMs": 33270,
+      "criterio": "visual_ola_email",
+      "emailAutenticado": "homolog984267@gmail.com",
+      "alreadyAuthenticated": false,
+      "code": "OK"
+    },
+    "meta": {
+      "capturedAt": "2026-07-14T16:47:38.193Z",
+      "provaAbertaAutomaticamente": false,
+      "demo": true
+    }
+  },
+  "ok": true,
+  "homologada": true,
+  "homologEnd": {
+    "runner": "Logout",
+    "lastValid": "provaLink capturado (não aberto)",
+    "nextExpected": "fim",
+    "rootCause": "OK"
+  },
+  "runnerMetrics": [
+    {
+      "runner": "start",
+      "ms": 30324,
+      "sec": 30,
+      "browserCalls": 4,
+      "browserMs": 30322,
+      "snapshotMs": 0,
+      "evaluateMs": 6986,
+      "clickMs": 0,
+      "navigateMs": 0,
+      "otherBrowserMs": 23336,
+      "pollMs": 0,
+      "waitConditionMs": 0,
+      "nodeMs": 2,
+      "snapshots": 0,
+      "evaluates": 1,
+      "clicks": 0,
+      "navigates": 0,
+      "waits": 0
+    },
+    {
+      "runner": "Auth",
+      "ms": 33270,
+      "sec": 33,
+      "browserCalls": 4,
+      "browserMs": 31056,
+      "snapshotMs": 0,
+      "evaluateMs": 31056,
+      "clickMs": 0,
+      "navigateMs": 0,
+      "otherBrowserMs": 0,
+      "pollMs": 2200,
+      "waitConditionMs": 0,
+      "nodeMs": 14,
+      "snapshots": 0,
+      "evaluates": 4,
+      "clicks": 0,
+      "navigates": 0,
+      "waits": 2
+    },
+    {
+      "runner": "Search/PDP",
+      "ms": 93536,
+      "sec": 94,
+      "browserCalls": 9,
+      "browserMs": 85019,
+      "snapshotMs": 0,
+      "evaluateMs": 28504,
+      "clickMs": 0,
+      "navigateMs": 26121,
+      "otherBrowserMs": 30394,
+      "pollMs": 8500,
+      "waitConditionMs": 0,
+      "nodeMs": 17,
+      "snapshots": 0,
+      "evaluates": 4,
+      "clicks": 0,
+      "navigates": 1,
+      "waits": 2
+    },
+    {
+      "runner": "Lead",
+      "ms": 56193,
+      "sec": 56,
+      "browserCalls": 7,
+      "browserMs": 21290,
+      "snapshotMs": 6887,
+      "evaluateMs": 7258,
+      "clickMs": 7145,
+      "navigateMs": 0,
+      "otherBrowserMs": 0,
+      "pollMs": 3000,
+      "waitConditionMs": 0,
+      "nodeMs": 31903,
+      "snapshots": 1,
+      "evaluates": 1,
+      "clicks": 1,
+      "navigates": 0,
+      "waits": 1
+    },
+    {
+      "runner": "Offer",
+      "ms": 124861,
+      "sec": 125,
+      "browserCalls": 18,
+      "browserMs": 19287,
+      "snapshotMs": 12739,
+      "evaluateMs": 0,
+      "clickMs": 0,
+      "navigateMs": 0,
+      "otherBrowserMs": 6548,
+      "pollMs": 0,
+      "waitConditionMs": 0,
+      "nodeMs": 105574,
+      "snapshots": 2,
+      "evaluates": 0,
+      "clicks": 0,
+      "navigates": 0,
+      "waits": 0
+    },
+    {
+      "runner": "Continuar(PDP)",
+      "ms": 46699,
+      "sec": 47,
+      "browserCalls": 6,
+      "browserMs": 42163,
+      "snapshotMs": 0,
+      "evaluateMs": 35483,
+      "clickMs": 6680,
+      "navigateMs": 0,
+      "otherBrowserMs": 0,
+      "pollMs": 4500,
+      "waitConditionMs": 0,
+      "nodeMs": 36,
+      "snapshots": 0,
+      "evaluates": 5,
+      "clicks": 1,
+      "navigates": 0,
+      "waits": 3
+    },
+    {
+      "runner": "Cart Gate",
+      "ms": 6524,
+      "sec": 7,
+      "browserCalls": 1,
+      "browserMs": 6523,
+      "snapshotMs": 0,
+      "evaluateMs": 6523,
+      "clickMs": 0,
+      "navigateMs": 0,
+      "otherBrowserMs": 0,
+      "pollMs": 0,
+      "waitConditionMs": 0,
+      "nodeMs": 1,
+      "snapshots": 0,
+      "evaluates": 1,
+      "clicks": 0,
+      "navigates": 0,
+      "waits": 0
+    },
+    {
+      "runner": "Checkout",
+      "ms": 113335,
+      "sec": 113,
+      "browserCalls": 16,
+      "browserMs": 106802,
+      "snapshotMs": 32142,
+      "evaluateMs": 35219,
+      "clickMs": 26814,
+      "navigateMs": 6144,
+      "otherBrowserMs": 6483,
+      "pollMs": 6500,
+      "waitConditionMs": 0,
+      "nodeMs": 33,
+      "snapshots": 5,
+      "evaluates": 5,
+      "clicks": 4,
+      "navigates": 1,
+      "waits": 4
+    },
+    {
+      "runner": "PostOrder",
+      "ms": 47818,
+      "sec": 48,
+      "browserCalls": 7,
+      "browserMs": 47817,
+      "snapshotMs": 6386,
+      "evaluateMs": 13379,
+      "clickMs": 7213,
+      "navigateMs": 0,
+      "otherBrowserMs": 20839,
+      "pollMs": 0,
+      "waitConditionMs": 21032,
+      "nodeMs": 1,
+      "snapshots": 1,
+      "evaluates": 2,
+      "clicks": 1,
+      "navigates": 0,
+      "waits": 0
+    },
+    {
+      "runner": "Capture",
+      "ms": 33684,
+      "sec": 34,
+      "browserCalls": 5,
+      "browserMs": 33683,
+      "snapshotMs": 0,
+      "evaluateMs": 33683,
+      "clickMs": 0,
+      "navigateMs": 0,
+      "otherBrowserMs": 0,
+      "pollMs": 0,
+      "waitConditionMs": 19796,
+      "nodeMs": 1,
+      "snapshots": 0,
+      "evaluates": 5,
+      "clicks": 0,
+      "navigates": 0,
+      "waits": 0
+    },
+    {
+      "runner": "Logout",
+      "ms": 63954,
+      "sec": 64,
+      "browserCalls": 6,
+      "browserMs": 0,
+      "snapshotMs": 0,
+      "evaluateMs": 0,
+      "clickMs": 0,
+      "navigateMs": 0,
+      "otherBrowserMs": 0,
+      "pollMs": 4000,
+      "waitConditionMs": 0,
+      "nodeMs": 59954,
+      "snapshots": 0,
+      "evaluates": 0,
+      "clicks": 0,
+      "navigates": 0,
+      "waits": 2
+    },
+    {
+      "runner": "Close",
+      "ms": 1,
+      "sec": 0,
+      "browserCalls": 0,
+      "browserMs": 0,
+      "snapshotMs": 0,
+      "evaluateMs": 0,
+      "clickMs": 0,
+      "navigateMs": 0,
+      "otherBrowserMs": 0,
+      "pollMs": 0,
+      "waitConditionMs": 0,
+      "nodeMs": 1,
+      "snapshots": 0,
+      "evaluates": 0,
+      "clicks": 0,
+      "navigates": 0,
+      "waits": 0
+    }
+  ],
+  "aborted": null,
+  "lead": {
+    "success": true,
+    "elapsedMs": 31889,
+    "browserCalls": 4,
+    "valuesFound": {
+      "nome": "Gabriel Lkonte",
+      "email": "homolog984267@gmail.com",
+      "telefone": "(11) 98712-1122",
+      "aceite": true
+    }
+  },
+  "offer": {
+    "success": true,
+    "elapsedMs": 105570,
+    "browserCalls": 15,
+    "valuesFound": {
+      "pais": "Brasil",
+      "cep": "05001200",
+      "estado": "São Paulo",
+      "cidade": "São Paulo",
+      "polo": "São Paulo - São Miguel Paulista (Campus da Univ. Cruzeiro do Sul) - SP - UNIVERSIDADE CRUZEIRO DO SUL",
+      "verCondicao": true,
+      "formaIngresso": "Vestibular Múltipla Escolha"
+    }
+  },
+  "funnel": {
+    "orderOk": true,
+    "linkProva": "https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQwNDkzODEsImlhdCI6MTc4NDA0NzU4MSwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYnJpZWwgTGtvbnRlIiwibnVtZXJvSW5zY3JpY2FvIjoiMjY1ODMwNTkwIiwidGlwb1Byb3ZhIjoiVkVTVElCVUxBUl9NVUxUSVBMQV9FU0NPTEhBIiwiZW1haWwiOiJob21vbG9nOTg0MjY3QGdtYWlsLmNvbSJ9fQ.91XOYaAhfT8beT55-AOOFnYnpIlYAp104YsyxGJBvOI",
+    "numeroInscricao": "1646733959831-01",
+    "polo": "São Paulo - São Miguel Paulista (Campus da Univ. Cruzeiro do Sul) - SP - UNIVERSIDADE CRUZEIRO DO SUL",
+    "gateCart": "orderForm.items",
+    "gateAuth": "visual_ola_email",
+    "authAttemptsUsed": 1,
+    "auth": {
+      "attempts": 1,
+      "elapsedMs": 33270,
+      "criterion": "visual_ola_email",
+      "authenticatedEmail": "homolog984267@gmail.com",
+      "alreadyAuthenticated": false,
+      "code": "OK",
+      "browserCalls": 4
+    }
+  },
+  "metrics": {
+    "totalElapsedSec": 650,
+    "totalBrowserToolCalls": 83,
+    "stageBrowserCalls": 19,
+    "humanInterventions": 0
+  },
+  "log": [
+    {
+      "t": 0,
+      "step": "PHASE",
+      "msg": "start"
+    },
+    {
+      "t": 23,
+      "step": "FOCUS",
+      "msg": "t509"
+    },
+    {
+      "t": 30,
+      "step": "WHERE",
+      "href": "https://cruzeirodosul.myvtex.com/graduacao",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/graduacao\",\"hasEntrar\":true,\"ola\":false,\"emailShown\":false}"
+    },
+    {
+      "t": 30,
+      "step": "PHASE",
+      "msg": "login"
+    },
+    {
+      "t": 38,
+      "step": "PHASE",
+      "msg": "login"
+    },
+    {
+      "t": 38,
+      "step": "AGENT_LOGIN",
+      "msg": "homolog984267@gmail.com attempt=1/3"
+    },
+    {
+      "t": 55,
+      "step": "PHASE",
+      "msg": "gate_auth"
+    },
+    {
+      "t": 64,
+      "step": "GATE_AUTH_PROBE",
+      "msg": "{\"attempt\":1,\"ready\":true,\"sameEmail\":true,\"via\":\"visual_ola_email\",\"hasEntrar\":false,\"ola\":true,\"emailShown\":true,\"portalOpen\":false,\"loginInputVisible\":false,\"hasAuthCookie\":false,\"storageHint\":false,\"loginUiGone\":true,\"href\":\"https://cruzeirodosul.myvtex.com/graduacao\"}"
+    },
+    {
+      "t": 64,
+      "step": "GATE_AUTH_READY",
+      "msg": "{\"attempt\":1,\"via\":\"visual_ola_email\",\"email\":\"homolog984267@gmail.com\",\"gateElapsedMs\":8690,\"totalElapsedMs\":33270}"
+    },
+    {
+      "t": 64,
+      "step": "AUTH_SUMMARY",
+      "msg": "{\"attempts\":1,\"elapsedMs\":33270,\"criterion\":\"visual_ola_email\",\"authenticatedEmail\":\"homolog984267@gmail.com\",\"alreadyAuthenticated\":false,\"code\":\"OK\",\"browserCalls\":4}"
+    },
+    {
+      "t": 64,
+      "step": "PHASE",
+      "msg": "search_pdp"
+    },
+    {
+      "t": 71,
+      "step": "SEARCH_COURSE",
+      "msg": "Gestão Financeira"
+    },
+    {
+      "t": 117,
+      "step": "FOCUS",
+      "msg": "t509"
+    },
+    {
+      "t": 124,
+      "step": "OPEN_COURSE_RESULT",
+      "msg": "{\"ok\":true,\"href\":\"https://cruzeirodosul.myvtex.com/grad-gestao-financeira-cruzeiro-do-sul-virtual/p\",\"text\":\"Gestão Financeira 4 semestresTecnológicoInício ImediatoEAD\",\"score\":165,\"mode\":\"scored\",\"top\":[{\"text\":\"Gestão Financeira 4 semestresTecnológicoInício ImediatoEAD\",\"score\":165,\"href\":\"https://cruzeirodosul.myvtex.com/grad-gestao-financeira-cruzeiro-do-sul-virtual/p\"}]}"
+    },
+    {
+      "t": 143,
+      "step": "FOCUS",
+      "msg": "t509"
+    },
+    {
+      "t": 149,
+      "step": "PDP_CONTENT",
+      "msg": "{\"ok\":true,\"via\":\"h1\",\"h1\":\"Gestão Financeira\",\"productName\":\"Gestão Financeira\",\"href\":\"https://cruzeirodosul.myvtex.com/grad-gestao-financeira-cruzeiro-do-sul-virtual/p\",\"curso\":\"Gestão Financeira\"}"
+    },
+    {
+      "t": 149,
+      "step": "PDP_CONTENT_OK",
+      "msg": "{\"ok\":true,\"via\":\"h1\",\"h1\":\"Gestão Financeira\",\"productName\":\"Gestão Financeira\",\"href\":\"https://cruzeirodosul.myvtex.com/grad-gestao-financeira-cruzeiro-do-sul-virtual/p\",\"curso\":\"Gestão Financeira\"}"
+    },
+    {
+      "t": 149,
+      "step": "PHASE",
+      "msg": "wait_lead"
+    },
+    {
+      "t": 157,
+      "step": "WAIT_LEAD",
+      "msg": "{\"ready\":true,\"hasLead\":true,\"btnText\":\"Inscreva-se\"}"
+    },
+    {
+      "t": 157,
+      "step": "PHASE",
+      "msg": "lead"
+    },
+    {
+      "t": 189,
+      "step": "STAGE_LEAD_DONE",
+      "msg": "{\"success\":true,\"code\":\"OK\",\"ms\":31889,\"calls\":4}"
+    },
+    {
+      "t": 203,
+      "step": "AGENT_CTA"
+    },
+    {
+      "t": 213,
+      "step": "PHASE",
+      "msg": "offer"
+    },
+    {
+      "t": 319,
+      "step": "STAGE_OFFER_DONE",
+      "msg": "{\"success\":true,\"code\":\"OK\",\"ms\":105570,\"calls\":15,\"polo\":\"São Paulo - São Miguel Paulista (Campus da Univ. Cruzeiro do Sul) - SP - UNIVERSIDADE CRUZEIRO DO SUL\"}"
+    },
+    {
+      "t": 319,
+      "step": "PHASE",
+      "msg": "post_offer"
+    },
+    {
+      "t": 338,
+      "step": "PHASE",
+      "msg": "continuar_telemetry"
+    },
+    {
+      "t": 338,
+      "step": "CONTINUAR_TELEMETRY_START"
+    },
+    {
+      "t": 351,
+      "step": "CONTINUAR_BEFORE",
+      "msg": "{\"found\":true,\"before\":{\"text\":\"Continuar inscrição\",\"enabled\":true,\"disabled\":false,\"ariaDisabled\":null,\"classes\":\"cruzeirodosul-product-purchase-box-0-x-cta_p1\",\"loading\":false,\"pointerEvents\":\"auto\",\"opacity\":\"1\",\"type\":\"submit\"}}"
+    },
+    {
+      "t": 358,
+      "step": "AGENT_CONTINUAR"
+    },
+    {
+      "t": 365,
+      "step": "CONTINUAR_TELEMETRY_TICK",
+      "msg": "{\"elapsedMs\":6571,\"href\":\"https://cruzeirodosul.myvtex.com/grad-gestao-financeira-cruzeiro-do-sul-virtual/p\",\"itemCount\":0,\"fetchCount\":13,\"xhrCount\":2,\"errors\":[],\"toasts\":[],\"button\":null}"
+    },
+    {
+      "t": 375,
+      "step": "CONTINUAR_TELEMETRY_TICK",
+      "msg": "{\"elapsedMs\":17220,\"href\":\"https://cruzeirodosul.myvtex.com/checkout/#/profile\",\"itemCount\":1,\"fetchCount\":0,\"xhrCount\":0,\"errors\":[\"A verificação expirou. Marque o campo novamente.\",\"× Encontramos um problema no preenchimento. Por favor, verifique os campos em destaque e tente novamente.\"],\"toasts\":[\"Sua inscrição é grátis.\"],\"button\":{\"text\":\"Continuar Inscrição\",\"disabled\":false,\"ariaDisabled\":null,\"classes\":\"submit btn btn-success btn-large\",\"loading\":false}}"
+    },
+    {
+      "t": 383,
+      "step": "CONTINUAR_TELEMETRY_TICK",
+      "msg": "{\"elapsedMs\":25223,\"href\":\"https://cruzeirodosul.myvtex.com/checkout/#/profile\",\"itemCount\":1,\"fetchCount\":0,\"xhrCount\":0,\"errors\":[\"A verificação expirou. Marque o campo novamente.\",\"× Encontramos um problema no preenchimento. Por favor, verifique os campos em destaque e tente novamente.\"],\"toasts\":[\"Sua inscrição é grátis.\"],\"button\":{\"text\":\"Continuar Inscrição\",\"disabled\":false,\"ariaDisabled\":null,\"classes\":\"submit btn btn-success btn-large\",\"loading\":false}}"
+    },
+    {
+      "t": 385,
+      "step": "CONTINUAR_TELEMETRY_DONE",
+      "msg": "{\"file\":\"continuar-telemetry.json\",\"fetch\":0,\"xhr\":0,\"errors\":[],\"validations\":[]}"
+    },
+    {
+      "t": 385,
+      "step": "PHASE_ABORT_CLEARED",
+      "msg": "{\"cleared\":{\"reason\":\"PHASE_TIMEOUT\",\"phase\":\"continuar_telemetry\",\"phaseMs\":46695},\"nextPhase\":\"gate_cart\"}"
+    },
+    {
+      "t": 385,
+      "step": "PHASE",
+      "msg": "gate_cart"
+    },
+    {
+      "t": 391,
+      "step": "GATE_CART_PROBE",
+      "msg": "{\"ready\":true,\"viaRedirect\":true,\"viaOrderForm\":true,\"href\":\"https://cruzeirodosul.myvtex.com/checkout/#/profile\",\"emptyCart\":false,\"onCheckout\":true,\"itemCount\":1,\"hasProfileField\":true,\"visualProduct\":true}"
+    },
+    {
+      "t": 391,
+      "step": "GATE_CART_READY",
+      "msg": "orderForm.items",
+      "href": "https://cruzeirodosul.myvtex.com/checkout/#/profile"
+    },
+    {
+      "t": 391,
+      "step": "RUNNER_HANDOFF",
+      "msg": "Gate Cart OK → Checkout → PostOrder → Capture"
+    },
+    {
+      "t": 391,
+      "step": "PHASE",
+      "msg": "checkout"
+    },
+    {
+      "t": 391,
+      "step": "CHECKOUT_START",
+      "msg": "{}"
+    },
+    {
+      "t": 405,
+      "step": "CHECKOUT_WAIT_OK",
+      "msg": "{\"label\":\"profile_fields\",\"elapsedMs\":6699,\"state\":{\"ready\":true,\"emptyCart\":false,\"hasProfile\":true,\"itemCount\":1,\"href\":\"https://cruzeirodosul.myvtex.com/checkout/#/profile\"}}"
+    },
+    {
+      "t": 412,
+      "step": "CHECKOUT_PROFILE_FILLED",
+      "msg": "{\"values\":{\"first\":true,\"last\":true,\"doc\":true,\"phone\":true,\"birth\":true}}"
+    },
+    {
+      "t": 425,
+      "step": "CHECKOUT_CLICK_IR_ENDERECO",
+      "msg": "{\"ref\":\"e17\"}"
+    },
+    {
+      "t": 441,
+      "step": "CHECKOUT_WAIT_OK",
+      "msg": "{\"label\":\"shipping_cep\",\"elapsedMs\":6311,\"state\":{\"ready\":true,\"href\":\"https://cruzeirodosul.myvtex.com/checkout/#/shipping\",\"hasCep\":true,\"emptyCart\":false}}"
+    },
+    {
+      "t": 454,
+      "step": "CHECKOUT_SHIPPING_CEP",
+      "msg": "{\"ref\":\"e14\",\"cep\":\"05001200\"}"
+    },
+    {
+      "t": 468,
+      "step": "CHECKOUT_SHIPPING_SEM_NUMERO",
+      "msg": "{\"ref\":\"e15\"}"
+    },
+    {
+      "t": 481,
+      "step": "CHECKOUT_CLICK_PROSSEGUIR",
+      "msg": "{\"ref\":\"e17\"}"
+    },
+    {
+      "t": 496,
+      "step": "CHECKOUT_CLICK_CONTINUAR_INSCRICAO",
+      "msg": "{\"ref\":\"e17\"}"
+    },
+    {
+      "t": 505,
+      "step": "CHECKOUT_WAIT_OK",
+      "msg": "{\"label\":\"order_confirmed\",\"elapsedMs\":8709,\"state\":{\"ready\":true,\"orderId\":\"1646733959831\",\"via\":\"og_query\",\"onOrderPath\":true,\"confirmedCopy\":false,\"href\":\"https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646733959831\",\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\nhomolog984267\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Homolog984267@Gmail.Com\\n1\\nInscrição 1646733959831-01\\nRealizado em 14/07/2026\"}}"
+    },
+    {
+      "t": 505,
+      "step": "CHECKOUT_ORDER_CONFIRMED",
+      "msg": "{\"orderId\":\"1646733959831\",\"orderHref\":\"https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646733959831\",\"via\":\"og_query\"}"
+    },
+    {
+      "t": 505,
+      "step": "CHECKOUT_DONE",
+      "msg": "{\"success\":true,\"code\":\"OK\",\"ms\":113334,\"browserCalls\":16,\"orderId\":\"1646733959831\",\"via\":\"og_query\",\"href\":\"https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646733959831\"}"
+    },
+    {
+      "t": 505,
+      "step": "PHASE",
+      "msg": "post_order"
+    },
+    {
+      "t": 505,
+      "step": "POST_ORDER_START",
+      "msg": "{\"orderId\":\"1646733959831\",\"observeOnly\":false}"
+    },
+    {
+      "t": 511,
+      "step": "POST_ORDER_GATE",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646733959831\",\"og\":\"1646733959831\",\"hasCta\":true,\"orderPath\":true,\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\nhomolog984267\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Homolog984267@Gmail.Com\\n1\\nInscrição 1646733959831-01\\nRea\"}"
+    },
+    {
+      "t": 518,
+      "step": "POST_ORDER_TABS_BEFORE",
+      "msg": "{\"tabs\":[{\"id\":\"t509\",\"type\":\"order_placed\",\"url\":\"https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646733959831\"},{\"id\":\"t533\",\"type\":\"recaptcha\",\"url\":\"https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=5l4638wck67o\"},{\"id\":\"t534\",\"type\":\"tracker\",\"url\":\"https://15055946.fls.doubleclick.net/activityi;dc_pre=CPunhfDO0pUDFWozuQYdIX0pRQ;src=15055946;type=invmedia;cat=pagev0;rcb=4;ord=5588234225089;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=https%3A%2F%2Fcruzeirodosul.myvtex.com%2F_v%2Fsegment%2Fadmin-login%2Fv1%2Flogin%3FreturnUrl%3D%252F%253F;u8=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fcheckout%2ForderPlaced%2F%3Fog%3D1646733959831;u9=2026-07-14T13%3A45%3A08;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67d0v9222101548z89201853077za20gzb9201853077zd9201853077xea;gcd=13l3l3l3l1l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118826209~118897920~118897930~119027224;epver=2;dc_random=1784047508_SBoo72ruMVVezU8s8_mclhJ4WIahet90ZA;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fcheckout%2ForderPlaced%2F%3Fog%3D1646733959831?\"},{\"id\":\"t535\",\"type\":\"recaptcha\",\"url\":\"https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=6dv6wgklsx8e\"},{\"id\":\"t536\",\"type\":\"tracker\",\"url\":\"https://gum.criteo.com/syncframe?topUrl=cruzeirodosul.myvtex.com&amp;origin=onetag#{%22bundle%22:{%22identifierExtractor%22:{%22origin%22:3},%22value%22:%22uxFcWV9ZSVklMkZweUFZTHVsdlE2dXRZdGslMkY1dTAwa0ttTzRHY3B2ZDBCNzFNcmFmSzlCQU1jbk1KNTRINFJ5MlhpOGpjV1BMYlQlMkJJeUxiTkxtWDMyTE1rY3dLTkZSd3d5TkhnVGNRbHNsUnNkazVVSmt5Q2VocDI3SWptdm5IODM0VFNaNjglMkZ0QmpHUkl5YmFhdXZlcXBldXBndyUzRCUzRA%22},%22cw%22:true,%22optout%22:{%22identifierExtractor%22:{%22origin%22:0},%22value%22:null},%22origin%22:%22onetag%22,%22tld%22:%22myvtex.com%22,%22topUrl%22:%22cruzeirodosul.myvtex.com%22,%22version%22:%225_46_0%22,%22ifa%22:{%22identifierExtractor%22:{%22origin%22:0},%22value%22:null},%22lsw%22:true,%22pm%22:0,%22requestId%22:%22bd5efd6a-eb0c-48e6-bed7-89a4c1e43f45%22}\"},{\"id\":\"t537\",\"type\":\"tracker\",\"url\":\"https://16181466.fls.doubleclick.net/activityi;dc_pre=CIfDo_DO0pUDFfJO3QIdqg8xhw;src=16181466;type=audin0;cat=flaud0;rcb=2;ord=7102755507484;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvtex.com;u4=undefined;u12=%2Fcheckout%2ForderPlaced%2F;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67d0v9238465408z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118826209~118897920~118897930~119027224;epver=2;dc_random=1784047508_ay5F2QgKnt-JFHJOhPNNDrdF7rS-YDXzNw;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fcheckout%2ForderPlaced%2F%3Fog%3D1646733959831?\"},{\"id\":\"t538\",\"type\":\"tracker\",\"url\":\"https://16181466.fls.doubleclick.net/activityi;dc_pre=CNO_uvDO0pUDFftO3QId4KENOg;src=16181466;type=jorna001;cat=fljor0;rcb=2;qty=1;npa=0;auiddc=932056679.1783629420;u1=inscricao;u2=purchase;u3=cruzeirodosul.myvtex.com;u6=Virtual;u9=online;u10=GEST%C3%83O%20FINANCEIRA;u11=3648;u12=%2Fcheckout%2ForderPlaced%2F;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KAAC;gtm=45fe67d0v9238465408z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118826209~118897920~118897930~119027224;epver=2;dc_random=1784047509_sVvcrTfsexZeRaREKwbJSWslTovokIi10g;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fcheckout%2ForderPlaced%2F%3Fog%3D1646733959831?\"},{\"id\":\"t515\",\"type\":\"service_worker\",\"url\":\"https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1\"},{\"id\":\"t341\",\"type\":\"myvtex_content\",\"url\":\"https://cruzeirodosul.myvtex.com/graduacao\"},{\"id\":\"t384\",\"type\":\"tracker\",\"url\":\"https://16181466.fls.doubleclick.net/activityi;dc_pre=CIn6656w0pUDFbFR3QId7gEbkQ;src=16181466;type=audin0;cat=flaud0;rcb=7;ord=5369900396096;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvtex.com;u4=undefined;u12=%2Fgraduacao;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1h1v9238465408z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938466~115938469~118131809~118826210~118897920~118897930~119027224;epver=2;dc_random=1784039285_Dw_8p5rTg_TNX_ICIuDHt2Xv_8ePbyKO7Q;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fgraduacao?\"},{\"id\":\"t389\",\"type\":\"tracker\",\"url\":\"https://15055946.fls.doubleclick.net/activityi;dc_pre=CP-cr5-w0pUDFftO3QIdm5QOow;src=15055946;type=invmedia;cat=pagev0;rcb=19;ord=3544238601759;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=https%3A%2F%2Fcruzeirodosul.myvtex.com%2F_v%2Fsegment%2Fadmin-login%2Fv1%2Flogin%3FreturnUrl%3D%252F%253F;u8=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fgraduacao;u9=2026-07-14T11%3A28%3A06;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1h1v9222101548z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115616985~115938466~115938468~118131809~118826210~118897920~118897930~119027224~119773332;epver=2;dc_random=1784039286_S85ZGiTJjT32AKDG26VlH-KYiR82GfWCkQ;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fgraduacao?\"},{\"id\":\"t386\",\"type\":\"service_worker\",\"url\":\"https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1\"},{\"id\":\"t359\",\"type\":\"service_worker\",\"url\":\"https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw.js?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com\"},{\"id\":\"t171\",\"type\":\"service_worker\",\"url\":\"https://cruzeirodosul.myvtex.com/serviceWorkerMerged.js\"},{\"id\":\"t539\",\"type\":\"recaptcha\",\"url\":\"https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i\"},{\"id\":\"t540\",\"type\":\"recaptcha\",\"url\":\"https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i\"}]}"
+    },
+    {
+      "t": 532,
+      "step": "POST_ORDER_CLICK_CONTINUAR_PROCESSO",
+      "msg": "{\"ref\":\"e12\",\"tClick\":1784047532310}"
+    },
+    {
+      "t": 546,
+      "step": "POST_ORDER_PROBE_TAB",
+      "msg": "{\"tabId\":\"t541\",\"url\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"type\":\"minhas_inscricoes\",\"isNew\":true}"
+    },
+    {
+      "t": 553,
+      "step": "POST_ORDER_CORRECT_TAB",
+      "msg": "{\"tabId\":\"t541\",\"url\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"via\":\"content_confirmed\",\"isNew\":true}"
+    },
+    {
+      "t": 553,
+      "step": "POST_ORDER_MINHAS_INSCRICOES",
+      "msg": "{\"via\":\"content_confirmed\",\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"openedNewTab\":true,\"tabId\":\"t541\"}"
+    },
+    {
+      "t": 553,
+      "step": "POST_ORDER_DONE",
+      "msg": "{\"success\":true,\"code\":\"OK\",\"ms\":47818,\"browserCalls\":7,\"openedNewTab\":true,\"tabId\":\"t541\",\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\"}"
+    },
+    {
+      "t": 553,
+      "step": "PHASE",
+      "msg": "capture"
+    },
+    {
+      "t": 553,
+      "step": "CAPTURE_START",
+      "msg": "{\"orderId\":\"1646733959831\"}"
+    },
+    {
+      "t": 560,
+      "step": "CAPTURE_CONFIRM_MINHAS",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"onAccount\":true,\"onMinhas\":true,\"hasTitle\":true,\"hasAcompanhar\":true,\"ready\":true,\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\nhomolog984267\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Homolog984267@Gmail.Com\\n0\\nOlá,\\nGabriel!\\nDados pessoais\\nE\"}"
+    },
+    {
+      "t": 566,
+      "step": "CAPTURE_WAIT_OK",
+      "msg": "{\"label\":\"enrollment_visible\",\"elapsedMs\":6587,\"state\":{\"ready\":true,\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"inscrs\":[\"1646733959831-01\"],\"hasOrder\":true,\"hasAcompanhar\":true,\"orderId\":\"1646733959831\",\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\nhomolog984267\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Homolog984267@Gmail.Com\\n0\\nOlá,\\nGabriel!\\nDados pessoais\\nEndereços\\nCartões\\nAutenticação\\nResponsáve\"}}"
+    },
+    {
+      "t": 566,
+      "step": "CAPTURE_ENROLLMENT_FOUND",
+      "msg": "{\"orderId\":\"1646733959831\",\"numeroInscricao\":\"1646733959831-01\",\"state\":{\"ready\":true,\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"inscrs\":[\"1646733959831-01\"],\"hasOrder\":true,\"hasAcompanhar\":true,\"orderId\":\"1646733959831\",\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\nhomolog984267\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Homolog984267@Gmail.Com\\n0\\nOlá,\\nGabriel!\\nDados pessoais\\nEndereços\\nCartões\\nAutenticação\\nResponsáve\"}}"
+    },
+    {
+      "t": 573,
+      "step": "CAPTURE_CLICK_ACOMPANHAR",
+      "msg": "{\"ok\":true,\"count\":1,\"orderId\":\"1646733959831\"}"
+    },
+    {
+      "t": 580,
+      "step": "CAPTURE_WAIT_OK",
+      "msg": "{\"label\":\"acompanhar_stabilize\",\"elapsedMs\":6643,\"state\":{\"ready\":true,\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"hasProva\":true,\"hasDetail\":true,\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\nhomolog984267\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Homolog984267@Gmail.Com\\n0\\nOlá,\\nGabriel!\\nDados pessoais\\nE\"}}"
+    },
+    {
+      "t": 580,
+      "step": "CAPTURE_STABILIZED",
+      "msg": "{\"ready\":true,\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"hasProva\":true,\"hasDetail\":true,\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\nhomolog984267\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Homolog984267@Gmail.Com\\n0\\nOlá,\\nGabriel!\\nDados pessoais\\nE\"}"
+    },
+    {
+      "t": 586,
+      "step": "CAPTURE_WAIT_OK",
+      "msg": "{\"label\":\"prova_href\",\"elapsedMs\":6566,\"state\":{\"ready\":true,\"hrefs\":[\"https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQwNDkzODEsImlhdCI6MTc4NDA0NzU4MSwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYnJpZWwgTGtvbnRlIiwibnVtZXJvSW5zY3JpY2FvIjoiMjY1ODMwNTkwIiwidGlwb1Byb3ZhIjoiVkVTVElCVUxBUl9NVUxUSVBMQV9FU0NPTEhBIiwiZW1haWwiOiJob21vbG9nOTg0MjY3QGdtYWlsLmNvbSJ9fQ.91XOYaAhfT8beT55-AOOFnYnpIlYAp104YsyxGJBvOI\"],\"links\":[{\"href\":\"https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQwNDkzODEsImlhdCI6MTc4NDA0NzU4MSwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYnJpZWwgTGtvbnRlIiwibnVtZXJvSW5zY3JpY2FvIjoiMjY1ODMwNTkwIiwidGlwb1Byb3ZhIjoiVkVTVElCVUxBUl9NVUxUSVBMQV9FU0NPTEhBIiwiZW1haWwiOiJob21vbG9nOTg0MjY3QGdtYWlsLmNvbSJ9fQ.91XOYaAhfT8beT55-AOOFnYnpIlYAp104YsyxGJBvOI\",\"text\":\"Acessar prova\"}],\"inscr\":\"1646733959831-01\",\"hasProvaText\":true,\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\"}}"
+    },
+    {
+      "t": 586,
+      "step": "CAPTURE_DONE",
+      "msg": "{\"stored\":true,\"opened\":false,\"provaLink\":\"https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQwNDkzODEsImlhdCI6MTc4NDA0NzU4MSwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYnJpZWwgTGtvbnRlIiwibnVtZXJvSW5zY3JpY2FvIjoiMjY1ODMwNTkwIiwidGlwb1Byb3ZhIjoiVkVTVElCVUxBUl9NVUxUSVBMQV9FU0NPTEhBIiwiZW1haWwiOiJob21vbG9nOTg0MjY3QGdtYWlsLmNvbSJ9fQ.91XOYaAhfT8beT55-AOOFnYnpIlYAp104YsyxGJBvOI\",\"inscr\":\"1646733959831-01\"}"
+    },
+    {
+      "t": 586,
+      "step": "CAPTURE_DONE",
+      "msg": "{\"success\":true,\"code\":\"OK\",\"ms\":33684,\"browserCalls\":5,\"provaLink\":true,\"inscr\":\"1646733959831-01\",\"opened\":false}"
+    },
+    {
+      "t": 586,
+      "step": "PHASE",
+      "msg": "logout"
+    },
+    {
+      "t": 600,
+      "step": "FOCUS",
+      "msg": "t541"
+    },
+    {
+      "t": 650,
+      "step": "LOGOUT",
+      "msg": "ok — logout via Sair"
+    },
+    {
+      "t": 650,
+      "step": "PHASE",
+      "msg": "close"
+    },
+    {
+      "t": 650,
+      "step": "BROWSER_CLOSE_SKIP",
+      "msg": "closeOnFinish=false — nenhum browser encerrado (opt-in necessário)"
+    }
+  ],
+  "data": {
+    "email": "homolog984267@gmail.com",
+    "curso": "Gestão Financeira",
+    "modalidade": "Graduação: Virtual",
+    "nome": "Gabriel Lkonte",
+    "telefone": "11987121122",
+    "cep": "05001200",
+    "estado": "São Paulo",
+    "cidade": "São Paulo",
+    "poloPrefix": "São Paulo - São Miguel Paulista",
+    "first": "Gabriel",
+    "last": "Lkonte",
+    "cpf": "39084716051",
+    "birth": "1999-09-09",
+    "formaIngresso": "Vestibular Múltipla Escolha",
+    "necessidade": "Não necessito de condições especiais"
+  },
+  "browserConfig": {
+    "closeOnFinish": false
+  },
+  "authConfig": {
+    "maxAttempts": 3,
+    "gateTimeoutMs": 30000,
+    "pollMs": 2000
+  }
+}

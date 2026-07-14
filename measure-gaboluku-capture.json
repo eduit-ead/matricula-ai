@@ -1,0 +1,29 @@
+{
+  "ok": false,
+  "list": {
+    "href": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/",
+    "hasList": true,
+    "hasGaboluku": true,
+    "snippet": "Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\ngaboluku\nCursos\nEstude com a gente\nBenefícios\nA Cruzeiro do Sul Virtual\n\nSou Aluno\n\nOlá, Gaboluku@Gmail.Com\n0\nOlá,\nGabriel!\nDados pessoais\nEndereços\nCartões\nAutenticação\nResponsável Financeiro\nMinhas inscrições\nSair\nVoltar\nMinhas Inscrições\nData da inscrição\n12 de julho de 2026\n# 1646273951589-01\nAcompanhar Inscrição\nGestão de Recursos Humanos\nGraduação: Virtual\nVestibular Múltipla Escolha\nAguardando processo seletivo\nInscrições não concluídas\nCarregando..."
+  },
+  "capture": {
+    "href": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/",
+    "hrefs": [],
+    "has": false,
+    "inscr": "1646273951589-01",
+    "snippet": "Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\ngaboluku\nCursos\nEstude com a gente\nBenefícios\nA Cruzeiro do Sul Virtual\n\nSou Aluno\n\nOlá, Gaboluku@Gmail.Com\n0\nOlá,\nGabriel!\nDados pessoais\nEndereços\nCartões\nAutenticação\nResponsável Financeiro\nMinhas inscrições\nSair\nVoltar\nMinhas Inscrições\nData da inscrição\n12 de julho de 2026\n# 1646273951589-01\nAcompanhar Inscrição\nGestão de Recursos Humanos\nGraduação: Virtual\nVestibular Múltipla Escolha\nAguardando processo seletivo\nInscrições não concluídas\nCarregando..."
+  },
+  "aborted": null,
+  "log": [
+    {
+      "t": 33,
+      "step": "LIST",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"hasList\":true,\"hasGaboluku\":true,\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\ngaboluku\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Gaboluku@Gmail.Com\\n0\\nOlá,\\nGabriel!\\nDados pessoais\\nEndereços\\nCartões\\nAutenticação\\nResponsável Financeiro\\nMinhas inscrições\\nSair\\nVoltar\\nMinhas Inscrições\\nData da inscrição\\n12 de julho de 2026\\n# 1646273951589-01\\nAcompanhar Inscrição\\nGestão de Recursos Humanos\\nGraduação: Virtual\\nVestibular Múltipla Escolha\\nAguardando processo seletivo\\nInscrições não concluídas\\nCarregando...\"}"
+    },
+    {
+      "t": 46,
+      "step": "CAPTURE",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\",\"hrefs\":[],\"has\":false,\"inscr\":\"1646273951589-01\",\"snippet\":\"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\ngaboluku\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Gaboluku@Gmail.Com\\n0\\nOlá,\\nGabriel!\\nDados pessoais\\nEndereços\\nCartões\\nAutenticação\\nResponsável Financeiro\\nMinhas inscrições\\nSair\\nVoltar\\nMinhas Inscrições\\nData da inscrição\\n12 de julho de 2026\\n# 1646273951589-01\\nAcompanhar Inscrição\\nGestão de Recursos Humanos\\nGraduação: Virtual\\nVestibular Múltipla Escolha\\nAguardando processo seletivo\\nInscrições não concluídas\\nCarregando...\"}"
+    }
+  ]
+}

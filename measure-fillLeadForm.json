@@ -1,0 +1,117 @@
+{
+  "ok": true,
+  "helper": {
+    "name": "fillLeadForm",
+    "result": {
+      "ok": true,
+      "stage": "fallback-validate",
+      "values": {
+        "nome": "Gabo Loko Teste Helper",
+        "email": "gaboloko@gmail.com",
+        "telefone": "(11) 98712-4916",
+        "aceite": true
+      },
+      "accepted": {
+        "nome": true,
+        "email": true,
+        "telefone": true,
+        "aceite": true
+      },
+      "errors": [],
+      "strategies": [
+        {
+          "strategy": "snapshot-fill-fallback",
+          "refs": {
+            "nome": "e21",
+            "email": "e22",
+            "tel": "e23"
+          },
+          "fillOut": "filled 3 field(s)\n"
+        }
+      ],
+      "elapsedMs": 21838,
+      "usedFallback": false,
+      "path": "snapshot-fill-primary"
+    },
+    "elapsedMs": 21838
+  },
+  "baseline": {
+    "source": "run-timing-pedagogia.json (continuação PDP)",
+    "fillCliMs": 6926,
+    "snapBeforeFillMs": 6361,
+    "ctaClickMs": 7131,
+    "retryUntilPoloMs": 14808,
+    "totalUntilPoloReadyMs": 59082,
+    "note": "Inclui snapshot + fill refs + CTA + waits/retry até hasPolo=true. Helper cobre só fill+aceite+validate (não CTA)."
+  },
+  "comparison": {
+    "before_fill_plus_snap_ms": 13287,
+    "after_helper_fill_validate_ms": 21838,
+    "delta_fill_ms": -8551,
+    "before_until_polo_ready_ms": 59082,
+    "after_helper_plus_first_cta_to_polo_ms": 39000,
+    "resilience": {
+      "before": "CTA frequentemente falhava na 1ª tentativa (retry ~15–40s); email React/DOM inconsistente",
+      "after": "fillLeadForm ok + 1º CTA → hasPolo=true sem retry",
+      "helperScope": "não clica Inscreva-se; agente decide CTA"
+    },
+    "verdict": "Etapa lead mais lenta em wall-clock do fill isolado (~22s vs ~13s snap+fill), mas caminho até polo mais estável/rápido (~39s vs ~59s) por eliminar retry. Ganho principal = resiliência + contrato híbrido.",
+    "note": "Baseline: run-timing-pedagogia.json. Medida: measure-fillLeadForm.json log HELPER_START→AGENT_VALIDATE_POLO."
+  },
+  "data": {
+    "email": "gaboloko@gmail.com",
+    "nome": "Gabo Loko Teste Helper",
+    "telefone": "11987124916",
+    "cep": "05001200",
+    "estado": "São Paulo",
+    "cidade": "São Paulo",
+    "first": "Gabo",
+    "last": "Loko",
+    "cpf": "50928152057",
+    "birth": "1999-09-09",
+    "nomeNormalized": "Gabo Loko Teste Helper"
+  },
+  "log": [
+    {
+      "t": 7,
+      "step": "FOCUS"
+    },
+    {
+      "t": 14,
+      "step": "WHERE",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p\",\"ola\":true,\"hasEntrar\":false}"
+    },
+    {
+      "t": 14,
+      "step": "HELPER_START",
+      "msg": "{\"nome\":\"Gabo Loko Teste Helper\",\"email\":\"gaboloko@gmail.com\",\"telefone\":\"11987124916\"}"
+    },
+    {
+      "t": 36,
+      "step": "HELPER_DONE",
+      "msg": "{\"ok\":true,\"elapsedMs\":21838,\"stage\":\"fallback-validate\",\"values\":{\"nome\":\"Gabo Loko Teste Helper\",\"email\":\"gaboloko@gmail.com\",\"telefone\":\"(11) 98712-4916\",\"aceite\":true},\"errors\":[],\"strategies\":[{\"strategy\":\"snapshot-fill-fallback\",\"refs\":{\"nome\":\"e21\",\"email\":\"e22\",\"tel\":\"e23\"},\"fillOut\":\"filled 3 field(s)\\n\"}]}"
+    },
+    {
+      "t": 43,
+      "step": "AGENT_CTA",
+      "msg": "{\"ok\":true} cli=7064ms"
+    },
+    {
+      "t": 53,
+      "step": "AGENT_VALIDATE_POLO",
+      "msg": "{\"hasPolo\":true}"
+    },
+    {
+      "t": 131,
+      "step": "POLO",
+      "msg": "NOT_FOUND"
+    },
+    {
+      "t": 196,
+      "step": "CHECKOUT",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p"
+    }
+  ],
+  "elapsedSec": 196
+}

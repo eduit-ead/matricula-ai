@@ -1,0 +1,31 @@
+{
+  "ok": false,
+  "timeline": [
+    {
+      "t": 19,
+      "step": "PDP",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p"
+    },
+    {
+      "t": 26,
+      "step": "LEAD",
+      "msg": "{\"name\":\"Gabo Loko\",\"email\":\"\",\"phone\":\"(11) 98712-4916\",\"privacy\":true,\"hasBtn\":true,\"nPh\":\"\",\"eType\":\"email\"}"
+    },
+    {
+      "t": 32,
+      "step": "CLICK_CTA",
+      "msg": "{\"ok\":true,\"text\":\"Inscreva-se\"}"
+    },
+    {
+      "t": 43,
+      "step": "AFTER_LEAD",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p\",\"hasPolo\":false,\"errors\":[]}"
+    }
+  ],
+  "after": {
+    "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p",
+    "hasPolo": false,
+    "errors": []
+  }
+}

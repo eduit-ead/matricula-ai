@@ -1,0 +1,133 @@
+{
+  "verdict": {
+    "leadViaDefinitiveArchitecture": true,
+    "agentApi": "runStageTransaction(\"lead-pdp\", payload)",
+    "writeEngine": "accessibilityFill (production default)",
+    "fillLeadFormUsed": false,
+    "ctaAdvancedToPolo": true,
+    "newEnrollmentCheckout": false,
+    "note": "Lead stage OK exclusively via Runtime→Write Engine. Cart empty after Continuar (agent funnel). Prova URL found in Minhas Inscrições is prior enrollment #265824866 — not proof of new checkout this run."
+  },
+  "ok": true,
+  "architecture": "Agent → Runtime → Stage Definition → Write Engine",
+  "agentApi": "runStageTransaction(stageId, payload)",
+  "stages": {
+    "lead-pdp": {
+      "success": true,
+      "elapsedMs": 26261,
+      "browserToolCalls": 4,
+      "writeBackend": "accessibilityFill",
+      "confidence": 1,
+      "nextActionSuggested": "click_inscreva_se",
+      "valuesFound": {
+        "nome": "Gabo Loko Pedreira",
+        "email": "gaboloko@gmail.com",
+        "telefone": "(11) 98712-4916",
+        "aceite": true
+      }
+    }
+  },
+  "funnelAfterLead": {
+    "advancedToPolo": true,
+    "provaCaptured": true,
+    "provaHrefs": [
+      "https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODM4MTk3NTMsImlhdCI6MTc4MzgxNzk1MywiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYm8gTG9rbyIsIm51bWVyb0luc2NyaWNhbyI6IjI2NTgyNDg2NiIsInRpcG9Qcm92YSI6IlZFU1RJQlVMQVJfTVVMVElQTEFfRVNDT0xIQSIsImVtYWlsIjoiZ2Fib2xva29AZ21haWwuY29tIn19.4x4k8A6jHjWlMjz5GFsUHQHl65p-CVqZ0wx_DdigsMM"
+    ],
+    "note": "Address/Checkout are agent-driven, not Stages"
+  },
+  "metrics": {
+    "leadElapsedMs": 26261,
+    "leadBrowserToolCalls": 4,
+    "totalElapsedSec": 326,
+    "totalBrowserToolCalls": 37,
+    "humanInterventions": 1,
+    "successRateLead": 1,
+    "successRateFunnelProva": 1
+  },
+  "comparison": {
+    "previousLeadMs": 26202,
+    "previousLeadBrowserCalls": 4,
+    "thisLeadMs": 26261,
+    "thisLeadBrowserCalls": 4,
+    "deltaLeadMs": -59,
+    "deltaLeadCalls": 0
+  },
+  "data": {
+    "email": "gaboloko@gmail.com",
+    "nome": "Gabo Loko Pedreira",
+    "telefone": "11987124916",
+    "cep": "05001200",
+    "estado": "São Paulo",
+    "cidade": "São Paulo",
+    "first": "Gabo",
+    "last": "Loko",
+    "cpf": "50928152057",
+    "birth": "1999-09-09"
+  },
+  "log": [
+    {
+      "t": 6,
+      "step": "FOCUS"
+    },
+    {
+      "t": 13,
+      "step": "WHERE",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p\",\"ola\":true,\"hasEntrar\":false}"
+    },
+    {
+      "t": 53,
+      "step": "NAV_PDP",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p"
+    },
+    {
+      "t": 60,
+      "step": "WAIT_LEAD_READY",
+      "msg": "{\"hasLead\":true,\"btnText\":\"Inscreva-se\",\"ready\":true}"
+    },
+    {
+      "t": 60,
+      "step": "STAGE_LEAD_START",
+      "msg": "{\"stageId\":\"lead-pdp\",\"api\":\"runStageTransaction(stageId, payload)\"}"
+    },
+    {
+      "t": 86,
+      "step": "STAGE_LEAD_DONE",
+      "msg": "{\"success\":true,\"confidence\":1,\"elapsedMs\":26261,\"browserCalls\":4,\"writeBackend\":\"accessibilityFill\",\"valuesFound\":{\"nome\":\"Gabo Loko Pedreira\",\"email\":\"gaboloko@gmail.com\",\"telefone\":\"(11) 98712-4916\",\"aceite\":true},\"errors\":[],\"nextActionSuggested\":\"click_inscreva_se\"}"
+    },
+    {
+      "t": 99,
+      "step": "AGENT_CTA"
+    },
+    {
+      "t": 113,
+      "step": "AGENT_VALIDATE_POLO",
+      "msg": "{\"hasPolo\":true}"
+    },
+    {
+      "t": 190,
+      "step": "POLO",
+      "msg": "São Paulo - Freguesia do Ó (Moinho Velho) - SP - UNIVERSIDADE CIDADE DE SÃO PAULO"
+    },
+    {
+      "t": 263,
+      "step": "AFTER_CONTINUAR",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p"
+    },
+    {
+      "t": 285,
+      "step": "NAV_CHECKOUT",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/checkout/#/cart\",\"empty\":true}"
+    },
+    {
+      "t": 285,
+      "step": "CART_EMPTY",
+      "msg": "Continuar não adicionou ao carrinho"
+    },
+    {
+      "t": 326,
+      "step": "CAPTURE",
+      "msg": "{\"hrefs\":[\"https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODM4MTk3NTMsImlhdCI6MTc4MzgxNzk1MywiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYm8gTG9rbyIsIm51bWVyb0luc2NyaWNhbyI6IjI2NTgyNDg2NiIsInRpcG9Qcm92YSI6IlZFU1RJQlVMQVJfTVVMVElQTEFfRVNDT0xIQSIsImVtYWlsIjoiZ2Fib2xva29AZ21haWwuY29tIn19.4x4k8A6jHjWlMjz5GFsUHQHl65p-CVqZ0wx_DdigsMM\"],\"has\":true}"
+    }
+  ]
+}

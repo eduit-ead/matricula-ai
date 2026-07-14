@@ -1,0 +1,39 @@
+{
+  "run": "homolog-fresh-2026-07-13",
+  "input": "demo-input-homolog-fresh.json",
+  "email": "nabokulu13jul@gmail.com",
+  "curso": "Gestão Financeira",
+  "preconditions": {
+    "emailNovo": true,
+    "sessaoResidualCandidato": false,
+    "evidenciaSessao": "hasEntrar=true, hasOla=false, apenas e-mail do atendente"
+  },
+  "resultado": "Falha",
+  "codigoAbort": "ORDER_NOT_PLACED",
+  "exitCode": 2,
+  "caminhoOkAte": "GATE_CART_READY → RUNNER_HANDOFF",
+  "runner": {
+    "profileFilled": true,
+    "shippingReady": true,
+    "cepFilled": true,
+    "continuarInscricaoClicked": true,
+    "orderPlaced": false,
+    "ultimoHref": "https://cruzeirodosul.myvtex.com/checkout/#/shipping"
+  },
+  "causaRaiz": {
+    "resumo": "Após o clique em Continuar Inscrição no checkout, a página permaneceu em #/shipping e não navegou para orderPlaced (timeout 60s).",
+    "evidenciasContribuintes": [
+      "Na telemetria do Continuar (antes do Runner), o checkout/#/profile já exibia: 'A verificação expirou. Marque o campo novamente.' e 'Encontramos um problema no preenchimento...'",
+      "Gate Cart passou com itemCount=1 (carrinho OK) — falha não é CART_EMPTY",
+      "Runner preencheu profile/shipping e clicou Continuar Inscrição, mas o pedido não foi criado",
+      "Estado final do abort: ainda em checkout/#/shipping com entrega CEP 05001-200 visível"
+    ],
+    "hipotesePrincipal": "Bloqueio de submissão do checkout (reCAPTCHA/verificação expirada e/ou validação de campos) impedindo a criação do pedido — não é falha de Gate Cart nem de Stages.",
+    "foraDeEscopoDestaHomolog": "Nenhuma correção aplicada (pedido explícito)."
+  },
+  "artefatos": {
+    "log": "homolog-fresh-run.log",
+    "demoResult": "demo-result.json",
+    "continuarTelemetry": "continuar-telemetry.json"
+  }
+}

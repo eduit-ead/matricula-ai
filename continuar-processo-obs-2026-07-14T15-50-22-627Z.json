@@ -1,0 +1,384 @@
+{
+  "observedAt": "2026-07-14T15:50:22.626Z",
+  "orderId": "1646723959413",
+  "continuarProcesso": {
+    "novaAbaCriada": true,
+    "idNovaAba": "t483",
+    "urlInicial": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/",
+    "urlFinal": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/",
+    "tempoParaAbrirMs": 21764,
+    "tempoParaEstabilizarMs": 21765,
+    "tempoAteMinhasInscricoesMs": 21765,
+    "focoAutomatico": false,
+    "abaAntigaPermaneceuAberta": true,
+    "timestamps": {
+      "clique": "2026-07-14T15:49:47.651Z",
+      "tabCriada": "2026-07-14T15:50:09.415Z",
+      "primeiroLoad": "2026-07-14T15:50:09.415Z",
+      "urlFinal": "2026-07-14T15:50:09.416Z",
+      "minhasInscricoes": "2026-07-14T15:50:09.416Z"
+    },
+    "tabsBefore": [
+      {
+        "id": "t448",
+        "url": "https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646723959413",
+        "title": "Pedido realizado",
+        "type": "order_placed",
+        "blockPreview": "1. Pedido realizado [use: t448 tab: t448] https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646723959413 id: 8C0E2B595F36DE0C1A25F7D0766F172B"
+      },
+      {
+        "id": "t475",
+        "url": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=vc7l2xarn38n",
+        "title": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly",
+        "type": "recaptcha",
+        "blockPreview": "2. https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9"
+      },
+      {
+        "id": "t476",
+        "url": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=nbpa88tncuqk",
+        "title": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly",
+        "type": "recaptcha",
+        "blockPreview": "3. https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9"
+      },
+      {
+        "id": "t477",
+        "url": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CI2CobXC0pUDFZW5lQIdLaczjg;src=15055946;type=invmedia;cat=pagev0;rcb=16;ord=5659255630393;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=https%3A%2F%2Fcruzeirodosul.myvtex.com%2F_v%2Fsegment%2Fadmin-login%2Fv1%2Flogin%3FreturnUrl%3D%252F%253F;u8=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fcheckout%2ForderPlaced%2F%3Fog%3D1646723959413;u9=2026-07-14T12%3A49%3A23;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1v9222101548z89201853077za20gzb9201853077zd9201853077xea;gcd=13l3l3l3l1l1;dma=0;dc_fmt=2;tag_exp=115938465~115938468~118131809~118826209~118897920~118897930~119027224~119527019~119896803;epver=2;dc_random=1784044163_PbhNRCzA6TRWMujiVPPE_EfGmDeJmyD8rQ;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fcheckout%2ForderPlaced%2F%3Fog%3D1646723959413?",
+        "title": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CI2CobXC0pUDFZW5lQIdLaczjg;src=15055946;type=invmedia;cat=pagev0;r",
+        "type": "tracker",
+        "blockPreview": "4. https://15055946.fls.doubleclick.net/activityi;dc_pre=CI2CobXC0pUDFZW5lQIdLaczjg;src=15055946;type=invmedia;cat=pagev0;rcb=16;ord=5659255630393;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=htt"
+      },
+      {
+        "id": "t478",
+        "url": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CLmnrLXC0pUDFZyKlQIdOxAVug;src=16181466;type=audin0;cat=flaud0;rcb=10;ord=149844191521;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvtex.com;u4=undefined;u12=%2Fcheckout%2ForderPlaced%2F;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1v9238465408z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938468~118131809~118395334~118826209~118897920~118897930~119027224;epver=2;dc_random=1784044164_iKMY0e-ozCUWfTF453uVEQYARhUvN7GvVA;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fcheckout%2ForderPlaced%2F%3Fog%3D1646723959413?",
+        "title": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CLmnrLXC0pUDFZyKlQIdOxAVug;src=16181466;type=audin0;cat=flaud0;rcb",
+        "type": "tracker",
+        "blockPreview": "5. https://16181466.fls.doubleclick.net/activityi;dc_pre=CLmnrLXC0pUDFZyKlQIdOxAVug;src=16181466;type=audin0;cat=flaud0;rcb=10;ord=149844191521;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvte"
+      },
+      {
+        "id": "t479",
+        "url": "https://gum.criteo.com/syncframe?topUrl=cruzeirodosul.myvtex.com&amp;origin=onetag#{%22bundle%22:{%22identifierExtractor%22:{%22origin%22:3},%22value%22:%22U6LwMV9ZSVklMkZweUFZTHVsdlE2dXRZdGslMkY1cWRRMHZhT3dyUHVNOVRUbndUd1ppbnpaSFR2Yk1CTCUyRlZYamdqS05ESUtPeTJiQXB3MyUyRlgxMmlOc0dDcmUzc01INnVtaDZVT3RsREtHcUVRN3VRUkJDRHdzU1VZZk9MOGQlMkYwJTJGcEhkTmJsJTJGVCUyRjNFRlVWclI1eEhwZ2tvM0ZFVWlnJTNEJTNE%22},%22cw%22:true,%22optout%22:{%22identifierExtractor%22:{%22origin%22:0},%22value%22:null},%22origin%22:%22onetag%22,%22tld%22:%22myvtex.com%22,%22topUrl%22:%22cruzeirodosul.myvtex.com%22,%22version%22:%225_46_0%22,%22ifa%22:{%22identifierExtractor%22:{%22origin%22:0},%22value%22:null},%22lsw%22:true,%22pm%22:0,%22requestId%22:%22e1bf7a16-2afd-4e98-9a16-b41dd3f8cb7d%22}",
+        "title": "https://gum.criteo.com/syncframe?topUrl=cruzeirodosul.myvtex.com&amp;origin=onetag#{%22bundle%22:{%22identifierExtractor",
+        "type": "tracker",
+        "blockPreview": "6. https://gum.criteo.com/syncframe?topUrl=cruzeirodosul.myvtex.com&amp;origin=onetag#{%22bundle%22:{%22identifierExtractor%22:{%22origin%22:3},%22value%22:%22U6LwMV9ZSVklMkZweUFZTHVsdlE2dXRZdGslMkY1c"
+      },
+      {
+        "id": "t480",
+        "url": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CJ_307XC0pUDFVeVlQId3WIIHw;src=16181466;type=jorna001;cat=fljor0;rcb=10;qty=1;npa=0;auiddc=932056679.1783629420;u1=inscricao;u2=purchase;u3=cruzeirodosul.myvtex.com;u6=Virtual;u9=online;u10=GEST%C3%83O%20FINANCEIRA;u11=3648;u12=%2Fcheckout%2ForderPlaced%2F;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KAAC;gtm=45fe67a1v9238465408z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938468~118131809~118395334~118826209~118897920~118897930~119027224;epver=2;dc_random=1784044164_wt6w4t63MzfFkolsqxEW4W2dvjgS5ibKNw;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fcheckout%2ForderPlaced%2F%3Fog%3D1646723959413?",
+        "title": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CJ_307XC0pUDFVeVlQId3WIIHw;src=16181466;type=jorna001;cat=fljor0;r",
+        "type": "tracker",
+        "blockPreview": "7. https://16181466.fls.doubleclick.net/activityi;dc_pre=CJ_307XC0pUDFVeVlQId3WIIHw;src=16181466;type=jorna001;cat=fljor0;rcb=10;qty=1;npa=0;auiddc=932056679.1783629420;u1=inscricao;u2=purchase;u3=cru"
+      },
+      {
+        "id": "t457",
+        "url": "https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1",
+        "title": "https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.c",
+        "type": "service_worker",
+        "blockPreview": "8. https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1 [use: t457 tab: t457] https://gtm.cruzeirodosulvirtual.com.br/"
+      },
+      {
+        "id": "t341",
+        "url": "https://cruzeirodosul.myvtex.com/graduacao",
+        "title": "Graduação - Cruzeiro do Sul Virtual",
+        "type": "myvtex_content",
+        "blockPreview": "9. Graduação - Cruzeiro do Sul Virtual [use: t341 tab: t341] https://cruzeirodosul.myvtex.com/graduacao id: F97281BBBAABFC0E195E76F869E2EEBC"
+      },
+      {
+        "id": "t384",
+        "url": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CIn6656w0pUDFbFR3QId7gEbkQ;src=16181466;type=audin0;cat=flaud0;rcb=7;ord=5369900396096;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvtex.com;u4=undefined;u12=%2Fgraduacao;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1h1v9238465408z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938466~115938469~118131809~118826210~118897920~118897930~119027224;epver=2;dc_random=1784039285_Dw_8p5rTg_TNX_ICIuDHt2Xv_8ePbyKO7Q;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fgraduacao?",
+        "title": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CIn6656w0pUDFbFR3QId7gEbkQ;src=16181466;type=audin0;cat=flaud0;rcb",
+        "type": "tracker",
+        "blockPreview": "10. https://16181466.fls.doubleclick.net/activityi;dc_pre=CIn6656w0pUDFbFR3QId7gEbkQ;src=16181466;type=audin0;cat=flaud0;rcb=7;ord=5369900396096;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvt"
+      },
+      {
+        "id": "t389",
+        "url": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CP-cr5-w0pUDFftO3QIdm5QOow;src=15055946;type=invmedia;cat=pagev0;rcb=19;ord=3544238601759;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=https%3A%2F%2Fcruzeirodosul.myvtex.com%2F_v%2Fsegment%2Fadmin-login%2Fv1%2Flogin%3FreturnUrl%3D%252F%253F;u8=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fgraduacao;u9=2026-07-14T11%3A28%3A06;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1h1v9222101548z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115616985~115938466~115938468~118131809~118826210~118897920~118897930~119027224~119773332;epver=2;dc_random=1784039286_S85ZGiTJjT32AKDG26VlH-KYiR82GfWCkQ;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Fgraduacao?",
+        "title": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CP-cr5-w0pUDFftO3QIdm5QOow;src=15055946;type=invmedia;cat=pagev0;r",
+        "type": "tracker",
+        "blockPreview": "11. https://15055946.fls.doubleclick.net/activityi;dc_pre=CP-cr5-w0pUDFftO3QIdm5QOow;src=15055946;type=invmedia;cat=pagev0;rcb=19;ord=3544238601759;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=ht"
+      },
+      {
+        "id": "t449",
+        "url": "https://www.google.com/recaptcha/enterprise/anchor?ar=2&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=gbmpt3dku2pv",
+        "title": "https://www.google.com/recaptcha/enterprise/anchor?ar=2&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly",
+        "type": "recaptcha",
+        "blockPreview": "12. https://www.google.com/recaptcha/enterprise/anchor?ar=2&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H"
+      },
+      {
+        "id": "t450",
+        "url": "https://www.google.com/recaptcha/enterprise/anchor?ar=2&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=s026ey4j28mx",
+        "title": "https://www.google.com/recaptcha/enterprise/anchor?ar=2&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly",
+        "type": "recaptcha",
+        "blockPreview": "13. https://www.google.com/recaptcha/enterprise/anchor?ar=2&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H"
+      },
+      {
+        "id": "t386",
+        "url": "https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1",
+        "title": "https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.c",
+        "type": "service_worker",
+        "blockPreview": "14. https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1 [use: t386 tab: t386] https://gtm.cruzeirodosulvirtual.com.br"
+      },
+      {
+        "id": "t359",
+        "url": "https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw.js?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com",
+        "title": "Service Worker https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw.js?origin=https%3A%2F%2Fcruzeirodosul.my",
+        "type": "service_worker",
+        "blockPreview": "15. Service Worker https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw.js?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com [use: t359 tab: t359] https://gtm.cruzeirodosulvirtual.com.br/_/"
+      },
+      {
+        "id": "t171",
+        "url": "https://cruzeirodosul.myvtex.com/serviceWorkerMerged.js",
+        "title": "Service Worker https://cruzeirodosul.myvtex.com/serviceWorkerMerged.js",
+        "type": "service_worker",
+        "blockPreview": "16. Service Worker https://cruzeirodosul.myvtex.com/serviceWorkerMerged.js [use: t171 tab: t171] https://cruzeirodosul.myvtex.com/serviceWorkerMerged.js id: 8F2631584556AE02123A5CDC99FFC318"
+      },
+      {
+        "id": "t451",
+        "url": "",
+        "title": "(untitled)",
+        "type": "blank_or_unknown",
+        "blockPreview": "17. (untitled) [use: t451 tab: t451] id: B0F46B9690F8FDD6BA8C3CFE92D8EB0D"
+      },
+      {
+        "id": "t452",
+        "url": "",
+        "title": "(untitled)",
+        "type": "blank_or_unknown",
+        "blockPreview": "18. (untitled) [use: t452 tab: t452] id: 7F8919C8F968AF742787DCF87DF5E912"
+      },
+      {
+        "id": "t481",
+        "url": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i",
+        "title": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i",
+        "type": "recaptcha",
+        "blockPreview": "19. https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i [use: t481 tab: t481] https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&v=rL1ELi"
+      },
+      {
+        "id": "t482",
+        "url": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i",
+        "title": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i",
+        "type": "recaptcha",
+        "blockPreview": "20. https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i [use: t482 tab: t482] https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&v=rL1ELi"
+      }
+    ],
+    "tabsAfterNew": [
+      {
+        "id": "t484",
+        "url": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CNLynsTC0pUDFb6ilQIdsP0ndQ;src=16181466;type=audin0;cat=flaud0;rcb=16;ord=4362417864881;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvtex.com;u4=undefined;u12=%2Faccount;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1v9238465408z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118826209~118897920~118897930~119027224~119724321;epver=2;dc_random=1784044195_DtOM8htuOmDrdgZ9I0eGgU5qKGDqcF3pug;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount?",
+        "title": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CNLynsTC0pUDFb6ilQIdsP0ndQ;src=16181466;type=audin0;cat=flaud0;rcb",
+        "type": "tracker",
+        "blockPreview": "1. https://16181466.fls.doubleclick.net/activityi;dc_pre=CNLynsTC0pUDFb6ilQIdsP0ndQ;src=16181466;type=audin0;cat=flaud0;rcb=16;ord=4362417864881;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvt"
+      },
+      {
+        "id": "t485",
+        "url": "https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1",
+        "title": "https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.c",
+        "type": "service_worker",
+        "blockPreview": "2. https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1 [use: t485 tab: t485] https://gtm.cruzeirodosulvirtual.com.br/"
+      },
+      {
+        "id": "t486",
+        "url": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LeRg9AnAAAAAG_xhOF_fAty2HCEKGEGOdqo58O9&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=c6b8zghromty",
+        "title": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LeRg9AnAAAAAG_xhOF_fAty2HCEKGEGOdqo58O9&amp;co=aHR0cHM6Ly",
+        "type": "recaptcha",
+        "blockPreview": "3. https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LeRg9AnAAAAAG_xhOF_fAty2HCEKGEGOdqo58O9&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9"
+      },
+      {
+        "id": "t487",
+        "url": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=8pbjb428g9z0",
+        "title": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly",
+        "type": "recaptcha",
+        "blockPreview": "4. https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9"
+      },
+      {
+        "id": "t488",
+        "url": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CPD5zcTC0pUDFaFeuAQdc3kiVA;src=15055946;type=invmedia;cat=pagev0;rcb=18;ord=8613708817873;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=https%3A%2F%2Fcruzeirodosul.myvtex.com%2F_v%2Fsegment%2Fadmin-login%2Fv1%2Flogin%3FreturnUrl%3D%252F%253F;u8=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount;u9=2026-07-14T12%3A49%3A56;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1v9222101548z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118395333~118826210~118897920~118897930~119027224~119724321;epver=2;dc_random=1784044196_Z42O4zQnqfqZ3aTEETeQruXYh_KmNOaVsA;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount?",
+        "title": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CPD5zcTC0pUDFaFeuAQdc3kiVA;src=15055946;type=invmedia;cat=pagev0;r",
+        "type": "tracker",
+        "blockPreview": "5. https://15055946.fls.doubleclick.net/activityi;dc_pre=CPD5zcTC0pUDFaFeuAQdc3kiVA;src=15055946;type=invmedia;cat=pagev0;rcb=18;ord=8613708817873;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=htt"
+      },
+      {
+        "id": "t489",
+        "url": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CICjwsTC0pUDFea4lQIdiNMksQ;src=15055946;type=invmedia;cat=pagev0;rcb=18;ord=1887724154545;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=https%3A%2F%2Fcruzeirodosul.myvtex.com%2F_v%2Fsegment%2Fadmin-login%2Fv1%2Flogin%3FreturnUrl%3D%252F%253F;u8=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount;u9=2026-07-14T12%3A49%3A55;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1v9222101548z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118395333~118826210~118897920~118897930~119027224~119724321;epver=2;dc_random=1784044195_Owfqacw3dOsWB1fuc1Atf1ZqnEzrpBdPzw;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount?",
+        "title": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CICjwsTC0pUDFea4lQIdiNMksQ;src=15055946;type=invmedia;cat=pagev0;r",
+        "type": "tracker",
+        "blockPreview": "6. https://15055946.fls.doubleclick.net/activityi;dc_pre=CICjwsTC0pUDFea4lQIdiNMksQ;src=15055946;type=invmedia;cat=pagev0;rcb=18;ord=1887724154545;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=htt"
+      },
+      {
+        "id": "t483",
+        "url": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/",
+        "title": "Pós-graduação EAD | Cruzeiro do Sul Virtual",
+        "type": "minhas_inscricoes",
+        "blockPreview": "7. Pós-graduação EAD | Cruzeiro do Sul Virtual [use: t483 tab: t483] https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/ id: DB16DCACE584C9C9649DE3E657BE85EB"
+      },
+      {
+        "id": "t490",
+        "url": "https://gum.criteo.com/syncframe?topUrl=cruzeirodosul.myvtex.com&amp;origin=onetag#{%22bundle%22:{%22identifierExtractor%22:{%22origin%22:3},%22value%22:%22n78K8l9ZSVklMkZweUFZTHVsdlE2dXRZdGslMkY1am03c2UlMkJiMk10Z3dFZGRFMlVYUWtQSHRvdjBwbW9acjJLSXNKNkxsRHpUQnhuZHpYcHFkSFA4T25tanRWUXFXOXBkeVg5UmJBQWhIaDY5YWNuM3k4QU9yMjdKJTJCMkdWSXhNQ0o4UXBXbDhIVWF6SyUyRldSMCUyQnlxV2tyS2NYb2VhOEElM0QlM0Q%22},%22cw%22:true,%22optout%22:{%22identifierExtractor%22:{%22origin%22:0},%22value%22:null},%22origin%22:%22onetag%22,%22tld%22:%22myvtex.com%22,%22topUrl%22:%22cruzeirodosul.myvtex.com%22,%22version%22:%225_46_0%22,%22ifa%22:{%22identifierExtractor%22:{%22origin%22:0},%22value%22:null},%22lsw%22:true,%22pm%22:0,%22requestId%22:%229c04b5c8-35bd-41a4-b1e9-3950bd7bfb56%22}",
+        "title": "https://gum.criteo.com/syncframe?topUrl=cruzeirodosul.myvtex.com&amp;origin=onetag#{%22bundle%22:{%22identifierExtractor",
+        "type": "tracker",
+        "blockPreview": "8. https://gum.criteo.com/syncframe?topUrl=cruzeirodosul.myvtex.com&amp;origin=onetag#{%22bundle%22:{%22identifierExtractor%22:{%22origin%22:3},%22value%22:%22n78K8l9ZSVklMkZweUFZTHVsdlE2dXRZdGslMkY1a"
+      },
+      {
+        "id": "t491",
+        "url": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i",
+        "title": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i",
+        "type": "recaptcha",
+        "blockPreview": "22. https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i [use: t491 tab: t491] https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&v=rL1ELi"
+      },
+      {
+        "id": "t492",
+        "url": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i",
+        "title": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i",
+        "type": "recaptcha",
+        "blockPreview": "24. https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i [use: t492 tab: t492] https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&v=rL1ELi"
+      }
+    ],
+    "urlSeries": [
+      {
+        "tMs": 21764,
+        "url": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/",
+        "type": "minhas_inscricoes"
+      }
+    ],
+    "timeline": [
+      {
+        "tMs": 6616,
+        "wall": "2026-07-14T15:49:54.267Z",
+        "event": "CLICK_DONE",
+        "hrefBeforeClick": "https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646723959413",
+        "focusedTabBefore": "t448"
+      },
+      {
+        "tMs": 21764,
+        "wall": "2026-07-14T15:50:09.415Z",
+        "event": "TAB_CREATED",
+        "tabId": "t483",
+        "url": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/",
+        "type": "minhas_inscricoes",
+        "allNew": [
+          {
+            "id": "t484",
+            "type": "tracker",
+            "url": "https://16181466.fls.doubleclick.net/activityi;dc_pre=CNLynsTC0pUDFb6ilQIdsP0ndQ;src=16181466;type=audin0;cat=flaud0;rcb=16;ord=4362417864881;npa=0;auiddc=932056679.1783629420;u3=cruzeirodosul.myvtex.com;u4=undefined;u12=%2Faccount;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1v9238465408z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118826209~118897920~118897930~119027224~119724321;epver=2;dc_random=1784044195_DtOM8htuOmDrdgZ9I0eGgU5qKGDqcF3pug;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount?"
+          },
+          {
+            "id": "t485",
+            "type": "service_worker",
+            "url": "https://gtm.cruzeirodosulvirtual.com.br/_/service_worker/66u0/sw_iframe.html?origin=https%3A%2F%2Fcruzeirodosul.myvtex.com&amp;1p=1"
+          },
+          {
+            "id": "t486",
+            "type": "recaptcha",
+            "url": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LeRg9AnAAAAAG_xhOF_fAty2HCEKGEGOdqo58O9&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=c6b8zghromty"
+          },
+          {
+            "id": "t487",
+            "type": "recaptcha",
+            "url": "https://www.google.com/recaptcha/enterprise/anchor?ar=1&amp;k=6LdV7CIpAAAAAPUrHXWlFArQ5hSiNQJk6Ja-vcYM&amp;co=aHR0cHM6Ly9jcnV6ZWlyb2Rvc3VsLm15dnRleC5jb206NDQz&amp;hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=8pbjb428g9z0"
+          },
+          {
+            "id": "t488",
+            "type": "tracker",
+            "url": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CPD5zcTC0pUDFaFeuAQdc3kiVA;src=15055946;type=invmedia;cat=pagev0;rcb=18;ord=8613708817873;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=https%3A%2F%2Fcruzeirodosul.myvtex.com%2F_v%2Fsegment%2Fadmin-login%2Fv1%2Flogin%3FreturnUrl%3D%252F%253F;u8=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount;u9=2026-07-14T12%3A49%3A56;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1v9222101548z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118395333~118826210~118897920~118897930~119027224~119724321;epver=2;dc_random=1784044196_Z42O4zQnqfqZ3aTEETeQruXYh_KmNOaVsA;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount?"
+          },
+          {
+            "id": "t489",
+            "type": "tracker",
+            "url": "https://15055946.fls.doubleclick.net/activityi;dc_pre=CICjwsTC0pUDFea4lQIdiNMksQ;src=15055946;type=invmedia;cat=pagev0;rcb=18;ord=1887724154545;npa=0;auiddc=932056679.1783629420;u1=page_view;u7=https%3A%2F%2Fcruzeirodosul.myvtex.com%2F_v%2Fsegment%2Fadmin-login%2Fv1%2Flogin%3FreturnUrl%3D%252F%253F;u8=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount;u9=2026-07-14T12%3A49%3A55;uaa=x86;uab=64;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.101%7CGoogle%2520Chrome%3B150.0.7871.101;uamb=0;uam=;uap=Windows;uapv=10.0.0;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe67a1v9222101548z89201853077za20gzb9201853077zd9201853077xea;gcs=G1--;gcd=13l3l3R3l5l1;dma=0;dc_fmt=2;tag_exp=115938465~115938469~118131809~118395333~118826210~118897920~118897930~119027224~119724321;epver=2;dc_random=1784044195_Owfqacw3dOsWB1fuc1Atf1ZqnEzrpBdPzw;_dc_test=1;~oref=https%3A%2F%2Fcruzeirodosul.myvtex.com%2Faccount?"
+          },
+          {
+            "id": "t483",
+            "type": "minhas_inscricoes",
+            "url": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/"
+          },
+          {
+            "id": "t490",
+            "type": "tracker",
+            "url": "https://gum.criteo.com/syncframe?topUrl=cruzeirodosul.myvtex.com&amp;origin=onetag#{%22bundle%22:{%22identifierExtractor%22:{%22origin%22:3},%22value%22:%22n78K8l9ZSVklMkZweUFZTHVsdlE2dXRZdGslMkY1am03c2UlMkJiMk10Z3dFZGRFMlVYUWtQSHRvdjBwbW9acjJLSXNKNkxsRHpUQnhuZHpYcHFkSFA4T25tanRWUXFXOXBkeVg5UmJBQWhIaDY5YWNuM3k4QU9yMjdKJTJCMkdWSXhNQ0o4UXBXbDhIVWF6SyUyRldSMCUyQnlxV2tyS2NYb2VhOEElM0QlM0Q%22},%22cw%22:true,%22optout%22:{%22identifierExtractor%22:{%22origin%22:0},%22value%22:null},%22origin%22:%22onetag%22,%22tld%22:%22myvtex.com%22,%22topUrl%22:%22cruzeirodosul.myvtex.com%22,%22version%22:%225_46_0%22,%22ifa%22:{%22identifierExtractor%22:{%22origin%22:0},%22value%22:null},%22lsw%22:true,%22pm%22:0,%22requestId%22:%229c04b5c8-35bd-41a4-b1e9-3950bd7bfb56%22}"
+          },
+          {
+            "id": "t491",
+            "type": "recaptcha",
+            "url": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i"
+          },
+          {
+            "id": "t492",
+            "type": "recaptcha",
+            "url": "https://www.google.com/recaptcha/enterprise/webworker.js?hl=pt-BR&amp;v=rL1ELiQAg1kPezz6_H9hTZ_i"
+          }
+        ]
+      },
+      {
+        "tMs": 21764,
+        "wall": "2026-07-14T15:50:09.415Z",
+        "event": "FIRST_LOAD",
+        "tabId": "t483",
+        "url": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/"
+      },
+      {
+        "tMs": 21765,
+        "wall": "2026-07-14T15:50:09.416Z",
+        "event": "MINHAS_INSCRICOES_SEEN",
+        "tabId": "t483",
+        "url": "https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/"
+      },
+      {
+        "tMs": 28332,
+        "wall": "2026-07-14T15:50:15.983Z",
+        "event": "FOCUS_AUTO_FINAL",
+        "focusChangedAuto": false,
+        "hrefNow": "https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646723959413"
+      }
+    ],
+    "note": "Observação only — nenhuma aba foi focada automaticamente pelo harness"
+  },
+  "runnerMetrics": [
+    {
+      "runner": "start",
+      "ms": 26771,
+      "sec": 27,
+      "browserCalls": 4
+    },
+    {
+      "runner": "Auth",
+      "ms": 33846,
+      "sec": 34,
+      "browserCalls": 4
+    },
+    {
+      "runner": "Search/PDP",
+      "ms": 89588,
+      "sec": 90,
+      "browserCalls": 9
+    },
+    {
+      "runner": "Lead",
+      "ms": 49118,
+      "sec": 49,
+      "browserCalls": 7
+    },
+    {
+      "runner": "Offer",
+      "ms": 119370,
+      "sec": 119,
+      "browserCalls": 18
+    },
+    {
+      "runner": "Continuar(PDP)",
+      "ms": 45173,
+      "sec": 45,
+      "browserCalls": 6
+    },
+    {
+      "runner": "Cart Gate",
+      "ms": 7849,
+      "sec": 8,
+      "browserCalls": 1
+    },
+    {
+      "runner": "Checkout",
+      "ms": 113903,
+      "sec": 114,
+      "browserCalls": 16
+    }
+  ]
+}

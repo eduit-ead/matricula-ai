@@ -1,0 +1,109 @@
+{
+  "id": "lead-pdp",
+  "version": 1,
+  "description": "Lead form on product page — fill and validate only; do not advance funnel",
+  "execution": {
+    "writeBackend": "accessibilityFill",
+    "note": "Production default (reliable). Target = pluggable trusted low-RT backend via Write Engine without changing this stage's business fields."
+  },
+  "preconditions": {
+    "requireVisibleInputNameAny": ["completeName", "email", "cellphone"]
+  },
+  "anchor": {
+    "strategy": "buttonText",
+    "match": { "equalsIgnoreCaseAny": ["Inscreva-se", "Carregando..."] },
+    "excludeTag": "a",
+    "fallbackCssIncludes": ["cta_p1", "purchase-box"]
+  },
+  "fields": [
+    {
+      "key": "nome",
+      "control": "text",
+      "locate": {
+        "strategies": [
+          { "type": "labelText", "includesAny": ["nome completo", "nome"] },
+          { "type": "placeholder", "includesAny": ["nome"] },
+          { "type": "ariaLabel", "includesAny": ["nome"] },
+          { "type": "attrName", "equalsAny": ["completeName"] }
+        ],
+        "preferNearAnchor": true,
+        "penalizePlaceholderIncludes": ["example@mail.com"]
+      },
+      "write": { "mode": "reactSafeSet", "normalize": ["trim", "titleCase"] },
+      "validate": [
+        { "rule": "nonEmpty" },
+        { "rule": "minWords", "count": 2 },
+        { "rule": "equalsNormalized" }
+      ]
+    },
+    {
+      "key": "email",
+      "control": "text",
+      "locate": {
+        "strategies": [
+          { "type": "labelText", "includesAny": ["e-mail", "email"] },
+          { "type": "inputType", "equals": "email" },
+          { "type": "placeholder", "includesAny": ["e-mail", "email"] },
+          { "type": "attrName", "equalsAny": ["email"] }
+        ],
+        "preferNearAnchor": true,
+        "penalizePlaceholderIncludes": ["example@mail.com"]
+      },
+      "write": { "mode": "reactSafeSet", "normalize": ["trim", "lowerCase"] },
+      "validate": [
+        { "rule": "nonEmpty" },
+        { "rule": "emailFormat" },
+        { "rule": "equalsNormalized" }
+      ]
+    },
+    {
+      "key": "telefone",
+      "control": "text",
+      "locate": {
+        "strategies": [
+          { "type": "labelText", "includesAny": ["telefone", "celular"] },
+          { "type": "inputType", "equals": "tel" },
+          { "type": "placeholder", "includesAny": ["telefone"] },
+          { "type": "attrName", "equalsAny": ["cellphone", "phone", "tel"] }
+        ],
+        "preferNearAnchor": true
+      },
+      "write": { "mode": "reactSafeSet", "normalize": ["trim", "digitsOnly"] },
+      "validate": [
+        { "rule": "minDigits", "count": 10 },
+        { "rule": "endsWithLastDigits", "count": 8 }
+      ]
+    }
+  ],
+  "checkboxes": [
+    {
+      "key": "aceite",
+      "locate": {
+        "strategies": [
+          {
+            "type": "labelText",
+            "includesAny": ["política de privacidade", "autorizo", "lgpd", "privacidade"]
+          }
+        ],
+        "preferNearAnchor": true,
+        "fallbackClosestToAnchor": true
+      },
+      "write": { "mode": "ensureChecked" },
+      "validate": [{ "rule": "isChecked" }]
+    }
+  ],
+  "selects": [],
+  "success": {
+    "allFieldsValid": true,
+    "allCheckboxesValid": true
+  },
+  "onSuccessSuggest": "click_inscreva_se",
+  "onFailureSuggest": {
+    "NOT_ON_STAGE": "abort_wrong_screen",
+    "ANCHOR_NOT_FOUND": "abort_wrong_screen",
+    "NOT_FOUND": "abort_lead_not_on_page",
+    "NOT_ACCEPTED": "retry_stage_or_ask_human",
+    "INVALID_INPUT": "ask_human_data",
+    "default": "retry_stage_or_ask_human"
+  }
+}

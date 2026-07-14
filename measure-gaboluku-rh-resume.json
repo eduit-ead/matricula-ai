@@ -1,0 +1,24 @@
+{
+  "ok": false,
+  "reason": "empty cart",
+  "aborted": null,
+  "metrics": {
+    "totalElapsedSec": 43
+  },
+  "log": [
+    {
+      "t": 8,
+      "step": "PHASE",
+      "msg": "checkout"
+    },
+    {
+      "t": 43,
+      "step": "CHECKOUT_PROFILE",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/checkout/#/cart\",\"emptyCart\":true,\"hasProfile\":true,\"text\":\"Ambiente seguro\\nMeu Carrinho\\nSeu carrinho está vazio.\\nEscolher produtos\\nAmbiente seguro\\nCondições Comerciais:\\nabrir todas as condições vigentes\\n*Para a Graduação EAD 100% on-line, as matrículas serão isentas nas seguintes formas de ingresso: Segunda Graduação, Segunda Graduação 2,0, R2, Pedagogia para Licenciados e Transferência. Já para as demais, a taxa de matrícula será de R$ 49.\\nCampus Virtual\"}"
+    },
+    {
+      "t": 43,
+      "step": "CART_EMPTY"
+    }
+  ]
+}

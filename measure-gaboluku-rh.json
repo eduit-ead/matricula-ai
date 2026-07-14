@@ -1,0 +1,167 @@
+{
+  "ok": false,
+  "lead": {
+    "success": true,
+    "confidence": 1,
+    "errors": [],
+    "valuesFound": {
+      "nome": "Gabriel Lkonte",
+      "email": "gaboluku@gmail.com",
+      "telefone": "(11) 98712-4916",
+      "aceite": true
+    },
+    "nextActionSuggested": "click_inscreva_se",
+    "stageId": "lead-pdp",
+    "version": 1,
+    "browserCalls": 4,
+    "elapsedMs": 26987,
+    "diagnostics": {
+      "strategiesUsed": {
+        "nome": [
+          "accessibilitySnapshot",
+          "nome"
+        ],
+        "email": [
+          "accessibilitySnapshot",
+          "email"
+        ],
+        "telefone": [
+          "accessibilitySnapshot",
+          "telefone"
+        ],
+        "aceite": [
+          "accessibilitySnapshot"
+        ]
+      },
+      "fillRefs": [
+        "e19",
+        "e20",
+        "e21"
+      ],
+      "checkRef": "e22",
+      "writeBackend": "accessibilityFill"
+    }
+  },
+  "aborted": {
+    "reason": "TOTAL_TIMEOUT",
+    "phase": "checkout",
+    "totalMs": 421151
+  },
+  "metrics": {
+    "totalElapsedSec": 423,
+    "totalBrowserToolCalls": 51,
+    "humanInterventions": 0
+  },
+  "log": [
+    {
+      "t": 16,
+      "step": "FOCUS",
+      "msg": "t1"
+    },
+    {
+      "t": 22,
+      "step": "WHERE",
+      "href": "https://cruzeirodosul.myvtex.com/grad-gestao-de-recursos-humanos-cruzeiro-do-sul-virtual/p",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/grad-gestao-de-recursos-humanos-cruzeiro-do-sul-virtual/p\",\"hasEntrar\":false,\"ola\":true}"
+    },
+    {
+      "t": 22,
+      "step": "PHASE",
+      "msg": "login"
+    },
+    {
+      "t": 38,
+      "step": "NAV_GRADUACAO"
+    },
+    {
+      "t": 49,
+      "step": "PHASE",
+      "msg": "search_pdp"
+    },
+    {
+      "t": 81,
+      "step": "FOCUS",
+      "msg": "t1"
+    },
+    {
+      "t": 87,
+      "step": "PDP",
+      "href": "https://cruzeirodosul.myvtex.com/grad-gestao-de-recursos-humanos-cruzeiro-do-sul-virtual/p"
+    },
+    {
+      "t": 87,
+      "step": "PHASE",
+      "msg": "wait_lead"
+    },
+    {
+      "t": 94,
+      "step": "WAIT_LEAD",
+      "msg": "{\"ready\":true,\"hasLead\":true,\"btnText\":\"Inscreva-se\"}"
+    },
+    {
+      "t": 94,
+      "step": "PHASE",
+      "msg": "lead"
+    },
+    {
+      "t": 94,
+      "step": "STAGE_LEAD_START"
+    },
+    {
+      "t": 121,
+      "step": "STAGE_LEAD_DONE",
+      "msg": "{\"success\":true,\"ms\":26987,\"calls\":4,\"backend\":\"accessibilityFill\",\"values\":{\"nome\":\"Gabriel Lkonte\",\"email\":\"gaboluku@gmail.com\",\"telefone\":\"(11) 98712-4916\",\"aceite\":true},\"errors\":[]}"
+    },
+    {
+      "t": 134,
+      "step": "AGENT_CTA"
+    },
+    {
+      "t": 148,
+      "step": "VALIDATE_POLO",
+      "msg": "{\"hasPolo\":true}"
+    },
+    {
+      "t": 148,
+      "step": "PHASE",
+      "msg": "polo"
+    },
+    {
+      "t": 224,
+      "step": "POLO",
+      "msg": "São Paulo - Freguesia do Ó (Moinho Velho) - SP - UNIVERSIDADE CIDADE DE SÃO PAULO"
+    },
+    {
+      "t": 286,
+      "step": "PHASE",
+      "msg": "checkout"
+    },
+    {
+      "t": 304,
+      "step": "CHECKOUT_PROFILE",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/checkout/#/profile\",\"emptyCart\":false,\"hasProfile\":true}"
+    },
+    {
+      "t": 415,
+      "step": "ORDER",
+      "href": "https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646273951589",
+      "msg": "Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\ngaboluku\nCursos\nEstude com a gente\nBenefícios\nA Cruzeiro do Sul Virtua"
+    }
+  ],
+  "data": {
+    "email": "gaboluku@gmail.com",
+    "cursoQuery": "Gestão de recursos humanos",
+    "nome": "Gabriel Lkonte",
+    "telefone": "11987124916",
+    "cep": "05001200",
+    "estado": "São Paulo",
+    "cidade": "São Paulo",
+    "poloPrefix": "São Paulo - Freguesia",
+    "first": "Gabriel",
+    "last": "Lkonte",
+    "cpf": "41018624007",
+    "birth": "1999-09-09",
+    "ingresso": "Vestibular Múltipla Escolha",
+    "necessidade": "Não necessito de condições especiais"
+  }
+}

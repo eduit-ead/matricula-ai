@@ -1,0 +1,204 @@
+{
+  "ok": true,
+  "architecture": "browser-transaction-runtime",
+  "stage": "lead-pdp",
+  "lead": {
+    "result": {
+      "ok": true,
+      "success": true,
+      "confidence": 1,
+      "errors": [],
+      "values": {
+        "nome": "Gabo Loko Pedreira",
+        "email": "gaboloko@gmail.com",
+        "telefone": "(11) 98712-4916",
+        "aceite": true
+      },
+      "valuesFound": {
+        "nome": "Gabo Loko Pedreira",
+        "email": "gaboloko@gmail.com",
+        "telefone": "(11) 98712-4916",
+        "aceite": true
+      },
+      "nextActionSuggested": "click_inscreva_se",
+      "elapsedMs": 26202,
+      "browserCalls": 4,
+      "stage": "done",
+      "path": "transaction-runtime",
+      "stageId": "lead-pdp",
+      "diagnostics": {
+        "writeBackend": "accessibilityFill",
+        "strategiesUsed": {
+          "nome": [
+            "accessibilitySnapshot",
+            "nome"
+          ],
+          "email": [
+            "accessibilitySnapshot",
+            "email"
+          ],
+          "telefone": [
+            "accessibilitySnapshot",
+            "telefone"
+          ],
+          "aceite": [
+            "accessibilitySnapshot"
+          ]
+        },
+        "fillRefs": [
+          "e21",
+          "e22",
+          "e23"
+        ],
+        "checkRef": "e24"
+      }
+    },
+    "elapsedMs": 26202,
+    "browserToolCalls": 4
+  },
+  "metrics": {
+    "leadMs": 26202,
+    "leadBrowserToolCalls": 4,
+    "totalBrowserToolCalls": 25,
+    "humanInterventions": 0,
+    "totalElapsedSec": 231
+  },
+  "verdict": {
+    "leadArchitectureWorks": true,
+    "ctaAdvancedToPolo": true,
+    "writeBackend": "accessibilityFill",
+    "oneEvaluateWriteBlockedByReact": true,
+    "note": "Lead stage success + agent CTA → hasPolo=true, 0 human interventions on lead. Pure evaluate write fills DOM but submit rejects (esp. type=email). Full funnel Continuação after lead is agent-owned; this run's later Continuar/cart had separate issues."
+  },
+  "comparison": {
+    "prevHelperLeadMs": 21800,
+    "prevHelperBrowserCallsApprox": 3,
+    "thisLeadMs": 26202,
+    "thisLeadBrowserCalls": 4,
+    "deltaLeadMs": -4402,
+    "humanInterventionsLead": 0
+  },
+  "data": {
+    "email": "gaboloko@gmail.com",
+    "nome": "Gabo Loko Pedreira",
+    "telefone": "11987124916",
+    "cep": "05001200",
+    "estado": "São Paulo",
+    "cidade": "São Paulo",
+    "first": "Gabo",
+    "last": "Loko",
+    "cpf": "50928152057",
+    "birth": "1999-09-09",
+    "nomeNormalized": "Gabo Loko Pedreira"
+  },
+  "log": [
+    {
+      "t": 7,
+      "step": "FOCUS"
+    },
+    {
+      "t": 13,
+      "step": "WHERE",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p\",\"ola\":true,\"hasEntrar\":false}"
+    },
+    {
+      "t": 36,
+      "step": "NAV_PDP",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p"
+    },
+    {
+      "t": 42,
+      "step": "WAIT_LEAD_READY",
+      "msg": "{\"hasLead\":true,\"btnText\":\"Inscreva-se\"}"
+    },
+    {
+      "t": 42,
+      "step": "LEAD_TX_START",
+      "msg": "{\"stageId\":\"lead-pdp\",\"nome\":\"Gabo Loko Pedreira\",\"email\":\"gaboloko@gmail.com\",\"telefone\":\"11987124916\"}"
+    },
+    {
+      "t": 68,
+      "step": "LEAD_TX_DONE",
+      "msg": "{\"success\":true,\"confidence\":1,\"elapsedMs\":26202,\"browserCalls\":4,\"valuesFound\":{\"nome\":\"Gabo Loko Pedreira\",\"email\":\"gaboloko@gmail.com\",\"telefone\":\"(11) 98712-4916\",\"aceite\":true},\"errors\":[],\"nextActionSuggested\":\"click_inscreva_se\"}"
+    },
+    {
+      "t": 80,
+      "step": "AGENT_CTA",
+      "msg": "{\"ok\":true,\"via\":\"snapshot-click\",\"ref\":\"e25\",\"out\":\"clicked ref e25 on https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencia\"} cli=12212ms"
+    },
+    {
+      "t": 94,
+      "step": "AGENT_VALIDATE_POLO",
+      "msg": "{\"hasPolo\":true}"
+    },
+    {
+      "t": 173,
+      "step": "POLO",
+      "msg": "NOT_FOUND"
+    },
+    {
+      "t": 231,
+      "step": "CHECKOUT",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p"
+    }
+  ],
+  "continuation": {
+    "log": [
+      {
+        "t": 13,
+        "step": "WHERE",
+        "msg": "{\n  \"href\": \"https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p\",\n  \"text\": \"Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\\nGabo Loko\\nCursos\\nEstude com a gente\\nBenefícios\\nA Cruzeiro do Sul Virtual\\n\\nSou Aluno\\n\\nOlá, Gabo\\n0\\nDiferenciais Cruzeiro do Su"
+      },
+      {
+        "t": 25,
+        "step": "PAIS"
+      },
+      {
+        "t": 38,
+        "step": "CEP"
+      },
+      {
+        "t": 51,
+        "step": "ESTADO"
+      },
+      {
+        "t": 64,
+        "step": "CIDADE"
+      },
+      {
+        "t": 83,
+        "step": "POLO",
+        "msg": "São Paulo - Freguesia do Ó (Moinho Velho) - SP - UNIVERSIDADE CIDADE DE SÃO PAULO"
+      },
+      {
+        "t": 96,
+        "step": "VER_COND"
+      },
+      {
+        "t": 114,
+        "step": "INGRESSO"
+      },
+      {
+        "t": 134,
+        "step": "NEC"
+      },
+      {
+        "t": 146,
+        "step": "CONTINUAR"
+      },
+      {
+        "t": 161,
+        "step": "CHECKOUT",
+        "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p"
+      }
+    ],
+    "elapsedSec": 161
+  },
+  "capture": {
+    "hrefs": [
+      "https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODM4MTI3MDIsImlhdCI6MTc4MzgxMDkwMiwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYm8gTG9rbyIsIm51bWVyb0luc2NyaWNhbyI6IjI2NTgyNDg2NiIsInRpcG9Qcm92YSI6IlZFU1RJQlVMQVJfTVVMVElQTEFfRVNDT0xIQSIsImVtYWlsIjoiZ2Fib2xva29AZ21haWwuY29tIn19.-tEwMDFmHcagb3jSIiD0HQ7DKRTSPh8TsD-DwX_MaZ4"
+    ],
+    "has": true
+  }
+}

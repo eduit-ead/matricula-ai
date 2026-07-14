@@ -1,0 +1,36 @@
+{
+  "homologacao": "NÃO HOMOLOGADA",
+  "input": "demo-input-homolog-final.json",
+  "email": "homolog142257@gmail.com",
+  "cpf": "08542304918",
+  "preconditions": {
+    "browserRestarted": true,
+    "sessaoLimpa": true,
+    "hasEntrar": true
+  },
+  "caminhoOk": [
+    "AUTH_READY",
+    "SEARCH_OK",
+    "PDP_OK",
+    "LEAD_OK",
+    "OFFER_OK",
+    "CART_READY"
+  ],
+  "falha": {
+    "runner": "Checkout Runner",
+    "estado": "ORDER_NOT_CONFIRMED",
+    "causaRaiz": "Após Continuar Inscrição no checkout, o pedido não foi criado (sem ORDER_ID/og). A página permaneceu em checkout/#/shipping. A sessão de checkout já apresentava, desde a entrada pós-Continuar da PDP, a mensagem de verificação/reCAPTCHA expirada e erro de preenchimento.",
+    "evidencia": {
+      "continuarTelemetry": [
+        "A verificação expirou. Marque o campo novamente.",
+        "Encontramos um problema no preenchimento. Por favor, verifique os campos em destaque e tente novamente."
+      ],
+      "gateCart": "OK itemCount=1",
+      "checkoutFinalHref": "https://cruzeirodosul.myvtex.com/checkout/#/shipping",
+      "orderId": null,
+      "code": "ORDER_NOT_CONFIRMED",
+      "log": "homolog-final-run.log"
+    }
+  },
+  "codigoNaoAlterado": true
+}

@@ -1,0 +1,248 @@
+{
+  "ok": true,
+  "lead": {
+    "success": true,
+    "elapsedMs": 26319,
+    "browserCalls": 4,
+    "writeBackend": "accessibilityFill",
+    "valuesFound": {
+      "nome": "Gabriel Lkonte",
+      "email": "gaboluku@gmail.com",
+      "telefone": "(11) 98712-1122",
+      "aceite": true
+    }
+  },
+  "offer": {
+    "success": true,
+    "elapsedMs": 113557,
+    "browserCalls": 15,
+    "writeBackend": "accessibilityFill",
+    "valuesFound": {
+      "pais": "Brasil",
+      "cep": "05001200",
+      "estado": "São Paulo",
+      "cidade": "São Paulo",
+      "polo": "São Paulo - Perdizes - SP - UNIVERSIDADE CIDADE DE SÃO PAULO",
+      "verCondicao": true,
+      "formaIngresso": "Vestibular Múltipla Escolha"
+    },
+    "diagnostics": {
+      "mode": "cascade",
+      "stepsLog": [
+        {
+          "key": "pais",
+          "kind": "select",
+          "ok": true,
+          "ref": "e19",
+          "value": "Brasil"
+        },
+        {
+          "key": "cep",
+          "kind": "fill",
+          "ok": true,
+          "ref": "e23",
+          "value": "05001200"
+        },
+        {
+          "key": "estado",
+          "kind": "select",
+          "ok": true,
+          "ref": "e24",
+          "value": "São Paulo"
+        },
+        {
+          "key": "cidade",
+          "kind": "select",
+          "ok": true,
+          "ref": "e53",
+          "value": "São Paulo"
+        },
+        {
+          "key": "polo",
+          "kind": "select",
+          "ok": true,
+          "ref": "e259",
+          "value": "São Paulo - Perdizes - SP - UNIVERSIDADE CIDADE DE SÃO PAULO"
+        },
+        {
+          "key": "verCondicao",
+          "kind": "click",
+          "ok": true,
+          "ref": "e342"
+        },
+        {
+          "key": "formaIngresso",
+          "kind": "select",
+          "ok": true,
+          "ref": "e19",
+          "value": "Vestibular Múltipla Escolha"
+        }
+      ],
+      "postCheck": {
+        "contVisible": true,
+        "ingressoHint": true,
+        "href": "https://cruzeirodosul.myvtex.com/grad-gestao-de-recursos-humanos-cruzeiro-do-sul-virtual/p"
+      },
+      "writeBackend": "accessibilityFill"
+    }
+  },
+  "funnel": {
+    "advancedToPolo": true,
+    "polo": "São Paulo - Perdizes - SP - UNIVERSIDADE CIDADE DE SÃO PAULO",
+    "orderOk": false,
+    "provaHrefs": [
+      "https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODM4ODg4NTAsImlhdCI6MTc4Mzg4NzA1MCwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYnJpZWwgTGtvbnRlIiwibnVtZXJvSW5zY3JpY2FvIjoiMjY1ODI1NDU2IiwidGlwb1Byb3ZhIjoiVkVTVElCVUxBUl9NVUxUSVBMQV9FU0NPTEhBIiwiZW1haWwiOiJnYWJvbHVrdUBnbWFpbC5jb20ifX0.BR5k1B_-RA6jztxlLgQ3U5SaZkehPkXHYjY0y4yaK94"
+    ],
+    "inscr": "1646273951589-01"
+  },
+  "aborted": null,
+  "comparison": {
+    "previous": {
+      "totalSec": 423,
+      "poloPhaseSec": 138,
+      "browserToolCalls": 51,
+      "success": true,
+      "note": "measure-gaboluku-rh.json — polo procedural; orderPlaced before TOTAL_TIMEOUT"
+    }
+  },
+  "metrics": {
+    "totalElapsedSec": 364,
+    "totalBrowserToolCalls": 42,
+    "stageBrowserCalls": 19,
+    "humanInterventions": 0
+  },
+  "log": [
+    {
+      "t": 13,
+      "step": "FOCUS",
+      "msg": "t1"
+    },
+    {
+      "t": 20,
+      "step": "WHERE",
+      "href": "https://cruzeirodosul.myvtex.com/graduacao/",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/graduacao/\",\"hasEntrar\":true,\"ola\":false}"
+    },
+    {
+      "t": 20,
+      "step": "PHASE",
+      "msg": "login"
+    },
+    {
+      "t": 47,
+      "step": "AGENT_LOGIN",
+      "msg": "gaboluku@gmail.com"
+    },
+    {
+      "t": 47,
+      "step": "PHASE",
+      "msg": "search_pdp"
+    },
+    {
+      "t": 80,
+      "step": "FOCUS",
+      "msg": "t1"
+    },
+    {
+      "t": 87,
+      "step": "PDP",
+      "href": "https://cruzeirodosul.myvtex.com/grad-gestao-de-recursos-humanos-cruzeiro-do-sul-virtual/p"
+    },
+    {
+      "t": 87,
+      "step": "PHASE",
+      "msg": "wait_lead"
+    },
+    {
+      "t": 94,
+      "step": "WAIT_LEAD",
+      "msg": "{\"ready\":true,\"hasLead\":true,\"btnText\":\"Inscreva-se\"}"
+    },
+    {
+      "t": 94,
+      "step": "PHASE",
+      "msg": "lead"
+    },
+    {
+      "t": 94,
+      "step": "STAGE_LEAD_START"
+    },
+    {
+      "t": 120,
+      "step": "STAGE_LEAD_DONE",
+      "msg": "{\"success\":true,\"ms\":26319,\"calls\":4,\"values\":{\"nome\":\"Gabriel Lkonte\",\"email\":\"gaboluku@gmail.com\",\"telefone\":\"(11) 98712-1122\",\"aceite\":true},\"errors\":[]}"
+    },
+    {
+      "t": 132,
+      "step": "AGENT_CTA"
+    },
+    {
+      "t": 144,
+      "step": "VALIDATE_POLO",
+      "msg": "{\"hasPolo\":true}"
+    },
+    {
+      "t": 144,
+      "step": "PHASE",
+      "msg": "offer"
+    },
+    {
+      "t": 144,
+      "step": "STAGE_OFFER_START"
+    },
+    {
+      "t": 258,
+      "step": "STAGE_OFFER_DONE",
+      "msg": "{\"success\":true,\"ms\":113557,\"calls\":15,\"values\":{\"pais\":\"Brasil\",\"cep\":\"05001200\",\"estado\":\"São Paulo\",\"cidade\":\"São Paulo\",\"polo\":\"São Paulo - Perdizes - SP - UNIVERSIDADE CIDADE DE SÃO PAULO\",\"verCondicao\":true,\"formaIngresso\":\"Vestibular Múltipla Escolha\"},\"errors\":[],\"suggest\":\"select_necessidade_then_continuar\"}"
+    },
+    {
+      "t": 258,
+      "step": "PHASE",
+      "msg": "post_offer"
+    },
+    {
+      "t": 272,
+      "step": "AGENT_NECESSIDADE",
+      "msg": "Não necessito de condições..."
+    },
+    {
+      "t": 289,
+      "step": "AGENT_CONTINUAR"
+    },
+    {
+      "t": 294,
+      "step": "PHASE",
+      "msg": "checkout"
+    },
+    {
+      "t": 330,
+      "step": "CHECKOUT_PROFILE",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/grad-gestao-de-recursos-humanos-cruzeiro-do-sul-virtual/p\",\"emptyCart\":false,\"hasProfile\":false}"
+    },
+    {
+      "t": 330,
+      "step": "PHASE",
+      "msg": "capture"
+    },
+    {
+      "t": 364,
+      "step": "CAPTURE",
+      "msg": "{\"hrefs\":[\"https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODM4ODg4NTAsImlhdCI6MTc4Mzg4NzA1MCwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYnJpZWwgTGtvbnRlIiwibnVtZXJvSW5zY3JpY2FvIjoiMjY1ODI1NDU2IiwidGlwb1Byb3ZhIjoiVkVTVElCVUxBUl9NVUxUSVBMQV9FU0NPTEhBIiwiZW1haWwiOiJnYWJvbHVrdUBnbWFpbC5jb20ifX0.BR5k1B_-RA6jztxlLgQ3U5SaZkehPkXHYjY0y4yaK94\"],\"has\":true,\"inscr\":\"1646273951589-01\"}"
+    }
+  ],
+  "data": {
+    "email": "gaboluku@gmail.com",
+    "nome": "Gabriel Lkonte",
+    "telefone": "11987121122",
+    "cep": "05001200",
+    "estado": "São Paulo",
+    "cidade": "São Paulo",
+    "poloPrefix": "São Paulo - perdizes",
+    "first": "Gabriel",
+    "last": "Lkonte",
+    "cpf": "06223434081",
+    "birth": "1999-09-09",
+    "formaIngresso": "Vestibular Múltipla Escolha",
+    "necessidade": "Não necessito de condições especiais"
+  }
+}

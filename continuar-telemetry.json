@@ -1,0 +1,188 @@
+{
+  "capturedAt": "2026-07-14T16:43:12.873Z",
+  "before": {
+    "found": true,
+    "before": {
+      "text": "Continuar inscrição",
+      "enabled": true,
+      "disabled": false,
+      "ariaDisabled": null,
+      "classes": "cruzeirodosul-product-purchase-box-0-x-cta_p1",
+      "loading": false,
+      "pointerEvents": "auto",
+      "opacity": "1",
+      "type": "submit"
+    }
+  },
+  "clickRef": "e36",
+  "monitorMs": 30000,
+  "samples": [
+    {
+      "href": "https://cruzeirodosul.myvtex.com/grad-gestao-financeira-cruzeiro-do-sul-virtual/p",
+      "onCheckout": false,
+      "itemCount": 0,
+      "orderFormId": null,
+      "buttonNow": null,
+      "errorMsgs": [],
+      "toasts": [],
+      "validationHints": [
+        "momentos presenciais obrigatórios, distribuídos ao longo do curso, que incluem práticas,",
+        "Selecione",
+        "Selecione uma forma de ingresso",
+        "Selecione"
+      ],
+      "fetchCount": 13,
+      "xhrCount": 2,
+      "consoleErrorCount": 0,
+      "urlTimeline": [
+        {
+          "t": 0,
+          "href": "https://cruzeirodosul.myvtex.com/grad-gestao-financeira-cruzeiro-do-sul-virtual/p"
+        }
+      ],
+      "recentFetch": [
+        {
+          "t": 14358,
+          "type": "fetch",
+          "method": "GET",
+          "url": "/api/dataentities/PL/search?an=cruzeirodosul&_where=(poleId=109 AND businessCode=12)&_fields=graduacaoCertificadora,posgraduacaoCertificadora,certificadora",
+          "status": 200,
+          "ok": true
+        },
+        {
+          "t": 14884,
+          "type": "fetch",
+          "method": "GET",
+          "url": "/api/dataentities/SU/search?an=cruzeirodosul&_where=(productId='3349' AND parcelasPlano='')&_fields=codCurs",
+          "status": 200,
+          "ok": true
+        },
+        {
+          "t": 15073,
+          "type": "fetch",
+          "method": "GET",
+          "url": "/v1/lead/?_where=(email=%22homolog984267@gmail.com%22)%20AND%20(formaIngresso=%22Vestibular%20M%C3%BAltipla%20Escolha%22)%20AND%20(statusGraduacao%20is%20not%20null)%20AND%20(ciclo=%222026/2%22)%20AND%20(marca=%2212%22)&_fields=id,product,formaIngresso,statusGraduacao,ciclo,marca,status",
+          "status": 200,
+          "ok": true
+        },
+        {
+          "t": 15510,
+          "type": "fetch",
+          "method": "POST",
+          "url": "/api/checkout/pub/orderForm/f4c35591726142e28e869dae03bf294c/attachments/clientProfileData",
+          "status": 200,
+          "ok": true
+        },
+        {
+          "t": 15510,
+          "type": "fetch",
+          "method": "GET",
+          "url": "/v1/lead/?_where=(email=homolog984267@gmail.com)%20AND%20((productId=3648))%20AND%20(status=pending)&_fields=id,formaIngresso,product,passoFicha,userStreet,status",
+          "status": 200,
+          "ok": true
+        },
+        {
+          "t": 15658,
+          "type": "fetch",
+          "method": "POST",
+          "url": "https://sp.vtex.com/event-api/v1/cruzeirodosul/event",
+          "status": 204,
+          "ok": true
+        },
+        {
+          "t": 15935,
+          "type": "fetch",
+          "method": "PATCH",
+          "url": "/v1/lead/54dd7568-9676-4bc7-aaaa-fa5944d8fbff",
+          "status": 200,
+          "ok": true
+        },
+        {
+          "t": 17610,
+          "type": "fetch",
+          "method": "GET",
+          "url": "/api/checkout/pub/orderForm/f4c35591726142e28e869dae03bf294c",
+          "status": 200,
+          "ok": true
+        }
+      ],
+      "recentXhr": [
+        {
+          "t": 1105,
+          "type": "xhr",
+          "method": "POST",
+          "url": "https://t.clarity.ms/collect",
+          "status": 204,
+          "responseURL": "https://t.clarity.ms/collect"
+        },
+        {
+          "t": 18020,
+          "type": "xhr",
+          "method": "POST",
+          "url": "/_v/setpricescodref/0120000000425?unidade=Virtual&turno=Online&orderFormId=f4c35591726142e28e869dae03bf294c&itemIndex=0&codCurso=164250&codVest=581&codPolo=109&poloTipo=2&seqVest=1&inscricaoValor=0.00"
+        }
+      ],
+      "recentConsoleErrors": [],
+      "elapsedMs": 6571
+    },
+    {
+      "href": "https://cruzeirodosul.myvtex.com/checkout/#/profile",
+      "onCheckout": true,
+      "itemCount": 1,
+      "orderFormId": "f4c35591726142e28e869dae03bf294c",
+      "buttonNow": {
+        "text": "Continuar Inscrição",
+        "disabled": false,
+        "ariaDisabled": null,
+        "classes": "submit btn btn-success btn-large",
+        "loading": false
+      },
+      "errorMsgs": [
+        "A verificação expirou. Marque o campo novamente.",
+        "× Encontramos um problema no preenchimento. Por favor, verifique os campos em destaque e tente novamente."
+      ],
+      "toasts": [
+        "Sua inscrição é grátis."
+      ],
+      "validationHints": [],
+      "fetchCount": 0,
+      "xhrCount": 0,
+      "consoleErrorCount": 0,
+      "urlTimeline": [],
+      "recentFetch": [],
+      "recentXhr": [],
+      "recentConsoleErrors": [],
+      "elapsedMs": 17220
+    },
+    {
+      "href": "https://cruzeirodosul.myvtex.com/checkout/#/profile",
+      "onCheckout": true,
+      "itemCount": 1,
+      "orderFormId": "f4c35591726142e28e869dae03bf294c",
+      "buttonNow": {
+        "text": "Continuar Inscrição",
+        "disabled": false,
+        "ariaDisabled": null,
+        "classes": "submit btn btn-success btn-large",
+        "loading": false
+      },
+      "errorMsgs": [
+        "A verificação expirou. Marque o campo novamente.",
+        "× Encontramos um problema no preenchimento. Por favor, verifique os campos em destaque e tente novamente."
+      ],
+      "toasts": [
+        "Sua inscrição é grátis."
+      ],
+      "validationHints": [],
+      "fetchCount": 0,
+      "xhrCount": 0,
+      "consoleErrorCount": 0,
+      "urlTimeline": [],
+      "recentFetch": [],
+      "recentXhr": [],
+      "recentConsoleErrors": [],
+      "elapsedMs": 25223
+    }
+  ],
+  "final": null
+}

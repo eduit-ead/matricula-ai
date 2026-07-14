@@ -1,0 +1,248 @@
+{
+  "ok": true,
+  "provaUrl": "https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODM4MDcwMzIsImlhdCI6MTc4MzgwNTIzMiwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYm8gTG9rbyIsIm51bWVyb0luc2NyaWNhbyI6IjI2NTgyNDg2NiIsInRpcG9Qcm92YSI6IlZFU1RJQlVMQVJfTVVMVElQTEFfRVNDT0xIQSIsImVtYWlsIjoiZ2Fib2xva29AZ21haWwuY29tIn19.vk-BTg335x6Y4NC5ga2x-AR_sCek6IzZpyDgLD95sVI",
+  "elapsedSec": 397,
+  "data": {
+    "nome": "Gabo Loko",
+    "email": "gaboloko@gmail.com",
+    "telefone": "11987124916",
+    "cep": "05001200",
+    "estado": "São Paulo",
+    "cidade": "São Paulo",
+    "first": "Gabo",
+    "last": "Loko",
+    "cpf": "50928152057",
+    "birth": "1999-09-09"
+  },
+  "timeline": [
+    {
+      "t": 11,
+      "dtMs": 10919,
+      "step": "FOCUS",
+      "why": "já logado + PDP"
+    },
+    {
+      "t": 24,
+      "dtMs": 13508,
+      "step": "PDP",
+      "href": "https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p"
+    },
+    {
+      "t": 31,
+      "dtMs": 6361,
+      "step": "SNAP",
+      "why": "refs lead",
+      "msg": "cli=6361ms"
+    },
+    {
+      "t": 31,
+      "dtMs": 1,
+      "step": "REFS",
+      "msg": "{\"nome\":\"e21\",\"email\":\"e22\",\"tel\":\"e23\",\"check\":\"e24\",\"btn\":\"e25\"}"
+    },
+    {
+      "t": 38,
+      "dtMs": 6926,
+      "step": "FILL",
+      "why": "openclaw fill React",
+      "msg": "filled 3 field(s)\n cli=6926ms"
+    },
+    {
+      "t": 45,
+      "dtMs": 7131,
+      "step": "CTA",
+      "why": "Inscreva-se button ref e25"
+    },
+    {
+      "t": 45,
+      "dtMs": 1,
+      "step": "WAIT",
+      "why": "aguardar polo UI",
+      "msg": "2000ms"
+    },
+    {
+      "t": 58,
+      "dtMs": 12918,
+      "step": "AFTER_LEAD",
+      "msg": "{\"href\":\"https://cruzeirodosul.myvtex.com/grad-pedagogia-semipresencial-cruzeiro-do-sul-virtual/p\",\"hasPolo\":false,\"bodySlice\":false}"
+    },
+    {
+      "t": 71,
+      "dtMs": 13437,
+      "step": "WAIT",
+      "why": "retry CTA",
+      "msg": "2500ms"
+    },
+    {
+      "t": 84,
+      "dtMs": 12308,
+      "step": "RETRY",
+      "msg": "{\"hasPolo\":true}"
+    },
+    {
+      "t": 96,
+      "dtMs": 12346,
+      "step": "BRASIL",
+      "why": "select"
+    },
+    {
+      "t": 96,
+      "dtMs": 0,
+      "step": "WAIT",
+      "why": "estado options",
+      "msg": "600ms"
+    },
+    {
+      "t": 120,
+      "dtMs": 24203,
+      "step": "UF_CEP"
+    },
+    {
+      "t": 120,
+      "dtMs": 0,
+      "step": "WAIT",
+      "why": "cidades",
+      "msg": "1200ms"
+    },
+    {
+      "t": 138,
+      "dtMs": 18247,
+      "step": "CIDADE"
+    },
+    {
+      "t": 138,
+      "dtMs": 0,
+      "step": "WAIT",
+      "why": "polos API",
+      "msg": "1800ms"
+    },
+    {
+      "t": 151,
+      "dtMs": 12722,
+      "step": "SNAP_POLO",
+      "why": "lista grande",
+      "msg": "cli=10911ms"
+    },
+    {
+      "t": 151,
+      "dtMs": 0,
+      "step": "POLO",
+      "msg": "São Paulo - Freguesia do Ó (Moinho Velho) - SP - UNIVERSIDADE CIDADE DE SÃO PAULO"
+    },
+    {
+      "t": 170,
+      "dtMs": 18764,
+      "step": "VER_COND"
+    },
+    {
+      "t": 170,
+      "dtMs": 0,
+      "step": "WAIT",
+      "why": "ingresso",
+      "msg": "1200ms"
+    },
+    {
+      "t": 213,
+      "dtMs": 43492,
+      "step": "INGRESSO"
+    },
+    {
+      "t": 213,
+      "dtMs": 0,
+      "step": "WAIT",
+      "why": "checkout redirect",
+      "msg": "3500ms"
+    },
+    {
+      "t": 226,
+      "dtMs": 13202,
+      "step": "CHECKOUT",
+      "href": "https://cruzeirodosul.myvtex.com/checkout/#/profile"
+    },
+    {
+      "t": 232,
+      "dtMs": 6010,
+      "step": "WAIT",
+      "why": "profile",
+      "msg": "1500ms"
+    },
+    {
+      "t": 244,
+      "dtMs": 11110,
+      "step": "PROFILE"
+    },
+    {
+      "t": 256,
+      "dtMs": 12859,
+      "step": "WAIT",
+      "why": "shipping",
+      "msg": "2000ms"
+    },
+    {
+      "t": 282,
+      "dtMs": 25435,
+      "step": "WAIT",
+      "why": "CEP resolve",
+      "msg": "1200ms"
+    },
+    {
+      "t": 309,
+      "dtMs": 26636,
+      "step": "SHIP_DONE"
+    },
+    {
+      "t": 309,
+      "dtMs": 0,
+      "step": "WAIT",
+      "why": "payment",
+      "msg": "2000ms"
+    },
+    {
+      "t": 323,
+      "dtMs": 14722,
+      "step": "PAY"
+    },
+    {
+      "t": 323,
+      "dtMs": 0,
+      "step": "WAIT",
+      "why": "orderPlaced",
+      "msg": "4500ms"
+    },
+    {
+      "t": 337,
+      "dtMs": 13534,
+      "step": "ORDER",
+      "href": "https://cruzeirodosul.myvtex.com/checkout/orderPlaced/?og=1646053950583",
+      "msg": "Atendente: fabio.boas50@polo.cruzeirodosul.edu.br\ngaboloko\nCursos\nEstude com a gente\nBenefícios\nA Cruzeiro do Sul Virtual\n\nSou Aluno\n\nOlá, Gaboloko@Gmail.Com\n1\n"
+    },
+    {
+      "t": 350,
+      "dtMs": 13105,
+      "step": "WAIT",
+      "why": "account",
+      "msg": "2500ms"
+    },
+    {
+      "t": 370,
+      "dtMs": 19803,
+      "step": "WAIT",
+      "why": "inscricoes",
+      "msg": "2500ms"
+    },
+    {
+      "t": 389,
+      "dtMs": 18972,
+      "step": "WAIT",
+      "why": "painel",
+      "msg": "1200ms"
+    },
+    {
+      "t": 397,
+      "dtMs": 8031,
+      "step": "CAPTURE",
+      "why": "somente copiar URL",
+      "msg": "{\"hrefs\":[\"https://provadigital.cruzeirodosul.edu.br/prova-lti?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODM4MDcwMzIsImlhdCI6MTc4MzgwNTIzMiwiZGF0YSI6eyJjb2RpZ29JZXMiOiIxMiIsIm5vbWVDb21wbGV0byI6IkdhYm8gTG9rbyIsIm51bWVyb0luc2NyaWNhbyI6IjI2NTgyNDg2NiIsInRpcG9Qcm92YSI6IlZFU1RJQlVMQVJfTVVMVElQTEFfRVNDT0xIQSIsImVtYWlsIjoiZ2Fib2xva29AZ21haWwuY29tIn19.vk-BTg335x6Y4NC5ga2x-AR_sCek6IzZpyDgLD95sVI\"],\"has\":true,\"page\":\"https://cruzeirodosul.myvtex.com/account#/minhas-inscricoes/\"}"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "email_aluno": "refix114626@gmail.com",
+  "curso": "Gestão Financeira",
+  "modalidade": "Graduação: Virtual",
+  "nome_completo": "Gabriel Lkonte",
+  "telefone": "11987121122",
+  "cep": "05001200",
+  "estado": "São Paulo",
+  "cidade": "São Paulo",
+  "polo_prefixo": "São Paulo - perdizes",
+  "cpf": "93523642019",
+  "nascimento": "09/09/1999",
+  "forma_ingresso": "Vestibular Múltipla Escolha",
+  "necessidade_especial": "Não necessito de condições especiais",
+  "aceitar_termos_lead": true,
+  "browser": {
+    "closeOnFinish": false
+  },
+  "auth": {
+    "maxAttempts": 3,
+    "gateTimeoutMs": 30000,
+    "pollMs": 2000
+  }
+}

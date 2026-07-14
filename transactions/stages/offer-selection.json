@@ -1,0 +1,113 @@
+{
+  "id": "offer-selection",
+  "version": 1,
+  "description": "Offer/polo form after lead CTA — fill país, CEP, estado, cidade, polo and forma de ingresso; do not click Continuar inscrição",
+  "execution": {
+    "writeBackend": "accessibilityFill",
+    "mode": "cascade",
+    "note": "Cascade re-snapshots between dependent selects. Same production Write Engine backend; Runtime/Agent unchanged."
+  },
+  "preconditions": {
+    "requireVisibleTextAny": [
+      "Digite seu CEP",
+      "Selecione um Polo",
+      "Selecione um Pa"
+    ]
+  },
+  "steps": [
+    {
+      "kind": "select",
+      "key": "pais",
+      "payloadKey": "pais",
+      "default": "Brasil",
+      "locate": {
+        "role": "combobox",
+        "includesAny": ["Selecione um Pa", "País", "Pais"]
+      },
+      "match": "exact",
+      "waitAfterMs": 700,
+      "required": true
+    },
+    {
+      "kind": "fill",
+      "key": "cep",
+      "payloadKey": "cep",
+      "locate": {
+        "role": "textbox",
+        "includesAny": ["Digite seu CEP", "CEP"]
+      },
+      "normalize": ["digitsOnly"],
+      "waitAfterMs": 500,
+      "required": true
+    },
+    {
+      "kind": "select",
+      "key": "estado",
+      "payloadKey": "estado",
+      "locate": {
+        "role": "combobox",
+        "includesAny": ["Selecione um Estado", "Estado"]
+      },
+      "match": "exact",
+      "waitAfterMs": 1000,
+      "required": true
+    },
+    {
+      "kind": "select",
+      "key": "cidade",
+      "payloadKey": "cidade",
+      "locate": {
+        "role": "combobox",
+        "includesAny": ["Selecione uma Cidade", "Cidade"]
+      },
+      "match": "exact",
+      "waitAfterMs": 1500,
+      "required": true
+    },
+    {
+      "kind": "select",
+      "key": "polo",
+      "payloadKey": "poloPrefix",
+      "locate": {
+        "role": "combobox",
+        "includesAny": ["Selecione um Polo", "Polo"]
+      },
+      "match": "optionContains",
+      "waitAfterMs": 800,
+      "required": true
+    },
+    {
+      "kind": "click",
+      "key": "verCondicao",
+      "locate": {
+        "role": "button",
+        "includesAny": ["Ver condição especial"]
+      },
+      "optional": true,
+      "waitAfterMs": 1200
+    },
+    {
+      "kind": "select",
+      "key": "formaIngresso",
+      "payloadKey": "formaIngresso",
+      "locate": {
+        "role": "combobox",
+        "includesAny": ["forma de ingresso", "Selecione uma forma"]
+      },
+      "match": "exact",
+      "waitAfterMs": 400,
+      "required": true
+    }
+  ],
+  "success": {
+    "requiredKeys": ["pais", "cep", "estado", "cidade", "polo", "formaIngresso"]
+  },
+  "onSuccessSuggest": "select_necessidade_then_continuar",
+  "onFailureSuggest": {
+    "NOT_ON_STAGE": "abort_wrong_screen",
+    "NOT_FOUND": "retry_stage_or_ask_human",
+    "OPTION_NOT_FOUND": "ask_human_data",
+    "NOT_ACCEPTED": "retry_stage_or_ask_human",
+    "default": "retry_stage_or_ask_human"
+  }
+}
