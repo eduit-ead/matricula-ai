@@ -1,0 +1,17 @@
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+~$*
+
+# Relatórios e dumps locais (PII / tokens)
+V2/*-report.json
+V2/*-run.log
+V2/_poc-run.log
+V2/_account.html
+V2/_asset-*.min.js
+V2/_bundle-*.js
+V2/_myaccount-*.js
+V2/_ppb-hits.txt
+run-p0b-validate*.log
+demo-input-p0b-homolog.json
