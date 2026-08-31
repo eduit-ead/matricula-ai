@@ -12,7 +12,8 @@ Agentes especialistas para a VTEX Cruzeiro (OpenClaw).
 
 ## Knowledge — fluxos
 
-- [knowledge/graduacao-multipla.md](./knowledge/graduacao-multipla.md) — Graduação / Múltipla Escolha *(caso ativo)*
+- [knowledge/graduacao-multipla.md](./knowledge/graduacao-multipla.md) — Graduação / Múltipla Escolha *(caso ativo; Golden Path API)*
+- [knowledge/graduacao-redacao.md](./knowledge/graduacao-redacao.md) — Graduação / Redação
 - [knowledge/enem.md](./knowledge/enem.md) — ENEM
 - [knowledge/transferencia.md](./knowledge/transferencia.md) — Transferência
 - [knowledge/segunda-graduacao.md](./knowledge/segunda-graduacao.md) — Segunda Graduação
@@ -42,6 +43,46 @@ Não duplique conteúdo aqui.
 ---
 
 ## Decisões
+
+### 2026-08-28 - ENEM: SIAA é job assíncrono, não passo faltante
+
+**Decisão:** O funil API (checkout + notas) está completo. `inscricaoSIAA` nulo no lead logo após o pedido não significa falha. O SIAA indexa com atraso; busca por CPF. **Iniciar matrícula** é passo posterior (abrir matrícula), não cria o vestibular. Poll de 30s no lead não é critério de sucesso do ENEM.
+
+**Contexto:** Em 2026-08-27 os leads API ficaram `inscricaoSIAA=null`. Em 2026-08-28 o operador achou no SIAA. GET `matricula-unificada` cedo demais caiu em `alerta.xhtml?codigoProcedimento=0`.
+
+**Alternativas descartadas:** (1) tratar o GET SIAA como criação obrigatória da inscrição; (2) falhar a execução se o poll de 30s não devolver número.
+
+**Impacto:** `knowledge/enem.md` (critério de sucesso). Engine pode manter o GET como tentativa opcional; não bloquear inscrição se o SIAA ainda não indexou.
+
+### 2026-08-27 - ENEM inicia matrícula no SIAA após notas aprovadas
+
+**Decisão:** Depois do `PATCH` OP com `statusGraduacao=1`, o engine replica o botão **Iniciar matrícula**: `GET` `matricula-unificada.jsf?inicio=1&codigoEmpresa={marca}&cpfCandidato={cpf}`. O `nrInscricao` sai do 302 (Location). Reprovado (`statusGraduacao=2`) não chama o SIAA.
+
+**Contexto:** Inscrições API paravam nas notas (`inscricaoSIAA` null). O fluxo manual (`96423032050`) gerou `265953605` ao clicar no botão. HAR Luan mostra o mesmo GET e o 302 com `nrInscricao`.
+
+**Alternativas descartadas:** (1) esperar sync assíncrono VTEX→SIAA; (2) inventar POST JSF; (3) chamar `dados.jsf` (HAR da API com `codigoEmpresa=NaN` caiu em aviso).
+
+**Impacto:** `V2/src/flows/graduacao-enem.js` (`afterOrder`), `VtexClient.request` (redirect 3xx), `knowledge/enem.md`, testes `V2/tests/enem.test.js`.
+
+### 2026-08-27 - ENEM preenche notas após o pedido
+
+**Decisão:** `graduacao_enem` reutiliza o pipeline de Graduação R$0 da Múltipla, com `formaIngresso: "ENEM"` e `seqVest: 1`. Notas em `additionalData`; após o checkout, `PATCH` OP com média e `statusGraduacao: media >= 300 ? 1 : 2` (regra do storefront `my-account-custom`). `1` = aprovado, `2` = reprovado. Sem `getProvaUrl`.
+
+**Contexto:** HAR confirmou o mesmo checkout da Múltipla; o delta é ingresso + notas depois do `orderPlaced`.
+
+**Alternativas descartadas:** (1) inventar `codVest` distinto; (2) enviar notas no addToCart; (3) exigir `enemNumeroInscricao`.
+
+**Impacto:** `V2/src/flows/graduacao-enem.js`, engine (`afterOrder`, merge de `additionalData`), UI de campos extras, testes `V2/tests/enem.test.js`.
+
+### 2026-08-27 - App web multi-fluxo (V2 API-only)
+
+**Decisão:** Extrair o POC API-only para um engine `runEnrollment({ type, candidate, course, pole })` em `V2/src/`, com Express + UI estática + Docker na raiz. Infra compartilhada (VTEX client, catálogo Excel, CEP, checkout) separada de estratégias por fluxo. Só `graduacao_multipla` homologado. Demais tipos existem no registry com `homologated: false` e não inventam payloads. `ALLOW_REAL_ENROLLMENTS` default `false` (dry-run para antes de `POST /v1/lead`). Catálogo devolve só fatos da planilha; campanha/codVest/seqVest ficam no fluxo. Endereço sai da API de CEP da VTEX, não de Barra Funda hardcoded.
+
+**Contexto:** Homologação atual é Graduação Vestibular Múltipla Escolha. Excel tem `Graduação` (012…) e `Pós-Graduação` (007…).
+
+**Alternativas descartadas:** (1) if/else em `api-only-poc.js`; (2) copiar campaign defaults de Graduação para os outros fluxos; (3) React neste momento.
+
+**Impacto:** `V2/src/**`, `V2/public/**`, `Dockerfile`, adapter `V2/api-only-poc.js`. Browser/`transactions/` intocado.
 
 ### 2026-07-14 - Sprint Final Homologação: PostOrder (aba por conteúdo) + Capture fail-stop + perf harness
 
