@@ -79,6 +79,12 @@ Status de detalhamento fino: a preencher na próxima execução assistida.
 
 ---
 
+## Caminho API (Golden Path)
+
+O funil browser acima é histórico. A implementação homologada de inscrição **sem UI** está em `V2/src/flows/graduacao-multipla.js`, executada por `runEnrollment({ type: "graduacao_multipla" })`.
+
+Critério de sucesso API: `orderGroup` + `inscricaoSIAA` + `provaLink` (`GET /v1/getProvaUrl`, `tipoProva=VESTIBULAR_MULTIPLA_ESCOLHA`).
+
 ## Exceções conhecidas
 
 - Nenhuma bloqueante ainda (captcha presente no DOM, ainda não bloqueou).

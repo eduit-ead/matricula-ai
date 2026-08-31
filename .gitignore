@@ -3,6 +3,8 @@ node_modules/
 .DS_Store
 Thumbs.db
 ~$*
+.env
+V2/.env
 
 # Relatórios e dumps locais (PII / tokens)
 V2/*-report.json

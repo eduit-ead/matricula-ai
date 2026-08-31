@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matrícula AI — Inscrição VTEX</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Matrícula AI</h1>
+      <p class="sub">Inscrição multi-fluxo — Cruzeiro do Sul Virtual</p>
+    </div>
+    <div id="mode-banner" class="mode dry" hidden></div>
+  </header>
+
+  <main>
+    <form id="form" class="card">
+      <label>
+        Tipo de inscrição
+        <select id="type" name="type" required></select>
+      </label>
+      <p id="type-note" class="note" hidden></p>
+
+      <div class="row">
+        <label>
+          Curso
+          <input id="course" name="course" list="courses" placeholder="Ex.: Gestão Financeira" required />
+          <datalist id="courses"></datalist>
+        </label>
+        <label>
+          Polo
+          <input id="pole" name="pole" list="poles" placeholder="Ex.: Barra Funda" required />
+          <datalist id="poles"></datalist>
+        </label>
+      </div>
+
+      <fieldset>
+        <legend>Candidato</legend>
+        <label>
+          Nome completo
+          <input id="nomeCompleto" name="nomeCompleto" autocomplete="name" required />
+        </label>
+        <div class="row">
+          <label>
+            E-mail
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </label>
+          <label>
+            Telefone
+            <input id="telefone" name="telefone" type="tel" placeholder="11999999999" required />
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            CPF
+            <input id="cpf" name="cpf" inputmode="numeric" required />
+          </label>
+          <label>
+            Data de nascimento
+            <input id="nascimento" name="nascimento" placeholder="DD/MM/AAAA" required />
+          </label>
+          <label>
+            CEP
+            <input id="cep" name="cep" inputmode="numeric" placeholder="00000-000" required />
+          </label>
+        </div>
+      </fieldset>
+
+      <div id="extra-fields"></div>
+
+      <button type="submit" id="submit">Executar inscrição</button>
+    </form>
+
+    <section class="card" id="progress-card">
+      <h2>Execução</h2>
+      <ol id="steps" class="steps"></ol>
+      <pre id="error" class="error" hidden></pre>
+      <dl id="result" class="result" hidden></dl>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
