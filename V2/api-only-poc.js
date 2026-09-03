@@ -24,7 +24,8 @@
  *   shipping/leadOrderPut = Matarazzo / Água Branca (CEP só preenche o número).
  *   CLI exige POC_CPF. Polo/cidade/poloNome vêm do Excel se não forem passados.
  *   Uma inscrição SIAA por candidato/forma no ciclo corrente
- *   (Redação, Múltipla Escolha, ENEM). Ciclo anterior não bloqueia.
+ *   (Redação, Múltipla Escolha, ENEM, Segunda Graduação, Transferência).
+ *   Ciclo anterior não bloqueia.
  */
 
 const fs = require("fs");

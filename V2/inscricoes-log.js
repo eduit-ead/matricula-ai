@@ -9,7 +9,7 @@ const ERRO_LABEL = {
   COURSE_NOT_FOUND: "Curso não existe no catálogo",
   COURSE_AMBIGUOUS: "Nome do curso bate em mais de um card",
   SEM_SIAA: "Pedido VTEX criado, SIAA não gerou número",
-  JA_INSCRITO_FORMA: "Já existe inscrição dessa forma no ciclo",
+  JA_INSCRITO_FORMA: "Já existe inscrição dessa forma no ciclo (vestibular, ENEM, segunda ou transferência)",
   POLO_VAZIO: "Polo_Inscicao vazio",
   POLO_DESCONHECIDO: "Polo_Inscicao fora do mapa",
   POLO_LOC_SEM_CHAVE: "Falta SUPABASE_ANON_KEY",

@@ -36,6 +36,8 @@ function normalizeForma(forma) {
   if (s.includes("redac")) return "redacao";
   if (s.includes("merito")) return "merito";
   if (s.includes("multipla")) return "multipla";
+  if (s.includes("segunda")) return "segunda";
+  if (s.includes("transfer")) return "transferencia";
   return s.replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 }
 
@@ -77,7 +79,7 @@ function inscricoesDaForma(consulta, formaIngresso, ciclo) {
 }
 
 /** Uma inscrição SIAA por candidato, por forma, no ciclo corrente. */
-const FORMAS_LIMITE_UMA = new Set(["redacao", "multipla", "enem"]);
+const FORMAS_LIMITE_UMA = new Set(["redacao", "multipla", "enem", "segunda", "transferencia"]);
 
 function formaTemLimiteUmaInscricao(formaIngresso) {
   return FORMAS_LIMITE_UMA.has(normalizeForma(formaIngresso));
