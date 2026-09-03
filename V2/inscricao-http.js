@@ -170,6 +170,8 @@ function publicResult(lead, result, err) {
       cpf: lead.cpf || null,
       email: lead.email || null,
       curso: lead.curso || null,
+      formacao: lead.formacao || null,
+      tipoInscricao: lead.tipoInscricao || null,
       formaIngresso: lead.formaIngresso || null,
       mensagem: `Falha na inscrição: ${code} — ${err.message}`,
     };
@@ -186,6 +188,8 @@ function publicResult(lead, result, err) {
     curso: result.catalog?.curso?.courseName || lead.curso,
     polo: result.catalog?.polo?.poloLabel || lead.polo,
     poloKm: lead.poloKm != null ? Number(lead.poloKm.toFixed(2)) : null,
+    formacao: lead.formacao || null,
+    tipoInscricao: lead.tipoInscricao || null,
     formaIngresso: result.formaIngresso || lead.formaIngresso,
     department: lead.department,
     orderId: result.orderId || null,
