@@ -13,6 +13,7 @@ const http = require("http");
 const { runInscricao } = require("./api-only-poc");
 const { CatalogError } = require("./catalog-resolver");
 const {
+  norm,
   leadFromKommoFields,
   resolvePoloInscricao,
   mapFormacaoTipo,
@@ -87,6 +88,55 @@ async function kommoFetch(pathname) {
   const text = await res.text();
   if (!res.ok) throw new Error(`Kommo ${res.status} ${pathname}: ${text.slice(0, 240)}`);
   return text ? JSON.parse(text) : {};
+}
+
+let _leadFields = null;
+async function kommoLeadFields() {
+  if (_leadFields) return _leadFields;
+  const data = await kommoFetch("/api/v4/leads/custom_fields?limit=250");
+  _leadFields = data._embedded?.custom_fields || [];
+  return _leadFields;
+}
+
+function kommoFieldByNames(fields, names) {
+  const want = new Set(names.map(norm));
+  return fields.find((f) => want.has(norm(f.name))) || null;
+}
+
+async function kommoWriteResult(leadId, out) {
+  const fields = await kommoLeadFields();
+  const values = [];
+  const nro = kommoFieldByNames(fields, [
+    "nro da inscricao",
+    "nro. da inscricao",
+    "numero da inscricao",
+    "nº da inscricao",
+  ]);
+  if (nro && out.inscricaoSIAA) {
+    values.push({ field_id: nro.id, values: [{ value: String(out.inscricaoSIAA) }] });
+  }
+  const link = out.provaLink || out.paymentLink || out.documentsLink;
+  const linkField = kommoFieldByNames(fields, [
+    "link da prova",
+    "link inscricao",
+    "link da inscricao",
+    "link documentos",
+  ]);
+  if (linkField && link) {
+    values.push({ field_id: linkField.id, values: [{ value: link }] });
+  }
+  if (!values.length) return;
+  const res = await fetch(`${kommoBase()}/api/v4/leads`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${process.env.KOMMO_ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([{ id: Number(leadId), custom_fields_values: values }]),
+  });
+  if (!res.ok) {
+    throw new Error(`Kommo PATCH ${res.status}: ${(await res.text()).slice(0, 180)}`);
+  }
 }
 
 async function kommoAddTag(leadId, tagName) {
@@ -229,6 +279,9 @@ async function afterKommo(leadId, out) {
       },
       body: JSON.stringify([{ note_type: "common", params: { text: out.mensagem } }]),
     });
+    if (out.inscricaoSIAA) {
+      await kommoWriteResult(leadId, out);
+    }
     if (!out.ok) {
       await kommoAddTag(leadId, "ERRO_INSCRIÇÃO");
     }
