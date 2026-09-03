@@ -254,6 +254,10 @@ function publicResult(lead, result, err) {
     out.mensagem = `Já existe inscrição nessa forma neste ciclo. SIAA: ${out.inscricaoSIAA || "—"}.`;
     return out;
   }
+  if (!out.ok && out.code === "JA_INSCRITO_CURSO") {
+    out.mensagem = `Já existe pós neste curso neste ciclo. SIAA: ${out.inscricaoSIAA || "—"}.`;
+    return out;
+  }
   if (out.ok && !out.inscricaoSIAA) {
     out.ok = false;
     out.code = "SEM_SIAA";

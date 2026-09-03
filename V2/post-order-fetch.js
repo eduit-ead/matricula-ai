@@ -38,6 +38,7 @@ function normalizeForma(forma) {
   if (s.includes("multipla")) return "multipla";
   if (s.includes("segunda")) return "segunda";
   if (s.includes("transfer")) return "transferencia";
+  if (s.includes("pos")) return "pos";
   return s.replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 }
 
@@ -83,6 +84,26 @@ const FORMAS_LIMITE_UMA = new Set(["redacao", "multipla", "enem", "segunda", "tr
 
 function formaTemLimiteUmaInscricao(formaIngresso) {
   return FORMAS_LIMITE_UMA.has(normalizeForma(formaIngresso));
+}
+
+function normalizeCursoKey(name) {
+  return String(name || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s*-\s*\d+\s*meses\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Pós: uma inscrição SIAA por curso (família, ignora "- N meses") no ciclo. Outro curso pode. */
+function inscricoesMesmoCursoPos(consulta, formaIngresso, cursoNome, ciclo) {
+  if (normalizeForma(formaIngresso) !== "pos") return [];
+  const cursoKey = normalizeCursoKey(cursoNome);
+  if (!cursoKey) return [];
+  return inscricoesDaForma(consulta, formaIngresso, ciclo).filter(
+    (l) => normalizeCursoKey(l.courseName) === cursoKey
+  );
 }
 
 async function fetchJson(url, opts = {}) {
@@ -410,6 +431,7 @@ module.exports = {
   resolveNumeroProva,
   consultarInscricoesSIAA,
   inscricoesDaForma,
+  inscricoesMesmoCursoPos,
   normalizeForma,
   formaTemLimiteUmaInscricao,
   normalizeCiclo,
