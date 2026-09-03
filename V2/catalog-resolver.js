@@ -141,7 +141,15 @@ function resolveCurso({ nome, department = "Graduação" }) {
   let matches = cursos.filter((r) => norm(r["Product Name"]) === q);
   if (deptNorm) {
     const byDept = matches.filter((r) => norm(r.Department) === deptNorm);
-    if (byDept.length) matches = byDept;
+    if (byDept.length) {
+      matches = byDept;
+    } else if (matches.length) {
+      const other = matches[0].Department || "outro departamento";
+      throw new CatalogError(
+        "COURSE_DEPT_MISMATCH",
+        `[CATALOG] "${nome}" existe em ${other}, não em ${department}. Com Tipo_Inscrição Pós/MBA use o nome do card de pós (ex. Administração Pública).`
+      );
+    }
   }
 
   if (isPos) {
