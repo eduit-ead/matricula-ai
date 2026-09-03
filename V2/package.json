@@ -4,6 +4,8 @@
   "description": "",
   "main": "api-only-poc.js",
   "scripts": {
+    "start": "node inscricao-http.js",
+    "http": "node inscricao-http.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -1,0 +1,7 @@
+**/node_modules
+**/.env
+**/.cursor
+**/*.log
+**/*-report.json
+.git
+.github

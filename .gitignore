@@ -4,6 +4,9 @@ node_modules/
 Thumbs.db
 ~$*
 
+.env
+V2/.env
+
 # Relatórios e dumps locais (PII / tokens)
 V2/*-report.json
 V2/*-run.log

@@ -69,19 +69,65 @@ function loadCatalog() {
 
 /** Product reference 0120000000425 → codigoCurso 164250, lead 4250 */
 function deriveCodigoCurso(productRef) {
-  const m = String(productRef || "").match(/^0120000000(\d+)$/);
-  if (!m) return { codigoCurso: null, codigoCursoLead: null };
-  const core = m[1];
-  const codigoCursoLead = core.length === 3 ? `${core}0` : core;
-  return {
-    codigoCurso: `16${codigoCursoLead}`,
-    codigoCursoLead,
-  };
+  const ref = String(productRef || "");
+  const grad = ref.match(/^0120000000(\d+)$/);
+  if (grad) {
+    const core = grad[1];
+    const codigoCursoLead = core.length === 3 ? `${core}0` : core;
+    return {
+      codigoCurso: `16${codigoCursoLead}`,
+      codigoCursoLead,
+    };
+  }
+  // Pós: 007 + 6 zeros + resto (0070000000223 → 2230; 0070000001644 → 16440)
+  const pos = ref.match(/^007000000(\d+)$/);
+  if (pos) {
+    const codigoCurso = `${Number(pos[1])}0`;
+    return { codigoCurso, codigoCursoLead: codigoCurso };
+  }
+  return { codigoCurso: null, codigoCursoLead: null };
 }
 
 /**
  * @param {{ nome: string, department?: string }} opts
  */
+function stripDuracao(name) {
+  return norm(name).replace(/\s*-\s*\d+\s*meses\s*$/i, "").trim();
+}
+
+function duracaoMeses(name) {
+  const m = norm(name).match(/-\s*(\d+)\s*meses\s*$/);
+  return m ? Number(m[1]) : null;
+}
+
+function maxProductId(rows) {
+  return [...rows].sort((a, b) => Number(b["Product ID"]) - Number(a["Product ID"]))[0];
+}
+
+/** Site: "- 6 meses" no título; 9 meses é o card sem sufixo. 12 meses não existe mais. */
+function pickPosOferta(rows, queryName) {
+  if (!rows.length) return null;
+  if (rows.length === 1) return rows[0];
+  const qDur = duracaoMeses(queryName);
+  if (qDur === 6) {
+    const six = rows.filter((r) => duracaoMeses(r["Product Name"]) === 6);
+    if (six.length) return maxProductId(six);
+  }
+  if (qDur === 9) {
+    const nine = rows.filter((r) => duracaoMeses(r["Product Name"]) === 9);
+    if (nine.length) return maxProductId(nine);
+    const unsuf = rows.filter((r) => duracaoMeses(r["Product Name"]) == null);
+    if (unsuf.length) return maxProductId(unsuf);
+  }
+  if (qDur === 3) {
+    const three = rows.filter((r) => duracaoMeses(r["Product Name"]) === 3);
+    if (three.length) return maxProductId(three);
+  }
+  const six = rows.filter((r) => duracaoMeses(r["Product Name"]) === 6);
+  if (six.length) return maxProductId(six);
+  return maxProductId(rows);
+}
+
 function resolveCurso({ nome, department = "Graduação" }) {
   const { cursos } = loadCatalog();
   const q = norm(nome);
@@ -90,11 +136,23 @@ function resolveCurso({ nome, department = "Graduação" }) {
   }
 
   const deptNorm = department ? norm(department) : null;
+  const isPos = deptNorm && /pos/.test(deptNorm);
 
   let matches = cursos.filter((r) => norm(r["Product Name"]) === q);
   if (deptNorm) {
     const byDept = matches.filter((r) => norm(r.Department) === deptNorm);
     if (byDept.length) matches = byDept;
+  }
+
+  if (isPos) {
+    const family = cursos.filter((r) => {
+      if (deptNorm && norm(r.Department) !== deptNorm) return false;
+      return stripDuracao(r["Product Name"]) === stripDuracao(q);
+    });
+    if (family.length) {
+      const picked = pickPosOferta(family, nome);
+      if (picked) matches = [picked];
+    }
   }
 
   if (matches.length === 0) {
@@ -261,22 +319,26 @@ function resolveCatalog(input) {
 
 function buildCourseConfig(resolvedCurso, defaults = {}) {
   return {
-    productId: resolvedCurso.productId,
-    skuId: resolvedCurso.skuId,
+    productId: defaults.productId ?? resolvedCurso.productId,
+    skuId: defaults.skuId ?? resolvedCurso.skuId,
     courseName: resolvedCurso.courseName,
-    productLabel: resolvedCurso.productLabel,
-    codigoDoCurso: resolvedCurso.codigoCurso,
-    codigoDoCursoLead: resolvedCurso.codigoCursoLead,
-    codCursoSetprices: resolvedCurso.codigoCurso,
-    productRef: resolvedCurso.productRef,
+    productLabel: defaults.productLabel ?? resolvedCurso.productLabel,
+    codigoDoCurso: defaults.codigoDoCurso ?? resolvedCurso.codigoCurso,
+    codigoDoCursoLead: defaults.codigoDoCursoLead ?? resolvedCurso.codigoCursoLead,
+    codCursoSetprices: defaults.codCursoSetprices ?? resolvedCurso.codigoCurso,
+    productRef: defaults.productRef ?? resolvedCurso.productRef,
     codVest: defaults.codVest ?? 581,
     seqVest: defaults.seqVest ?? 5,
+    seqVestSetprices: defaults.seqVestSetprices ?? defaults.seqVest ?? 5,
     campanhaId: defaults.campanhaId ?? 2708,
     campanhaNome: defaults.campanhaNome ?? "Aprovados - Grad EAD [PDP VTEX]",
     productValue: defaults.productValue ?? 5855.48,
     areaInteresse: defaults.areaInteresse ?? "Gestão e Negócios",
     tipoFormacao: defaults.tipoFormacao ?? "Graduação",
+    tipoDoCursoSku: defaults.tipoDoCursoSku ?? 3,
     modalidade: defaults.modalidade ?? 8,
+    modalidadeLabel: defaults.modalidadeLabel ?? "EAD",
+    duracao: defaults.duracao ?? 4,
     unidade: defaults.unidade ?? 16,
     ciclo: defaults.ciclo ?? "2026/2",
   };
@@ -296,4 +358,5 @@ module.exports = {
   loadCatalog,
   resetCache,
   deriveCodigoCurso,
+  pickPosOferta,
 };

@@ -1,0 +1,79 @@
+{
+  "name": "Kommo → Inscrição (teste)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Kommo → motor\nWebhook path: `inscricaoautomatica`\nURL de teste já no Kommo (PROCESSO SELETIVO):\nhttps://banco-dev-n8n-eduit.6tqx2r.easypanel.host/webhook-test/inscricaoautomatica\n\nN8N está no EasyPanel: o nó Motor NÃO pode ser 127.0.0.1 desta máquina. Coloque a URL pública do `inscricao-http.js`.\n\nAtive o workflow e use a URL de produção `/webhook/inscricaoautomatica` no Kommo quando for sair do teste.",
+        "height": 260,
+        "width": 380
+      },
+      "id": "note-1",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [200, 80]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "inscricaoautomatica",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook Kommo",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 400],
+      "webhookId": "inscricaoautomatica"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8787/inscricao",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body || $json }}",
+        "options": {
+          "timeout": 180000
+        }
+      },
+      "id": "http-1",
+      "name": "Motor inscrição",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Kommo": {
+      "main": [
+        [
+          {
+            "node": "Motor inscrição",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
