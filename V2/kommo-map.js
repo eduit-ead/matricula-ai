@@ -115,15 +115,20 @@ function mapForma(raw) {
 
 function mapFormacaoTipo(formacao, tipo) {
   const formaTipo = mapForma(tipo);
+  if (formaTipo) {
+    const pos = formaTipo === "Pós Graduação";
+    return {
+      department: pos ? "Pós-Graduação" : "Graduação",
+      formaIngresso: formaTipo,
+    };
+  }
   const nForm = norm(formacao);
-  const nTipo = norm(tipo);
-  const pos = formaTipo === "Pós Graduação" || nForm.includes("pos") || nTipo.includes("mba");
-  if (pos) {
+  if (nForm === "pos" || nForm === "pos graduacao") {
     return { department: "Pós-Graduação", formaIngresso: "Pós Graduação" };
   }
   return {
-    department: nForm.includes("gradu") ? "Graduação" : "Graduação",
-    formaIngresso: formaTipo || "Vestibular Múltipla Escolha",
+    department: "Graduação",
+    formaIngresso: "Vestibular Múltipla Escolha",
   };
 }
 

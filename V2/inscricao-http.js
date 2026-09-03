@@ -195,7 +195,13 @@ function publicResult(lead, result, err) {
     out.mensagem = `Já existe inscrição nessa forma neste ciclo. SIAA: ${out.inscricaoSIAA || "—"}.`;
     return out;
   }
-  const bits = [`Inscrição ok. SIAA: ${out.inscricaoSIAA || "—"}. Pedido: ${out.orderId || "—"}.`];
+  if (out.ok && !out.inscricaoSIAA) {
+    out.ok = false;
+    out.code = "SEM_SIAA";
+    out.mensagem = `Pedido ${out.orderId || "—"} criado, mas sem inscrição SIAA (forma ${out.formaIngresso}).`;
+    return out;
+  }
+  const bits = [`Inscrição ok. SIAA: ${out.inscricaoSIAA}. Pedido: ${out.orderId || "—"}.`];
   if (out.provaLink) bits.push(`Prova: ${out.provaLink}`);
   if (out.paymentLink) bits.push(`Pagamento (informe o CPF): ${out.paymentLink}`);
   if (out.documentsLink) bits.push(`Upload de documentos (CPF + nascimento ${out.nascimento}): ${out.documentsLink}`);
