@@ -23,6 +23,7 @@ const {
   normalizePhone,
 } = require("./kommo-map");
 const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
+const { writeInscricaoLog } = require("./inscricoes-log");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
 const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
@@ -335,39 +336,48 @@ function authorized(req) {
   return hdr === `Bearer ${AUTH}` || q === AUTH;
 }
 
+async function failLog(lead, err, t0) {
+  const out = publicResult(lead || {}, null, err);
+  out.durationMs = Date.now() - t0;
+  if (lead?.leadId) await afterKommo(lead.leadId, out);
+  await writeInscricaoLog(lead || {}, out);
+  return out;
+}
+
 async function handleInscricao(body) {
+  const t0 = Date.now();
   let lead = fromPlainBody(body.body || body);
   if (!hasLeadFields(lead)) {
     const leadId = extractKommoLeadId(body.body || body);
     if (!leadId) {
       const err = new Error("Informe cpf+curso+polo no JSON, ou um webhook Kommo com lead id + token Kommo");
       err.code = "INPUT_INVALID";
-      throw err;
+      return failLog(lead, err, t0);
     }
     lead = { ...lead, ...(await loadKommoLead(leadId)), leadId };
   }
   if (ONLY_LEAD_ID && String(lead.leadId || "") !== ONLY_LEAD_ID) {
     const err = new Error(`Teste: só o lead ${ONLY_LEAD_ID} pode inscrever (recebido: ${lead.leadId || "sem id"})`);
     err.code = "LEAD_NAO_PERMITIDO";
-    throw err;
+    return failLog(lead, err, t0);
   }
 
   if (!lead.cpf) {
     const err = new Error("CPF ausente no lead");
     err.code = "INPUT_INVALID";
-    throw err;
+    return failLog(lead, err, t0);
   }
   if (!lead.curso || !lead.poloRaw) {
     const err = new Error("Curso Inscrição ou Polo_Inscicao ausente no lead");
     err.code = "INPUT_INVALID";
-    throw err;
+    return failLog(lead, err, t0);
   }
 
   const lockKey = `${String(lead.cpf).replace(/\D/g, "")}:${lead.formaIngresso}`;
   if (inflight.has(lockKey)) {
     const err = new Error("Inscrição deste CPF/forma já está em andamento");
     err.code = "IN_FLIGHT";
-    throw err;
+    return failLog(lead, err, t0);
   }
 
   inflight.add(lockKey);
@@ -383,11 +393,15 @@ async function handleInscricao(body) {
     if (resolvedPolo.km != null) lead.poloKm = resolvedPolo.km;
     const result = await runInscricao(toOverrides(lead));
     const out = publicResult(lead, result, null);
+    out.durationMs = Date.now() - t0;
     await afterKommo(lead.leadId, out);
+    await writeInscricaoLog(lead, out);
     return out;
   } catch (err) {
     const out = publicResult(lead, null, err);
+    out.durationMs = Date.now() - t0;
     await afterKommo(lead.leadId, out);
+    await writeInscricaoLog(lead, out);
     return out;
   } finally {
     inflight.delete(lockKey);
@@ -411,7 +425,9 @@ const server = http.createServer(async (req, res) => {
     const out = await enqueue(() => handleInscricao(body));
     send(res, out.ok ? 200 : 409, out);
   } catch (err) {
-    send(res, 400, publicResult({}, null, err));
+    const out = publicResult({}, null, err);
+    await writeInscricaoLog({}, out);
+    send(res, 400, out);
   }
 });
 
