@@ -21,6 +21,7 @@ const {
   assertCepExiste,
   normalizePhone,
 } = require("./kommo-map");
+const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
 const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
@@ -184,6 +185,7 @@ function publicResult(lead, result, err) {
     nascimento: lead.nascimento || "09/09/1999",
     curso: result.catalog?.curso?.courseName || lead.curso,
     polo: result.catalog?.polo?.poloLabel || lead.polo,
+    poloKm: lead.poloKm != null ? Number(lead.poloKm.toFixed(2)) : null,
     formaIngresso: result.formaIngresso || lead.formaIngresso,
     department: lead.department,
     orderId: result.orderId || null,
@@ -204,6 +206,7 @@ function publicResult(lead, result, err) {
     return out;
   }
   const bits = [`Inscrição ok. SIAA: ${out.inscricaoSIAA}. Pedido: ${out.orderId || "—"}.`];
+  if (out.poloKm != null) bits.push(`Polo mais próximo: ${out.polo} (${out.poloKm} km).`);
   if (out.provaLink) bits.push(`Prova: ${out.provaLink}`);
   if (out.paymentLink) bits.push(`Pagamento (informe o CPF): ${out.paymentLink}`);
   if (out.documentsLink) bits.push(`Upload de documentos (CPF + nascimento ${out.nascimento}): ${out.documentsLink}`);
@@ -313,11 +316,14 @@ async function handleInscricao(body) {
   inflight.add(lockKey);
   try {
     lead.cep = requireCep(lead.cep);
-    await assertCepExiste(lead.cep);
-    const resolvedPolo = resolvePoloInscricao(lead.poloRaw);
+    const vtexPostal = await assertCepExiste(lead.cep);
+    const resolvedPolo = isPoloMaisProximo(lead.poloRaw)
+      ? await resolvePoloMaisProximo(lead.cep, vtexPostal)
+      : resolvePoloInscricao(lead.poloRaw);
     lead.poloPrefixo = resolvedPolo.prefixo;
     lead.poleId = resolvedPolo.poleId;
     lead.polo = resolvedPolo.prefixo;
+    if (resolvedPolo.km != null) lead.poloKm = resolvedPolo.km;
     const result = await runInscricao(toOverrides(lead));
     const out = publicResult(lead, result, null);
     await afterKommo(lead.leadId, out);

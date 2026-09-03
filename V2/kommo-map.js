@@ -3,7 +3,7 @@
  * Nunca resolve por substring (vila / taboão / campinas ambíguos).
  *
  * Slugs oficiais = coluna `polo` de catalog/Polos.xlsx (13 polos).
- * "polo mais próximo" espera a base de coordenadas (ainda não enviada).
+ * "polo mais próximo" → polo-proximo.js (Supabase polo_loc + geocode).
  */
 const { CatalogError } = require("./catalog-resolver");
 
@@ -84,12 +84,6 @@ function resolvePoloInscricao(raw) {
   const q = norm(raw);
   if (!q || q === "selecione") {
     throw new CatalogError("POLO_VAZIO", "Polo_Inscicao vazio ou 'Selecione'.");
-  }
-  if (q === "polo mais proximo") {
-    throw new CatalogError(
-      "POLO_MAIS_PROXIMO_PENDENTE",
-      "Polo_Inscicao='polo mais próximo': falta a base de coordenadas dos polos. Não escolhi polo para não errar."
-    );
   }
   const hit = POLO_INSCRICAO[q];
   if (!hit) {
