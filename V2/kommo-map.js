@@ -137,14 +137,15 @@ function cepDigits(cep) {
 }
 
 function requireCep(cep) {
-  const d = cepDigits(cep);
+  let d = cepDigits(cep);
   if (!d) {
     const err = new Error("CEP ausente no lead");
     err.code = "CEP_AUSENTE";
     throw err;
   }
+  if (d.length === 7) d = `0${d}`;
   if (d.length !== 8) {
-    const err = new Error(`CEP inválido: "${cep}" (${d.length} dígitos). Informe 8 dígitos.`);
+    const err = new Error(`CEP inválido: "${cep}" (${cepDigits(cep).length} dígitos). Informe 8 dígitos.`);
     err.code = "CEP_INVALIDO";
     throw err;
   }
