@@ -16,7 +16,9 @@ const {
   leadFromKommoFields,
   resolvePoloInscricao,
   mapFormacaoTipo,
-  padCep,
+  cepDigits,
+  requireCep,
+  assertCepExiste,
   normalizePhone,
 } = require("./kommo-map");
 
@@ -130,7 +132,7 @@ function fromPlainBody(body) {
     poloRaw: pick(body, ["poloRaw", "Polo_Inscicao", "polo_inscicao", "polo"]),
     department,
     formaIngresso,
-    cep: padCep(pick(body, ["cep", "CEP"])),
+    cep: cepDigits(pick(body, ["cep", "CEP"])),
   };
 }
 
@@ -310,6 +312,8 @@ async function handleInscricao(body) {
 
   inflight.add(lockKey);
   try {
+    lead.cep = requireCep(lead.cep);
+    await assertCepExiste(lead.cep);
     const resolvedPolo = resolvePoloInscricao(lead.poloRaw);
     lead.poloPrefixo = resolvedPolo.prefixo;
     lead.poleId = resolvedPolo.poleId;

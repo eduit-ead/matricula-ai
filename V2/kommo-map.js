@@ -132,10 +132,39 @@ function mapFormacaoTipo(formacao, tipo) {
   };
 }
 
-function padCep(cep) {
-  const d = String(cep || "").replace(/\D/g, "");
-  if (!d) return "";
-  return d.padStart(8, "0").slice(-8);
+function cepDigits(cep) {
+  return String(cep || "").replace(/\D/g, "");
+}
+
+function requireCep(cep) {
+  const d = cepDigits(cep);
+  if (!d) {
+    const err = new Error("CEP ausente no lead");
+    err.code = "CEP_AUSENTE";
+    throw err;
+  }
+  if (d.length !== 8) {
+    const err = new Error(`CEP inválido: "${cep}" (${d.length} dígitos). Informe 8 dígitos.`);
+    err.code = "CEP_INVALIDO";
+    throw err;
+  }
+  return d;
+}
+
+async function assertCepExiste(cep8) {
+  const res = await fetch(`https://cruzeirodosul.myvtex.com/api/checkout/pub/postal-code/BRA/${cep8}`);
+  let json = null;
+  try {
+    json = await res.json();
+  } catch {
+    json = null;
+  }
+  if (!res.ok || !json?.postalCode) {
+    const err = new Error(`CEP inválido ou não encontrado: ${cep8}`);
+    err.code = "CEP_INVALIDO";
+    throw err;
+  }
+  return json;
 }
 
 function normalizePhone(phone) {
@@ -165,7 +194,7 @@ function leadFromKommoFields(lead, contact = {}) {
     formaIngresso,
     formacao,
     tipoInscricao: tipo,
-    cep: padCep(fieldExact(all, FIELD.cep)),
+    cep: cepDigits(fieldExact(all, FIELD.cep)),
   };
 }
 
@@ -177,7 +206,9 @@ module.exports = {
   fieldExact,
   resolvePoloInscricao,
   mapFormacaoTipo,
-  padCep,
+  cepDigits,
+  requireCep,
+  assertCepExiste,
   normalizePhone,
   leadFromKommoFields,
 };
