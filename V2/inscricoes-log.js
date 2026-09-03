@@ -1,6 +1,8 @@
 const SUPABASE_URL = (process.env.SUPABASE_URL || "https://vtlbndvcgajcoajhcnnx.supabase.co").replace(/\/$/, "");
 
 const ERRO_LABEL = {
+  ENEM_SEM_NOTA: "ENEM sem nota — anexe o boletim em Resultado ENEM",
+  ENEM_NOTA_ILEGIVEL: "Não consegui ler as 5 notas do boletim ENEM",
   CEP_AUSENTE: "Lead sem CEP",
   CEP_INVALIDO: "CEP com dígitos errados ou não encontrado na VTEX",
   CEP_GEO_GOOGLE: "Google Geocode não achou o CEP",

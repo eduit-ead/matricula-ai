@@ -198,8 +198,8 @@ function loadInput(overrides = {}) {
     cidade,
     estado,
     formaIngresso: env("FORMA_INGRESSO", "Vestibular Múltipla Escolha"),
-    enemAno: env("ENEM_ANO", "2022"),
-    enemNota: env("ENEM_NOTA", "400"),
+    enemAno: env("ENEM_ANO", ""),
+    enemNota: env("ENEM_NOTA", ""),
     necessidadeEspecial: env(
       "NECESSIDADE_ESPECIAL",
       "0 - Não necessito de condições especiais"
@@ -639,6 +639,14 @@ async function runInscricao(overrides = {}) {
   if (transferencia) {
     course.seqVest = 4;
     course.seqVestSetprices = 1;
+  }
+  if (isEnem(input.formaIngresso)) {
+    const n = Number(input.enemNota);
+    if (!Number.isFinite(n) || n <= 0) {
+      const err = new Error("ENEM sem nota. Anexe o boletim no campo Resultado ENEM.");
+      err.code = "ENEM_SEM_NOTA";
+      throw err;
+    }
   }
   if (!envIsSet("CIDADE") && !overrides.cidade && resolvedPolo.cidade) {
     input.cidade = resolvedPolo.cidade;
@@ -1115,8 +1123,13 @@ async function runInscricao(overrides = {}) {
       },
       enemScores: isEnem(input.formaIngresso)
         ? {
-            ano: input.enemAno || env("ENEM_ANO", "2022"),
-            media: Number(input.enemNota ?? env("ENEM_NOTA", "400")),
+            ano: input.enemAno || env("ENEM_ANO", ""),
+            media: Number(input.enemNota),
+            linguagens: input.enemLinguagens,
+            humanas: input.enemHumanas,
+            natureza: input.enemNatureza,
+            matematica: input.enemMatematica,
+            redacao: input.enemRedacao,
           }
         : null,
       posPayment: pos,

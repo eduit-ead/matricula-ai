@@ -13,6 +13,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "tesseract.js": "^5.1.1",
     "xlsx": "^0.18.5"
   }
 }

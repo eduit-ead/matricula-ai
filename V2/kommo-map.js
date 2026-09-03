@@ -64,6 +64,7 @@ const FIELD = {
   cep: ["cep"],
   telefone: ["telefone inscricao"],
   nascimento: ["data de nascimento"],
+  resultadoEnem: ["resultado enem"],
 };
 
 function fieldExact(fields, names) {
@@ -78,6 +79,24 @@ function fieldExact(fields, names) {
     return String(v).trim();
   }
   return "";
+}
+
+function fieldFileMeta(fields, names) {
+  if (!Array.isArray(fields) || !names?.length) return null;
+  const want = new Set(names.map(norm));
+  for (const f of fields) {
+    const label = norm(f.field_name || f.field_code || "");
+    if (!want.has(label)) continue;
+    const row = f.values?.[0];
+    if (!row) continue;
+    const v = row.value;
+    if (v && typeof v === "object") {
+      const uuid = v.file_uuid || v.uuid || row.file_uuid;
+      if (uuid) return { uuid, name: v.file_name || v.name || "" };
+    }
+    if (row.file_uuid) return { uuid: row.file_uuid, name: row.file_name || "" };
+  }
+  return null;
 }
 
 function resolvePoloInscricao(raw) {
@@ -190,6 +209,7 @@ function leadFromKommoFields(lead, contact = {}) {
     formacao,
     tipoInscricao: tipo,
     cep: cepDigits(fieldExact(all, FIELD.cep)),
+    enemFile: fieldFileMeta(all, FIELD.resultadoEnem),
   };
 }
 
@@ -199,6 +219,7 @@ module.exports = {
   POLO_VALIDOS,
   FIELD,
   fieldExact,
+  fieldFileMeta,
   resolvePoloInscricao,
   mapFormacaoTipo,
   cepDigits,

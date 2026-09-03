@@ -24,6 +24,7 @@ const {
 } = require("./kommo-map");
 const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 const { writeInscricaoLog } = require("./inscricoes-log");
+const { enemFromDocumento, requireEnemNotas } = require("./enem-notas");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
 const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
@@ -89,6 +90,25 @@ async function kommoFetch(pathname) {
   const text = await res.text();
   if (!res.ok) throw new Error(`Kommo ${res.status} ${pathname}: ${text.slice(0, 240)}`);
   return text ? JSON.parse(text) : {};
+}
+
+async function downloadKommoFile(uuid) {
+  const token = process.env.KOMMO_ACCESS_TOKEN;
+  const meta = await kommoFetch(`/api/v4/files/${uuid}`).catch(() => null);
+  const href =
+    meta?._links?.download?.href ||
+    meta?.download_link ||
+    meta?.url ||
+    `${kommoBase()}/download/drive/${uuid}`;
+  const res = await fetch(href, {
+    headers: { Authorization: `Bearer ${token}`, "User-Agent": "matricula-ai-inscricao-http" },
+  });
+  if (!res.ok) {
+    const err = new Error(`Não baixei o arquivo do Resultado ENEM (${res.status}).`);
+    err.code = "ENEM_SEM_NOTA";
+    throw err;
+  }
+  return Buffer.from(await res.arrayBuffer());
 }
 
 let _leadFields = null;
@@ -207,6 +227,11 @@ function toOverrides(lead) {
   if (lead.cep) o.cepRaw = String(lead.cep).replace(/\D/g, "");
   if (lead.enemAno) o.enemAno = lead.enemAno;
   if (lead.enemNota) o.enemNota = lead.enemNota;
+  if (lead.linguagens) o.enemLinguagens = lead.linguagens;
+  if (lead.humanas) o.enemHumanas = lead.humanas;
+  if (lead.natureza) o.enemNatureza = lead.natureza;
+  if (lead.matematica) o.enemMatematica = lead.matematica;
+  if (lead.redacao) o.enemRedacao = lead.redacao;
   return o;
 }
 
@@ -386,6 +411,13 @@ async function handleInscricao(body) {
 
   inflight.add(lockKey);
   try {
+    if (/^enem$/i.test(lead.formaIngresso)) {
+      if (!lead.enemNota && lead.enemFile?.uuid) {
+        const buf = await downloadKommoFile(lead.enemFile.uuid);
+        Object.assign(lead, await enemFromDocumento(buf, lead.enemFile.name));
+      }
+      requireEnemNotas(lead);
+    }
     lead.cep = requireCep(lead.cep);
     const vtexPostal = await assertCepExiste(lead.cep);
     const resolvedPolo = isPoloMaisProximo(lead.poloRaw)
