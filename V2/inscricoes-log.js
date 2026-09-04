@@ -22,6 +22,7 @@ const ERRO_LABEL = {
   INPUT_INVALID: "CPF, curso ou polo ausente",
   LEAD_NAO_PERMITIDO: "Lead fora do allowlist de teste",
   IN_FLIGHT: "Mesmo CPF/forma já em execução",
+  EMAIL_JA_CADASTRADO: "E-mail já tem cadastro na loja com outro CPF",
   INSCRICAO_FAILED: "Falha no checkout VTEX/SIAA",
   CATALOG_ERROR: "Erro de catálogo",
 };

@@ -973,8 +973,7 @@ async function runInscricao(overrides = {}) {
         e.response?.error?.code === "CHK003" ||
         /CHK003/.test(String(e.message || ""));
       if (!chk003) throw e;
-      // CPF já tem perfil na VTEX (ex.: fez segunda e agora vestibular).
-      // Reenviar documento como guest dá 403; o pedido segue no perfil existente.
+      let ofJson = null;
       try {
         const ofRes = await request(
           "10b_orderForm_apos_chk003",
@@ -983,12 +982,23 @@ async function runInscricao(overrides = {}) {
           undefined,
           { Referer: `${BASE}/checkout/` }
         );
-        ctx.savedAddressId = pickSavedAddressId(ofRes.json) || ctx.savedAddressId;
+        ofJson = ofRes.json;
+        ctx.savedAddressId = pickSavedAddressId(ofJson) || ctx.savedAddressId;
       } catch {
-        /* orderForm ainda utilizável; não abortar a inscrição */
+        ofJson = null;
       }
-      ctx.vtexProfileLocked = true;
-      console.log("CHK003: CPF já cadastrado na VTEX — seguindo sem reenviar documento");
+      const p = ofJson?.clientProfileData;
+      const sameCpf = p && maskedDocMatchesCpf(p.document, input.cpf);
+      if (sameCpf) {
+        ctx.vtexProfileLocked = true;
+        console.log("CHK003: mesmo CPF já na VTEX — seguindo sem reenviar documento");
+      } else {
+        const err = new Error(
+          "Este e-mail já tem cadastro na loja com outro CPF. Para testar um CPF novo, use um e-mail que nunca foi inscrito."
+        );
+        err.code = "EMAIL_JA_CADASTRADO";
+        throw err;
+      }
     }
   }
 

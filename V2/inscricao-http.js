@@ -325,13 +325,30 @@ function publicResult(lead, result, err) {
     out.mensagem = `Pedido ${out.orderId || "—"} criado, mas sem inscrição SIAA (forma ${out.formaIngresso}).`;
     return out;
   }
-  const bits = [`Inscrição ok. SIAA: ${out.inscricaoSIAA}. Pedido: ${out.orderId || "—"}.`];
-  if (out.poloKm != null) bits.push(`Polo mais próximo: ${out.polo} (${out.poloKm} km).`);
+  const bits = ["Inscrição ok."];
+  if (out.polo) {
+    bits.push(out.poloKm != null ? `Polo: ${out.polo} (${out.poloKm} km)` : `Polo: ${out.polo}`);
+  }
   if (out.provaLink) bits.push(`Prova: ${out.provaLink}`);
   if (out.paymentLink) bits.push(`Pagamento (informe o CPF): ${out.paymentLink}`);
   if (out.documentsLink) bits.push(`Upload de documentos (CPF + nascimento ${out.nascimento}): ${out.documentsLink}`);
-  out.mensagem = bits.join(" ");
+  out.mensagem = bits.join("\n");
   return out;
+}
+
+async function kommoAddNote(leadId, text) {
+  if (!text) return;
+  const res = await fetch(`${kommoBase()}/api/v4/leads/${leadId}/notes`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.KOMMO_ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([{ note_type: "common", params: { text } }]),
+  });
+  if (!res.ok) {
+    throw new Error(`Kommo note ${res.status}: ${(await res.text()).slice(0, 180)}`);
+  }
 }
 
 async function afterKommo(lead, out) {
@@ -339,17 +356,8 @@ async function afterKommo(lead, out) {
   if (!leadId || !process.env.KOMMO_ACCESS_TOKEN || !kommoBase()) return;
   try {
     await kommoWriteResult(lead || { leadId }, out);
-    if (!out.ok) {
-      await fetch(`${kommoBase()}/api/v4/leads/${leadId}/notes`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.KOMMO_ACCESS_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify([{ note_type: "common", params: { text: out.mensagem } }]),
-      });
-      await kommoAddTag(leadId, "ERRO_INSCRIÇÃO");
-    }
+    await kommoAddNote(leadId, out.mensagem);
+    if (!out.ok) await kommoAddTag(leadId, "ERRO_INSCRIÇÃO");
   } catch (e) {
     console.error("Kommo pós-inscrição:", e.message);
   }
