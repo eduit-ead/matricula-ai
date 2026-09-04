@@ -340,6 +340,14 @@ async function afterKommo(lead, out) {
   try {
     await kommoWriteResult(lead || { leadId }, out);
     if (!out.ok) {
+      await fetch(`${kommoBase()}/api/v4/leads/${leadId}/notes`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.KOMMO_ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([{ note_type: "common", params: { text: out.mensagem } }]),
+      });
       await kommoAddTag(leadId, "ERRO_INSCRIÇÃO");
     }
   } catch (e) {
