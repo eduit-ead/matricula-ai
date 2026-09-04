@@ -190,6 +190,13 @@ async function kommoWriteResult(lead, out) {
 }
 
 async function kommoAddTag(leadId, tagName) {
+  const data = await kommoFetch(`/api/v4/leads/tags?limit=250`);
+  const tags = data._embedded?.tags || [];
+  const hit = tags.find((t) => t.name === tagName);
+  if (!hit) {
+    console.error(`Kommo: tag "${tagName}" não existe, não criei outra.`);
+    return;
+  }
   await fetch(`${kommoBase()}/api/v4/leads/${leadId}`, {
     method: "PATCH",
     headers: {
@@ -198,7 +205,7 @@ async function kommoAddTag(leadId, tagName) {
     },
     body: JSON.stringify({
       id: Number(leadId),
-      _embedded: { tags: [{ name: tagName }] },
+      _embedded: { tags: [{ id: hit.id }] },
     }),
   });
 }
@@ -333,7 +340,7 @@ async function afterKommo(lead, out) {
   try {
     await kommoWriteResult(lead || { leadId }, out);
     if (!out.ok) {
-      await kommoAddTag(leadId, "Erro inscrição");
+      await kommoAddTag(leadId, "ERRO_INSCRIÇÃO");
     }
   } catch (e) {
     console.error("Kommo pós-inscrição:", e.message);
