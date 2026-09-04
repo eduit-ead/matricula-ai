@@ -37,6 +37,27 @@ const POLO_INSCRICAO = {
   "vila mariana": { poleId: 2188, prefixo: "Vila Mariana" },
 };
 
+/** Valor do dropdown Polo_Inscicao no Kommo (mesmo texto da lista). */
+const POLE_ID_TO_KOMMO = {
+  45: "morumbi",
+  1876: "sapopemba (vila ema)",
+  2257: "freguesia",
+  2841: "vila prudente 2",
+  43: "santana 2",
+  50: "barra funda",
+  1823: "mituzi",
+  3135: "ouro verde",
+  3136: "capivari",
+  3146: "taboão centro",
+  8932: "ibirapuera",
+  3137: "itapira",
+  2188: "vila mariana",
+};
+
+function kommoPoloLabel(poleId) {
+  return POLE_ID_TO_KOMMO[Number(poleId)] || "";
+}
+
 const POLO_VALIDOS = [
   "morumbi",
   "sapopemba (vila ema)",
@@ -216,6 +237,8 @@ function leadFromKommoFields(lead, contact = {}) {
 module.exports = {
   norm,
   POLO_INSCRICAO,
+  POLE_ID_TO_KOMMO,
+  kommoPoloLabel,
   POLO_VALIDOS,
   FIELD,
   fieldExact,

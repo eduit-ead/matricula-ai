@@ -15,6 +15,7 @@ const { CatalogError } = require("./catalog-resolver");
 const {
   norm,
   leadFromKommoFields,
+  kommoPoloLabel,
   resolvePoloInscricao,
   mapFormacaoTipo,
   cepDigits,
@@ -124,7 +125,17 @@ function kommoFieldByNames(fields, names) {
   return fields.find((f) => want.has(norm(f.name))) || null;
 }
 
-async function kommoWriteResult(leadId, out) {
+function kommoEnum(field, ...labels) {
+  const enums = field?.enums || [];
+  const want = labels.map(norm).filter(Boolean);
+  return (
+    enums.find((e) => want.includes(norm(e.value))) ||
+    enums.find((e) => want.some((w) => norm(e.value) === w || norm(e.value).includes(w))) ||
+    null
+  );
+}
+
+async function kommoWriteResult(lead, out) {
   const fields = await kommoLeadFields();
   const values = [];
   const nro = kommoFieldByNames(fields, [
@@ -136,16 +147,34 @@ async function kommoWriteResult(leadId, out) {
   if (nro && out.inscricaoSIAA) {
     values.push({ field_id: nro.id, values: [{ value: String(out.inscricaoSIAA) }] });
   }
-  const link = out.provaLink || out.paymentLink || out.documentsLink;
-  const linkField = kommoFieldByNames(fields, [
-    "link da prova",
-    "link inscricao",
-    "link da inscricao",
-    "link documentos",
-  ]);
-  if (linkField && link) {
-    values.push({ field_id: linkField.id, values: [{ value: link }] });
+
+  const statusField = kommoFieldByNames(fields, ["status inscricao"]);
+  const statusEnum = kommoEnum(statusField, out.ok ? "OK" : "ERRO");
+  if (statusField && statusEnum) {
+    values.push({ field_id: statusField.id, values: [{ enum_id: statusEnum.id }] });
   }
+
+  const fromMaisProximo = lead && (lead.poloKm != null || norm(lead.poloRaw) === "polo mais proximo");
+  if (fromMaisProximo && lead.poleId) {
+    const poloField = kommoFieldByNames(fields, [
+      "polo inscicao",
+      "polo inscricao",
+      "polo_inscicao",
+      "polo_inscricao",
+    ]);
+    const slug = kommoPoloLabel(lead.poleId);
+    const poloEnum = kommoEnum(
+      poloField,
+      slug,
+      lead.poloPrefixo,
+      Number(lead.poleId) === 3135 ? "campinas" : "",
+      Number(lead.poleId) === 3146 ? "taboao centro" : ""
+    );
+    if (poloField && poloEnum) {
+      values.push({ field_id: poloField.id, values: [{ enum_id: poloEnum.id }] });
+    }
+  }
+
   if (!values.length) return;
   const res = await fetch(`${kommoBase()}/api/v4/leads`, {
     method: "PATCH",
@@ -153,7 +182,7 @@ async function kommoWriteResult(leadId, out) {
       Authorization: `Bearer ${process.env.KOMMO_ACCESS_TOKEN}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify([{ id: Number(leadId), custom_fields_values: values }]),
+    body: JSON.stringify([{ id: Number(lead.leadId), custom_fields_values: values }]),
   });
   if (!res.ok) {
     throw new Error(`Kommo PATCH ${res.status}: ${(await res.text()).slice(0, 180)}`);
@@ -298,22 +327,13 @@ function publicResult(lead, result, err) {
   return out;
 }
 
-async function afterKommo(leadId, out) {
+async function afterKommo(lead, out) {
+  const leadId = lead?.leadId || out.leadId;
   if (!leadId || !process.env.KOMMO_ACCESS_TOKEN || !kommoBase()) return;
   try {
-    await fetch(`${kommoBase()}/api/v4/leads/${leadId}/notes`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.KOMMO_ACCESS_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify([{ note_type: "common", params: { text: out.mensagem } }]),
-    });
-    if (out.inscricaoSIAA) {
-      await kommoWriteResult(leadId, out);
-    }
+    await kommoWriteResult(lead || { leadId }, out);
     if (!out.ok) {
-      await kommoAddTag(leadId, "ERRO_INSCRIÇÃO");
+      await kommoAddTag(leadId, "Erro inscrição");
     }
   } catch (e) {
     console.error("Kommo pós-inscrição:", e.message);
@@ -368,7 +388,7 @@ function authorized(req) {
 async function failLog(lead, err, t0) {
   const out = publicResult(lead || {}, null, err);
   out.durationMs = Date.now() - t0;
-  if (lead?.leadId) await afterKommo(lead.leadId, out);
+  if (lead?.leadId) await afterKommo(lead, out);
   await writeInscricaoLog(lead || {}, out);
   return out;
 }
@@ -430,13 +450,13 @@ async function handleInscricao(body) {
     const result = await runInscricao(toOverrides(lead));
     const out = publicResult(lead, result, null);
     out.durationMs = Date.now() - t0;
-    await afterKommo(lead.leadId, out);
+    await afterKommo(lead, out);
     await writeInscricaoLog(lead, out);
     return out;
   } catch (err) {
     const out = publicResult(lead, null, err);
     out.durationMs = Date.now() - t0;
-    await afterKommo(lead.leadId, out);
+    await afterKommo(lead, out);
     await writeInscricaoLog(lead, out);
     return out;
   } finally {
