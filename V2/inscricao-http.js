@@ -330,8 +330,12 @@ function publicResult(lead, result, err) {
     bits.push(out.poloKm != null ? `Polo: ${out.polo} (${out.poloKm} km)` : `Polo: ${out.polo}`);
   }
   if (out.provaLink) bits.push(`Prova: ${out.provaLink}`);
-  if (out.paymentLink) bits.push(`Pagamento (informe o CPF): ${out.paymentLink}`);
-  if (out.documentsLink) bits.push(`Upload de documentos (CPF + nascimento ${out.nascimento}): ${out.documentsLink}`);
+  if (out.paymentLink) bits.push(`Pagamento (informe o CPF ${out.cpf || "—"}): ${out.paymentLink}`);
+  if (out.documentsLink) {
+    bits.push(
+      `Upload de documentos (CPF ${out.cpf || "—"} + nascimento ${out.nascimento}): ${out.documentsLink}`
+    );
+  }
   out.mensagem = bits.join("\n");
   return out;
 }
