@@ -968,17 +968,27 @@ async function runInscricao(overrides = {}) {
         { Referer: `${BASE}/checkout/` }
       );
     } catch (e) {
-      if (e.status !== 403) throw e;
-      const ofRes = await request(
-        "10b_orderForm_apos_chk003",
-        "GET",
-        `${BASE}/api/checkout/pub/orderForm/${ctx.orderFormId}`,
-        undefined,
-        { Referer: `${BASE}/checkout/` }
-      );
-      if (!isExistingLockedProfile(ofRes.json, input)) throw e;
+      const chk003 =
+        e.status === 403 ||
+        e.response?.error?.code === "CHK003" ||
+        /CHK003/.test(String(e.message || ""));
+      if (!chk003) throw e;
+      // CPF já tem perfil na VTEX (ex.: fez segunda e agora vestibular).
+      // Reenviar documento como guest dá 403; o pedido segue no perfil existente.
+      try {
+        const ofRes = await request(
+          "10b_orderForm_apos_chk003",
+          "GET",
+          `${BASE}/api/checkout/pub/orderForm/${ctx.orderFormId}`,
+          undefined,
+          { Referer: `${BASE}/checkout/` }
+        );
+        ctx.savedAddressId = pickSavedAddressId(ofRes.json) || ctx.savedAddressId;
+      } catch {
+        /* orderForm ainda utilizável; não abortar a inscrição */
+      }
       ctx.vtexProfileLocked = true;
-      console.log("CHK003: perfil VTEX existente já anexado — seguindo");
+      console.log("CHK003: CPF já cadastrado na VTEX — seguindo sem reenviar documento");
     }
   }
 
