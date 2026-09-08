@@ -4,6 +4,7 @@
  * N8N só encaminha o webhook. Catálogo, VTEX e SIAA ficam no motor.
  *
  * POST /inscricao  — JSON limpo OU payload Kommo (busca o lead se houver token)
+ * POST /webhook   — mesmo handler; URL para o Kommo (responde 200 na hora)
  * GET  /health
  *
  * Env: INSCRICAO_HTTP_PORT (8787), INSCRICAO_HTTP_TOKEN,
@@ -29,7 +30,6 @@ const { enemFromDocumento, requireEnemNotas } = require("./enem-notas");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
 const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
-const ONLY_LEAD_ID = String(process.env.INSCRICAO_ONLY_LEAD_ID || "").trim();
 
 function pick(obj, keys) {
   if (!obj) return "";
@@ -447,11 +447,6 @@ async function handleInscricao(body) {
     }
     lead = { ...lead, ...(await loadKommoLead(leadId)), leadId };
   }
-  if (ONLY_LEAD_ID && String(lead.leadId || "") !== ONLY_LEAD_ID) {
-    const err = new Error(`Teste: só o lead ${ONLY_LEAD_ID} pode inscrever (recebido: ${lead.leadId || "sem id"})`);
-    err.code = "LEAD_NAO_PERMITIDO";
-    return failLog(lead, err, t0);
-  }
 
   if (!lead.cpf) {
     const err = new Error("CPF ausente no lead");
@@ -511,21 +506,23 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "GET" && url.pathname === "/health") {
     return send(res, 200, { ok: true, kommo: Boolean(process.env.KOMMO_ACCESS_TOKEN && kommoBase()) });
   }
-  if (req.method !== "POST" || url.pathname !== "/inscricao") {
-    return send(res, 404, { ok: false, error: "Use POST /inscricao" });
-  }
-  if (!authorized(req)) {
-    return send(res, 401, { ok: false, error: "Unauthorized" });
+  if (req.method !== "POST" || (url.pathname !== "/inscricao" && url.pathname !== "/webhook")) {
+    return send(res, 404, { ok: false, error: "Use POST /inscricao ou POST /webhook" });
   }
 
   try {
     const body = await readBody(req);
-    const out = await enqueue(() => handleInscricao(body));
-    send(res, out.ok ? 200 : 409, out);
+    if (!authorized(req) && !extractKommoLeadId(body.body || body)) {
+      return send(res, 401, { ok: false, error: "Unauthorized" });
+    }
+    send(res, 200, { ok: true, accepted: true });
+    enqueue(() => handleInscricao(body)).catch((err) => {
+      console.error("Inscrição em background:", err.message);
+    });
   } catch (err) {
     const out = publicResult({}, null, err);
     await writeInscricaoLog({}, out);
-    send(res, 400, out);
+    if (!res.headersSent) send(res, 400, out);
   }
 });
 
