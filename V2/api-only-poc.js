@@ -781,7 +781,8 @@ async function runInscricao(overrides = {}) {
       consultaSiaa,
       input.formaIngresso,
       resolvedCurso.courseName || input.curso,
-      course.ciclo
+      course.ciclo,
+      resolvedCurso.productId
     );
     if (mesmoCurso.length) {
       const hit = mesmoCurso[0];

@@ -55,6 +55,7 @@ function summarizeInscricao(lead) {
     courseName: lead.courseName || lead.curso || null,
     ciclo: lead.ciclo || null,
     status: lead.status || null,
+    productId: lead.productId || null,
     marca: lead.marca ?? lead.iesNumber ?? null,
     iesNumber: lead.iesNumber ?? lead.marca ?? null,
   };
@@ -62,8 +63,7 @@ function summarizeInscricao(lead) {
 
 function leadEhPosReal(l) {
   if (normalizeForma(l.formaIngresso) !== "pos") return false;
-  const ies = Number(l.iesNumber ?? l.marca);
-  return ies !== 12;
+  return Number(l.iesNumber ?? l.marca) === 7;
 }
 
 function inscricaoDeOutraForma(leads, numero, formaAtual) {
@@ -76,9 +76,40 @@ function inscricaoDeOutraForma(leads, numero, formaAtual) {
   });
 }
 
+async function order14Existe(orderId, headers = {}) {
+  if (!orderId) return false;
+  const id = /-\d+$/.test(String(orderId)) ? String(orderId) : `${orderId}-01`;
+  try {
+    const order = await fetchJson(`${BASE}/_v/order14/${id}`, { headers });
+    return Boolean(order && (order.orderId || order.status));
+  } catch {
+    return false;
+  }
+}
+
+const OP_CONFIRM_FIELDS =
+  "id,inscricaoSIAA,orderId,status,formaIngresso,courseName,ciclo,marca,iesNumber,productId";
+
+/** Só conta inscrição se o VTEX ainda tiver a ficha finished + pedido. Número solto no lead não basta. */
+async function confirmarInscricaoVtex(lead, headers = {}) {
+  if (!lead?.id || !lead.inscricaoSIAA) return null;
+  const doc = await getLeadDocument(lead.id, headers, OP_CONFIRM_FIELDS);
+  if (!doc?.inscricaoSIAA) return null;
+  if (String(doc.status || "").toLowerCase() !== "finished") return null;
+  if (!doc.orderId) return null;
+  if (!(await order14Existe(doc.orderId, headers))) return null;
+  return summarizeInscricao({ ...lead, ...doc });
+}
+
 async function consultarInscricoesSIAA({ email, cookie = "" }) {
-  const leads = await getLeadOrder(email, withHeaders(cookie));
-  const comSiaa = leads.filter((l) => l.inscricaoSIAA).map(summarizeInscricao);
+  const headers = withHeaders(cookie);
+  const leads = await getLeadOrder(email, headers);
+  const comSiaa = [];
+  for (const lead of leads) {
+    if (!lead?.inscricaoSIAA) continue;
+    const hit = await confirmarInscricaoVtex(lead, headers);
+    if (hit) comSiaa.push(hit);
+  }
   return {
     email,
     leads: leads.map(summarizeInscricao),
@@ -126,7 +157,7 @@ function normalizeCursoKey(name) {
 
 /** Pós: uma inscrição SIAA por curso (família, ignora "- N meses") no ciclo. Outro curso pode.
  * Múltipla/redação/ENEM no mesmo ciclo não bloqueiam. Empresa 12 (grad) não conta como pós. */
-function inscricoesMesmoCursoPos(consulta, formaIngresso, cursoNome, ciclo) {
+function inscricoesMesmoCursoPos(consulta, formaIngresso, cursoNome, ciclo, productId) {
   if (normalizeForma(formaIngresso) !== "pos") return [];
   const cursoKey = normalizeCursoKey(cursoNome);
   if (!cursoKey) return [];
@@ -137,6 +168,7 @@ function inscricoesMesmoCursoPos(consulta, formaIngresso, cursoNome, ciclo) {
       const leadCiclo = normalizeCiclo(l.ciclo);
       if (!leadCiclo || leadCiclo !== cicloKey) return false;
     }
+    if (productId && l.productId && String(l.productId) !== String(productId)) return false;
     return normalizeCursoKey(l.courseName) === cursoKey;
   });
 }
