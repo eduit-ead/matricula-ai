@@ -31,7 +31,7 @@ const { normalizeForma } = require("./post-order-fetch");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
 const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
-const ONLY_LEAD_ID = String(process.env.INSCRICAO_ONLY_LEAD_ID || "19884275").trim();
+const ONLY_LEAD_ID = String(process.env.INSCRICAO_ONLY_LEAD_ID || "").trim();
 
 function pick(obj, keys) {
   if (!obj) return "";
