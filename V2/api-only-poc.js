@@ -31,7 +31,7 @@
 const fs = require("fs");
 const path = require("path");
 const { resolveCatalog, CatalogError } = require("./catalog-resolver");
-const { runPostOrder, consultarInscricoesSIAA, inscricoesDaForma, inscricoesMesmoCursoPos, formaTemLimiteUmaInscricao, fallbackFormaVestibular } = require("./post-order-fetch");
+const { runPostOrder, consultarInscricoesSIAA, inscricoesDaForma, formaTemLimiteUmaInscricao, fallbackFormaVestibular } = require("./post-order-fetch");
 
 const BASE = "https://cruzeirodosul.myvtex.com";
 const BINDING_ID = "b609c118-0b5f-4ae9-b099-d94f79af4a58";
@@ -778,32 +778,7 @@ async function runInscricao(overrides = {}) {
   console.log(JSON.stringify(consultaSiaa.comSiaa, null, 2));
   const mesmaForma = inscricoesDaForma(consultaSiaa, input.formaIngresso, course.ciclo);
   if (pos) {
-    const mesmoCurso = inscricoesMesmoCursoPos(
-      consultaSiaa,
-      input.formaIngresso,
-      resolvedCurso.courseName || input.curso,
-      course.ciclo,
-      resolvedCurso.productId
-    );
-    if (mesmoCurso.length) {
-      const hit = mesmoCurso[0];
-      const result = {
-        ok: false,
-        code: "JA_INSCRITO_CURSO",
-        cpf: input.cpf,
-        email: input.email,
-        formaIngresso: input.formaIngresso,
-        ciclo: course.ciclo,
-        curso: resolvedCurso.courseName || input.curso,
-        inscricaoSIAA: hit.inscricaoSIAA,
-        orderId: hit.orderId,
-        courseName: hit.courseName,
-        existentes: consultaSiaa.comSiaa,
-      };
-      console.log("\n========================================");
-      console.log(JSON.stringify(result, null, 2));
-      return result;
-    }
+    console.log("pós: não bloqueia por inscricaoSIAA no OP — pedido VTEX não prova inscrição no SIAA");
   } else if (
     !pos &&
     formaTemLimiteUmaInscricao(input.formaIngresso) &&
