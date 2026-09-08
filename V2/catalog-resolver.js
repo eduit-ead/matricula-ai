@@ -91,12 +91,20 @@ function deriveCodigoCurso(productRef) {
 /**
  * @param {{ nome: string, department?: string }} opts
  */
+/** Kommo às vezes manda "Administração Pública - 6 meses 6 meses". */
+function collapseDuracaoDuplicada(name) {
+  return String(name || "")
+    .replace(/(?:\s*-)?\s*(\d+)\s*meses(?:(?:\s*-)?\s*\1\s*meses)+/gi, " - $1 meses")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function stripDuracao(name) {
-  return norm(name).replace(/\s*-\s*\d+\s*meses\s*$/i, "").trim();
+  return norm(collapseDuracaoDuplicada(name)).replace(/\s*-\s*\d+\s*meses\s*$/i, "").trim();
 }
 
 function duracaoMeses(name) {
-  const m = norm(name).match(/-\s*(\d+)\s*meses\s*$/);
+  const m = norm(collapseDuracaoDuplicada(name)).match(/-\s*(\d+)\s*meses\s*$/);
   return m ? Number(m[1]) : null;
 }
 
@@ -130,6 +138,7 @@ function pickPosOferta(rows, queryName) {
 
 function resolveCurso({ nome, department = "Graduação" }) {
   const { cursos } = loadCatalog();
+  nome = collapseDuracaoDuplicada(nome);
   const q = norm(nome);
   if (!q) {
     throw new CatalogError("COURSE_NOT_FOUND", "[CATALOG] Nome do curso não informado.");
