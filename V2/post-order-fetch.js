@@ -55,7 +55,25 @@ function summarizeInscricao(lead) {
     courseName: lead.courseName || lead.curso || null,
     ciclo: lead.ciclo || null,
     status: lead.status || null,
+    marca: lead.marca ?? lead.iesNumber ?? null,
+    iesNumber: lead.iesNumber ?? lead.marca ?? null,
   };
+}
+
+function leadEhPosReal(l) {
+  if (normalizeForma(l.formaIngresso) !== "pos") return false;
+  const ies = Number(l.iesNumber ?? l.marca);
+  return ies !== 12;
+}
+
+function inscricaoDeOutraForma(leads, numero, formaAtual) {
+  const key = normalizeForma(formaAtual);
+  if (!numero || !key) return false;
+  return (leads || []).some((l) => {
+    if (String(l.inscricaoSIAA) !== String(numero)) return false;
+    const f = normalizeForma(l.formaIngresso);
+    return f && f !== key;
+  });
 }
 
 async function consultarInscricoesSIAA({ email, cookie = "" }) {
@@ -106,14 +124,21 @@ function normalizeCursoKey(name) {
     .trim();
 }
 
-/** Pós: uma inscrição SIAA por curso (família, ignora "- N meses") no ciclo. Outro curso pode. */
+/** Pós: uma inscrição SIAA por curso (família, ignora "- N meses") no ciclo. Outro curso pode.
+ * Múltipla/redação/ENEM no mesmo ciclo não bloqueiam. Empresa 12 (grad) não conta como pós. */
 function inscricoesMesmoCursoPos(consulta, formaIngresso, cursoNome, ciclo) {
   if (normalizeForma(formaIngresso) !== "pos") return [];
   const cursoKey = normalizeCursoKey(cursoNome);
   if (!cursoKey) return [];
-  return inscricoesDaForma(consulta, formaIngresso, ciclo).filter(
-    (l) => normalizeCursoKey(l.courseName) === cursoKey
-  );
+  const cicloKey = normalizeCiclo(ciclo);
+  return (consulta?.comSiaa || []).filter((l) => {
+    if (!leadEhPosReal(l)) return false;
+    if (cicloKey) {
+      const leadCiclo = normalizeCiclo(l.ciclo);
+      if (!leadCiclo || leadCiclo !== cicloKey) return false;
+    }
+    return normalizeCursoKey(l.courseName) === cursoKey;
+  });
 }
 
 async function fetchJson(url, opts = {}) {
@@ -217,6 +242,9 @@ async function putLeadOrder(lead, orderId, extras = {}, headers = {}) {
     statusGraduacao: Object.prototype.hasOwnProperty.call(extras, "statusGraduacao")
       ? extras.statusGraduacao
       : "0",
+    inscricaoSIAA: Object.prototype.hasOwnProperty.call(extras, "inscricaoSIAA")
+      ? extras.inscricaoSIAA
+      : null,
     passoFicha: extras.passoFicha ?? "4",
     formaPagamento: extras.formaPagamento || lead.formaPagamento || "Isento",
     situacaoPagamento: extras.situacaoPagamento || lead.situacaoPagamento || "Isento",
@@ -231,16 +259,26 @@ async function putLeadOrder(lead, orderId, extras = {}, headers = {}) {
   });
 }
 
-async function pollInscricaoSIAA(email, orderId, { leadId, headers = {}, maxMs = 90000, intervalMs = 3000 } = {}) {
+async function pollInscricaoSIAA(email, orderId, { leadId, headers = {}, formaAtual = "", maxMs = 90000, intervalMs = 3000 } = {}) {
   const start = Date.now();
   while (Date.now() - start < maxMs) {
+    const leads = await getLeadOrder(email, headers);
     if (leadId) {
       const doc = await getLeadDocument(leadId, headers);
-      if (doc?.inscricaoSIAA) return doc;
+      if (
+        doc?.inscricaoSIAA &&
+        !inscricaoDeOutraForma(leads, doc.inscricaoSIAA, formaAtual || doc.formaIngresso)
+      ) {
+        return doc;
+      }
     }
-    const leads = await getLeadOrder(email, headers);
     const lead = selectLead(leads, { leadId, orderId });
-    if (lead?.inscricaoSIAA) return lead;
+    if (
+      lead?.inscricaoSIAA &&
+      !inscricaoDeOutraForma(leads, lead.inscricaoSIAA, formaAtual || lead.formaIngresso)
+    ) {
+      return lead;
+    }
     await new Promise((r) => setTimeout(r, intervalMs));
   }
   return null;
@@ -334,6 +372,15 @@ async function runPostOrder({
   if (!lead) {
     throw new Error(`Lead da execução não encontrado (leadId=${leadId} orderId=${orderId})`);
   }
+  const formaAtual = leadOrderPutExtras.formaIngresso || lead.formaIngresso;
+  if (posPayment) {
+    if (leadId && String(lead.id) !== String(leadId)) {
+      throw new Error("Lead de pós não encontrado; não reutilizar ficha de outra forma");
+    }
+    if (lead.formaIngresso && normalizeForma(lead.formaIngresso) !== "pos") {
+      throw new Error("Lead selecionado não é pós; múltipla/redação no ciclo não fecha no lugar da pós");
+    }
+  }
 
   const putExtras = { ...leadOrderPutExtras, orderId };
 
@@ -341,12 +388,17 @@ async function runPostOrder({
   await putLeadOrder(lead, orderId, putExtras, headers);
   const leads = await getLeadOrder(email, headers);
   lead = selectLead(leads, { leadId: lead.id, orderId }) || lead;
+  if (lead?.inscricaoSIAA && inscricaoDeOutraForma(leads, lead.inscricaoSIAA, formaAtual)) {
+    log("inscricaoSIAA ignorada: número já pertence a outra forma", lead.inscricaoSIAA);
+    lead = { ...lead, inscricaoSIAA: null };
+  }
 
   if (!lead?.inscricaoSIAA) {
     log("\n>>> polling inscricaoSIAA (até 90s)…");
     const polled = await pollInscricaoSIAA(email, orderId, {
       leadId: lead.id,
       headers,
+      formaAtual,
     });
     if (polled?.inscricaoSIAA) {
       lead = { ...lead, ...polled, email: lead.email || polled.email };
