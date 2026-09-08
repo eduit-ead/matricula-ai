@@ -509,6 +509,36 @@ function isPosDept(dept) {
   return /p[oó]s/i.test(String(dept || ""));
 }
 
+/** HAR pós: vault promissório + gatewayCallback. Sem isso o SIAA não cria a inscrição. */
+function posVaultPaymentsPayload(tx, payValue) {
+  const mt = tx?.merchantTransactions?.[0] || {};
+  const transactionId = mt.transactionId || tx?.id;
+  const p0 = mt.payments?.[0] || {};
+  const value = Number(p0.value || payValue || 0);
+  return {
+    transactionId,
+    merchantName: mt.merchantName || mt.id || "CRUZEIRODOSUL",
+    payments: [
+      {
+        paymentSystem: Number(p0.paymentSystem || 17),
+        paymentSystemName: p0.paymentSystemName || "Promissory",
+        group: p0.group || "promissoryPaymentGroup",
+        installments: p0.installments || 1,
+        installmentsInterestRate: p0.installmentsInterestRate || 0,
+        installmentsValue: value,
+        value,
+        referenceValue: Number(p0.referenceValue || value),
+        id: mt.id || "CRUZEIRODOSUL",
+        interestRate: 0,
+        installmentValue: value,
+        transaction: { id: transactionId, merchantName: mt.merchantName || "CRUZEIRODOSUL" },
+        currencyCode: "BRL",
+        originalPaymentIndex: 0,
+      },
+    ],
+  };
+}
+
 function applyPosFromSku(course, sku) {
   const codCurs = String(sku.codCurs || course.codigoDoCurso || "");
   const codUnidade = String(sku.codUnidade || "41");
@@ -1136,18 +1166,29 @@ async function runInscricao(overrides = {}) {
   if (!orderGroup) throw new Error("orderGroup ausente após transaction");
 
   if (pos) {
-    try {
-      await request(
-        "17b_gatewayCallback",
-        "POST",
-        `${BASE}/api/checkout/pub/gatewayCallback/${orderGroup}`,
-        undefined,
-        { Referer: `${BASE}/checkout/` }
-      );
-    } catch (e) {
-      // Promissory sem callCenter: CHK0223. Pedido já existe; o boleto sai no SIAA.
-      console.log("gatewayCallback ignorado:", e.message.slice(0, 180));
-    }
+    const vault = posVaultPaymentsPayload(txRes.json, payValue);
+    if (!vault.transactionId) throw new Error("transactionId ausente para pagamento pós");
+    const callbackUrl = `${BASE}/checkout/gatewayCallback/${orderGroup}/{messageCode}`;
+    const vaultQs = new URLSearchParams({
+      orderId: orderGroup,
+      redirect: "false",
+      callbackUrl,
+      an: "cruzeirodosul",
+    });
+    await request(
+      "17b_vault_promissory",
+      "POST",
+      `https://api.vtexvault.com/api/payments/transactions/${vault.transactionId}/payments?&${vaultQs}`,
+      vault.payments,
+      { Origin: BASE, Referer: `${BASE}/` }
+    );
+    await request(
+      "17c_gatewayCallback",
+      "POST",
+      `${BASE}/api/checkout/pub/gatewayCallback/${orderGroup}`,
+      undefined,
+      { Referer: `${BASE}/checkout/` }
+    );
   }
 
   const checkoutMs = Date.now() - t0;
@@ -1169,6 +1210,14 @@ async function runInscricao(overrides = {}) {
         userStreet: input.street || "Avenida Francisco Matarazzo",
         userAddressNumber: input.semNumero ? "S/N" : "",
         userNeighborhood: input.neighborhood || "Água Branca",
+        ...(pos
+          ? {
+              formaPagamento: "Promissória",
+              situacaoPagamento: "Aberto",
+              statusGraduacao: null,
+              codigoDoCurso: course.codCursoSetprices,
+            }
+          : {}),
       },
       enemScores: enemComNota
         ? {

@@ -214,10 +214,12 @@ async function putLeadOrder(lead, orderId, extras = {}, headers = {}) {
     ...extras,
     orderId,
     status: "finished",
-    statusGraduacao: extras.statusGraduacao ?? "0",
+    statusGraduacao: Object.prototype.hasOwnProperty.call(extras, "statusGraduacao")
+      ? extras.statusGraduacao
+      : "0",
     passoFicha: extras.passoFicha ?? "4",
-    formaPagamento: lead.formaPagamento || extras.formaPagamento || "Isento",
-    situacaoPagamento: lead.situacaoPagamento || extras.situacaoPagamento || "Isento",
+    formaPagamento: extras.formaPagamento || lead.formaPagamento || "Isento",
+    situacaoPagamento: extras.situacaoPagamento || lead.situacaoPagamento || "Isento",
     identifyer: (lead.identifyer || "")
       .replace(/\s-\s(pending|finished)(?:\s-\s[\d-]+)?$/i, "")
       .concat(` - finished - ${orderId}`),
