@@ -154,6 +154,14 @@ async function kommoWriteResult(lead, out) {
     values.push({ field_id: statusField.id, values: [{ enum_id: statusEnum.id }] });
   }
 
+  if (out.ok && out.formaPedida && out.formaIngresso && out.formaPedida !== out.formaIngresso) {
+    const tipoField = kommoFieldByNames(fields, ["tipo inscricao", "tipo_inscricao"]);
+    const tipoEnum = kommoEnum(tipoField, out.formaIngresso);
+    if (tipoField && tipoEnum) {
+      values.push({ field_id: tipoField.id, values: [{ enum_id: tipoEnum.id }] });
+    }
+  }
+
   const fromMaisProximo = lead && (lead.poloKm != null || norm(lead.poloRaw) === "polo mais proximo");
   if (fromMaisProximo && lead.poleId) {
     const poloField = kommoFieldByNames(fields, [
@@ -303,6 +311,7 @@ function publicResult(lead, result, err) {
     formacao: lead.formacao || null,
     tipoInscricao: lead.tipoInscricao || null,
     formaIngresso: result.formaIngresso || lead.formaIngresso,
+    formaPedida: result.formaPedida || null,
     department: lead.department,
     orderId: result.orderId || null,
     inscricaoSIAA: result.inscricaoSIAA || post.inscricaoSIAA || null,
@@ -325,7 +334,11 @@ function publicResult(lead, result, err) {
     out.mensagem = `Pedido ${out.orderId || "—"} criado, mas sem inscrição SIAA (forma ${out.formaIngresso}).`;
     return out;
   }
-  const bits = ["Inscrição ok."];
+  const bits = [
+    out.formaPedida && out.formaPedida !== out.formaIngresso
+      ? `Inscrição ok em ${out.formaIngresso} (pedida: ${out.formaPedida}).`
+      : "Inscrição ok.",
+  ];
   if (out.polo) {
     bits.push(out.poloKm != null ? `Polo: ${out.polo} (${out.poloKm} km)` : `Polo: ${out.polo}`);
   }

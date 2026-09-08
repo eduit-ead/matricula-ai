@@ -31,7 +31,7 @@
 const fs = require("fs");
 const path = require("path");
 const { resolveCatalog, CatalogError } = require("./catalog-resolver");
-const { runPostOrder, consultarInscricoesSIAA, inscricoesDaForma, inscricoesMesmoCursoPos, formaTemLimiteUmaInscricao } = require("./post-order-fetch");
+const { runPostOrder, consultarInscricoesSIAA, inscricoesDaForma, inscricoesMesmoCursoPos, formaTemLimiteUmaInscricao, fallbackFormaVestibular } = require("./post-order-fetch");
 
 const BASE = "https://cruzeirodosul.myvtex.com";
 const BINDING_ID = "b609c118-0b5f-4ae9-b099-d94f79af4a58";
@@ -746,22 +746,30 @@ async function runInscricao(overrides = {}) {
       return result;
     }
   } else if (formaTemLimiteUmaInscricao(input.formaIngresso) && mesmaForma.length) {
-    const hit = mesmaForma[0];
-    const result = {
-      ok: false,
-      code: "JA_INSCRITO_FORMA",
-      cpf: input.cpf,
-      email: input.email,
-      formaIngresso: input.formaIngresso,
-      ciclo: course.ciclo,
-      inscricaoSIAA: hit.inscricaoSIAA,
-      orderId: hit.orderId,
-      courseName: hit.courseName,
-      existentes: consultaSiaa.comSiaa,
-    };
-    console.log("\n========================================");
-    console.log(JSON.stringify(result, null, 2));
-    return result;
+    const alt = fallbackFormaVestibular(input.formaIngresso);
+    const altOcupada = alt && inscricoesDaForma(consultaSiaa, alt, course.ciclo).length > 0;
+    if (alt && !altOcupada) {
+      input.formaPedida = input.formaIngresso;
+      input.formaIngresso = alt;
+      console.log(`SIAA: ${input.formaPedida} já inscrita — fallback para ${alt}`);
+    } else {
+      const hit = mesmaForma[0];
+      const result = {
+        ok: false,
+        code: "JA_INSCRITO_FORMA",
+        cpf: input.cpf,
+        email: input.email,
+        formaIngresso: input.formaIngresso,
+        ciclo: course.ciclo,
+        inscricaoSIAA: hit.inscricaoSIAA,
+        orderId: hit.orderId,
+        courseName: hit.courseName,
+        existentes: consultaSiaa.comSiaa,
+      };
+      console.log("\n========================================");
+      console.log(JSON.stringify(result, null, 2));
+      return result;
+    }
   }
 
   const ofRes = await request(
@@ -1168,6 +1176,8 @@ async function runInscricao(overrides = {}) {
     orderId: `${orderGroup}-01`,
     email: input.email,
     cpf: input.cpf,
+    formaIngresso: input.formaIngresso,
+    formaPedida: input.formaPedida || null,
     catalog: {
       curso: resolvedCurso,
       polo: resolvedPolo,

@@ -86,6 +86,16 @@ function formaTemLimiteUmaInscricao(formaIngresso) {
   return FORMAS_LIMITE_UMA.has(normalizeForma(formaIngresso));
 }
 
+/** Múltipla ↔ Redação. Outras formas não têm fallback. */
+const FORMA_FALLBACK_VEST = {
+  multipla: "Vestibular Redação",
+  redacao: "Vestibular Múltipla Escolha",
+};
+
+function fallbackFormaVestibular(forma) {
+  return FORMA_FALLBACK_VEST[normalizeForma(forma)] || null;
+}
+
 function normalizeCursoKey(name) {
   return String(name || "")
     .toLowerCase()
@@ -434,5 +444,6 @@ module.exports = {
   inscricoesMesmoCursoPos,
   normalizeForma,
   formaTemLimiteUmaInscricao,
+  fallbackFormaVestibular,
   normalizeCiclo,
 };
