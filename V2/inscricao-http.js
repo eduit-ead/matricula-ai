@@ -253,25 +253,33 @@ async function kommoWriteResult(lead, out) {
   }
 }
 
-async function kommoAddTag(leadId, tagName) {
-  const data = await kommoFetch(`/api/v4/leads/tags?limit=250`);
+async function kommoFindTag(tagName) {
+  const q = encodeURIComponent(tagName);
+  const data = await kommoFetch(`/api/v4/leads/tags?limit=50&query=${q}`);
   const tags = data._embedded?.tags || [];
-  const hit = tags.find((t) => t.name === tagName);
+  const want = norm(tagName);
+  return tags.find((t) => norm(t.name) === want) || tags.find((t) => t.name === tagName) || null;
+}
+
+async function kommoAddTag(leadId, tagName) {
+  const hit = await kommoFindTag(tagName);
   if (!hit) {
     console.error(`Kommo: tag "${tagName}" não existe, não criei outra.`);
     return;
   }
-  await fetch(`${kommoBase()}/api/v4/leads/${leadId}`, {
+  const res = await fetch(`${kommoBase()}/api/v4/leads`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${process.env.KOMMO_ACCESS_TOKEN}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      id: Number(leadId),
-      _embedded: { tags: [{ id: hit.id }] },
-    }),
+    body: JSON.stringify([
+      { id: Number(leadId), _embedded: { tags: [{ id: hit.id }] } },
+    ]),
   });
+  if (!res.ok) {
+    throw new Error(`Kommo tag ${tagName} ${res.status}: ${(await res.text()).slice(0, 180)}`);
+  }
 }
 
 async function loadKommoLead(leadId) {
