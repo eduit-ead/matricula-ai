@@ -124,9 +124,37 @@ function formatCep(cep) {
   return d.length === 8 ? `${d.slice(0, 5)}-${d.slice(5)}` : cep;
 }
 
+function parseBirthParts(raw) {
+  const s = String(raw ?? "").trim();
+  if (!s) return null;
+  const iso = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (iso) return { y: iso[1], m: iso[2], d: iso[3] };
+  if (/^\d{10,13}$/.test(s)) {
+    const ms = s.length <= 10 ? Number(s) * 1000 : Number(s);
+    const dt = new Date(ms);
+    if (!Number.isNaN(dt.getTime())) {
+      return {
+        y: String(dt.getUTCFullYear()),
+        m: String(dt.getUTCMonth() + 1),
+        d: String(dt.getUTCDate()),
+      };
+    }
+  }
+  const digits = s.replace(/\D/g, "");
+  if (digits.length === 8) {
+    return { d: digits.slice(0, 2), m: digits.slice(2, 4), y: digits.slice(4, 8) };
+  }
+  const parts = s.split(/[/\-.]/).filter(Boolean);
+  if (parts.length === 3 && parts[0] && parts[1] && parts[2]) {
+    const [d, m, y] = parts;
+    return { d, m, y: y.length === 2 ? `20${y}` : y };
+  }
+  return null;
+}
+
 function birthISO(ddmmyyyy) {
-  const [d, m, y] = String(ddmmyyyy).split("/");
-  return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+  const parts = parseBirthParts(ddmmyyyy) || parseBirthParts("09/09/1999");
+  return `${parts.y}-${String(parts.m).padStart(2, "0")}-${String(parts.d).padStart(2, "0")}`;
 }
 
 function cpfDigits(cpf) {
