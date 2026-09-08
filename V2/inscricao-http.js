@@ -323,14 +323,17 @@ function hasLeadFields(lead) {
 }
 
 function toOverrides(lead) {
+  const posLead = /p[oó]s|mba/i.test(
+    `${lead.department || ""} ${lead.formaIngresso || ""} ${lead.tipoInscricao || ""}`
+  );
   const o = {
     nome: lead.nome,
     cpf: lead.cpf,
     nascimento: lead.nascimento || "09/09/1999",
     curso: lead.curso,
     polo_prefixo: lead.poloPrefixo || lead.polo,
-    department: lead.department,
-    formaIngresso: lead.formaIngresso || "Vestibular Múltipla Escolha",
+    department: posLead ? "Pós-Graduação" : lead.department,
+    formaIngresso: posLead ? "Pós Graduação" : lead.formaIngresso || "Vestibular Múltipla Escolha",
   };
   if (lead.email) o.email = lead.email;
   if (lead.telefone) o.phone = lead.telefone;

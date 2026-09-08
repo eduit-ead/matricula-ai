@@ -646,6 +646,10 @@ async function runInscricao(overrides = {}) {
   const t0 = Date.now();
   const input = loadInput(overrides);
   const skipPostOrder = env("SKIP_POST_ORDER") === "1";
+  if (isPosDept(input.department) || isPosDept(input.formaIngresso) || isPosDept(overrides.department)) {
+    input.department = "Pós-Graduação";
+    input.formaIngresso = "Pós Graduação";
+  }
 
   let catalog;
   try {
@@ -666,11 +670,13 @@ async function runInscricao(overrides = {}) {
   const { curso: resolvedCurso, polo: resolvedPolo, course, catalogLookupMs } = catalog;
   course.slugGuess = resolvedCurso.slugGuess;
   course.pdpSlug = pdpPath(resolvedCurso.slugGuess, resolvedCurso.department || input.department);
-  const pos = isPosDept(resolvedCurso.department || input.department);
+  const pos =
+    isPosDept(input.department) ||
+    isPosDept(input.formaIngresso) ||
+    isPosDept(resolvedCurso.department);
   if (pos) {
-    if (!envIsSet("FORMA_INGRESSO") && !overrides.formaIngresso) {
-      input.formaIngresso = "Pós Graduação";
-    }
+    input.department = "Pós-Graduação";
+    input.formaIngresso = "Pós Graduação";
     course.pos = true;
     course.marca = 7;
     course.iesNumber = 7;
@@ -796,7 +802,11 @@ async function runInscricao(overrides = {}) {
       console.log(JSON.stringify(result, null, 2));
       return result;
     }
-  } else if (formaTemLimiteUmaInscricao(input.formaIngresso) && mesmaForma.length) {
+  } else if (
+    !pos &&
+    formaTemLimiteUmaInscricao(input.formaIngresso) &&
+    mesmaForma.length
+  ) {
     const alt = fallbackFormaVestibular(input.formaIngresso);
     const altOcupada = alt && inscricoesDaForma(consultaSiaa, alt, course.ciclo).length > 0;
     if (alt && !altOcupada) {

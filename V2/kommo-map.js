@@ -143,12 +143,12 @@ function resolvePoloInscricao(raw) {
 function mapForma(raw) {
   const n = norm(raw);
   if (!n) return "";
+  if (n.includes("pos") || n.includes("mba")) return "Pós Graduação";
   if (n.includes("segunda")) return "Segunda Graduação";
   if (n.includes("transfer")) return "Transferência";
   if (n.includes("enem")) return "ENEM";
   if (n.includes("redac")) return "Vestibular Redação";
   if (n.includes("multipl") || n === "vestibular") return "Vestibular Múltipla Escolha";
-  if (n.includes("pos") || n.includes("mba")) return "Pós Graduação";
   return "";
 }
 
