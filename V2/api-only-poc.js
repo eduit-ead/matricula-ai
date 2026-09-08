@@ -771,6 +771,7 @@ async function runInscricao(overrides = {}) {
 
   const consultaSiaa = await consultarInscricoesSIAA({
     email: input.email,
+    cpf: input.cpfDigits || input.cpf,
     cookie: jar.header(),
   });
   console.log("\n>>> CONSULTA SIAA (leadOrder / inscricaoSIAA)");

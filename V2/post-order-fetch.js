@@ -46,6 +46,16 @@ function normalizeCiclo(ciclo) {
   return String(ciclo ?? "").replace(/\D/g, "");
 }
 
+function cpfDigits(cpf) {
+  return String(cpf || "").replace(/\D/g, "");
+}
+
+function sameCpf(a, b) {
+  const da = cpfDigits(a);
+  const db = cpfDigits(b);
+  return da.length === 11 && da === db;
+}
+
 function summarizeInscricao(lead) {
   return {
     id: lead.id,
@@ -56,6 +66,7 @@ function summarizeInscricao(lead) {
     ciclo: lead.ciclo || null,
     status: lead.status || null,
     productId: lead.productId || null,
+    cpf: lead.cpf || null,
     marca: lead.marca ?? lead.iesNumber ?? null,
     iesNumber: lead.iesNumber ?? lead.marca ?? null,
   };
@@ -88,7 +99,7 @@ async function order14Existe(orderId, headers = {}) {
 }
 
 const OP_CONFIRM_FIELDS =
-  "id,inscricaoSIAA,orderId,status,formaIngresso,courseName,ciclo,marca,iesNumber,productId";
+  "id,inscricaoSIAA,orderId,status,formaIngresso,courseName,ciclo,marca,iesNumber,productId,cpf";
 
 /** Só conta inscrição se o VTEX ainda tiver a ficha finished + pedido. Número solto no lead não basta. */
 async function confirmarInscricaoVtex(lead, headers = {}) {
@@ -101,17 +112,42 @@ async function confirmarInscricaoVtex(lead, headers = {}) {
   return summarizeInscricao({ ...lead, ...doc });
 }
 
-async function consultarInscricoesSIAA({ email, cookie = "" }) {
+async function getLeadsByCpf(cpf, headers = {}) {
+  const digits = cpfDigits(cpf);
+  if (digits.length !== 11) return [];
+  try {
+    const rows = await fetchJson(
+      `${BASE}/api/dataentities/OP/search?an=cruzeirodosul&_fields=${OP_CONFIRM_FIELDS}&_where=cpf=${digits}`,
+      { headers }
+    );
+    return Array.isArray(rows) ? rows : [];
+  } catch {
+    return [];
+  }
+}
+
+async function consultarInscricoesSIAA({ email, cpf = "", cookie = "" }) {
   const headers = withHeaders(cookie);
-  const leads = await getLeadOrder(email, headers);
+  const byEmail = email ? await getLeadOrder(email, headers) : [];
+  const byCpf = await getLeadsByCpf(cpf, headers);
+  const seen = new Set();
+  const leads = [];
+  for (const lead of [...byCpf, ...byEmail]) {
+    if (!lead?.id || seen.has(lead.id)) continue;
+    seen.add(lead.id);
+    leads.push(lead);
+  }
   const comSiaa = [];
   for (const lead of leads) {
     if (!lead?.inscricaoSIAA) continue;
     const hit = await confirmarInscricaoVtex(lead, headers);
-    if (hit) comSiaa.push(hit);
+    if (!hit) continue;
+    if (cpf && !sameCpf(hit.cpf, cpf)) continue;
+    comSiaa.push(hit);
   }
   return {
     email,
+    cpf: cpfDigits(cpf) || null,
     leads: leads.map(summarizeInscricao),
     comSiaa,
   };
@@ -121,6 +157,7 @@ function inscricoesDaForma(consulta, formaIngresso, ciclo) {
   const key = normalizeForma(formaIngresso);
   const cicloKey = normalizeCiclo(ciclo);
   return (consulta?.comSiaa || []).filter((l) => {
+    if (consulta?.cpf && !sameCpf(l.cpf, consulta.cpf)) return false;
     if (normalizeForma(l.formaIngresso) !== key) return false;
     if (!cicloKey) return true;
     const leadCiclo = normalizeCiclo(l.ciclo);
@@ -163,6 +200,7 @@ function inscricoesMesmoCursoPos(consulta, formaIngresso, cursoNome, ciclo, prod
   if (!cursoKey) return [];
   const cicloKey = normalizeCiclo(ciclo);
   return (consulta?.comSiaa || []).filter((l) => {
+    if (consulta?.cpf && !sameCpf(l.cpf, consulta.cpf)) return false;
     if (!leadEhPosReal(l)) return false;
     if (cicloKey) {
       const leadCiclo = normalizeCiclo(l.ciclo);
