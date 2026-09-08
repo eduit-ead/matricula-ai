@@ -141,9 +141,22 @@ function withHeaders(cookie) {
   return cookie ? { Cookie: cookie } : {};
 }
 
-async function getOrder14(orderGroup, headers = {}) {
+async function getOrder14(orderGroup, headers = {}, { maxMs = 45000, intervalMs = 2000 } = {}) {
   const orderId = `${orderGroup}-01`;
-  return fetchJson(`${BASE}/_v/order14/${orderId}`, { headers });
+  const url = `${BASE}/_v/order14/${orderId}`;
+  const start = Date.now();
+  let lastErr = null;
+  while (Date.now() - start < maxMs) {
+    try {
+      return await fetchJson(url, { headers });
+    } catch (err) {
+      lastErr = err;
+      if (err.status !== 404) throw err;
+      await new Promise((r) => setTimeout(r, intervalMs));
+    }
+  }
+  console.log(`order14 ainda 404 após ${maxMs}ms — seguindo com ${orderId}`);
+  return null;
 }
 
 async function getLeadOrder(email, headers = {}) {
@@ -309,8 +322,8 @@ async function runPostOrder({
   const orderId = `${orderGroup}-01`;
 
   log("\n>>> GET /_v/order14/{orderGroup}-01");
-  const order = await getOrder14(orderGroup, headers);
-  const numeroInscricao = order.orderId;
+  const order = (await getOrder14(orderGroup, headers)) || { orderId };
+  const numeroInscricao = order.orderId || orderId;
   log("numeroInscricao:", numeroInscricao);
 
   log("\n>>> GET /_v/leadOrder/{email}");
