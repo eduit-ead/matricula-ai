@@ -334,11 +334,13 @@ function publicResult(lead, result, err) {
     out.mensagem = `Pedido ${out.orderId || "—"} criado, mas sem inscrição SIAA (forma ${out.formaIngresso}).`;
     return out;
   }
-  const bits = [
-    out.formaPedida && out.formaPedida !== out.formaIngresso
-      ? `Inscrição ok em ${out.formaIngresso} (pedida: ${out.formaPedida}).`
-      : "Inscrição ok.",
-  ];
+  const bits = [];
+  if (out.formaPedida && out.formaPedida !== out.formaIngresso) {
+    bits.push(`Inscrição em ${out.formaIngresso}`);
+    bits.push(`Já existia uma inscrição em ${out.formaPedida} neste ciclo.`);
+  } else {
+    bits.push("Inscrição ok.");
+  }
   if (out.polo) {
     bits.push(out.poloKm != null ? `Polo: ${out.polo} (${out.poloKm} km)` : `Polo: ${out.polo}`);
   }
