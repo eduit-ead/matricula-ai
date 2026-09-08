@@ -13,6 +13,7 @@ const ERRO_LABEL = {
   SEM_SIAA: "Pedido VTEX criado, SIAA não gerou número",
   JA_INSCRITO_FORMA: "Já existe inscrição dessa forma no ciclo (vestibular, ENEM, segunda ou transferência)",
   JA_INSCRITO_CURSO: "Já existe pós neste mesmo curso no ciclo",
+  POLO_POS_PROXIMO: "Pós não aceita polo mais próximo — escolha o polo",
   POLO_VAZIO: "Polo_Inscicao vazio",
   POLO_DESCONHECIDO: "Polo_Inscicao fora do mapa",
   POLO_LOC_SEM_CHAVE: "Falta SUPABASE_ANON_KEY",

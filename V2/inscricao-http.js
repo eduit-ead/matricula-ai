@@ -26,7 +26,7 @@ const {
 } = require("./kommo-map");
 const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 const { writeInscricaoLog } = require("./inscricoes-log");
-const { enemFromDocumento, requireEnemNotas } = require("./enem-notas");
+const { enemFromDocumento } = require("./enem-notas");
 const { normalizeForma } = require("./post-order-fetch");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
@@ -377,6 +377,7 @@ function publicResult(lead, result, err) {
     formacao: lead.formacao || null,
     tipoInscricao: lead.tipoInscricao || null,
     formaIngresso: result.formaIngresso || lead.formaIngresso,
+    enemNota: Number(post.lead?.statusGraduacao) === 1 ? post.lead.enemMedia || null : null,
     formaPedida: result.formaPedida || null,
     department: lead.department,
     orderId: result.orderId || null,
@@ -417,6 +418,9 @@ function publicResult(lead, result, err) {
       `Upload de documentos (CPF ${out.cpf || "—"} + nascimento ${out.nascimento}): ${out.documentsLink}`
     );
   }
+  if (normalizeForma(out.formaIngresso) === "enem" && !(Number(out.enemNota) > 0)) {
+    bits.push("Falta o boletim ENEM (Resultado ENEM) para iniciar a matrícula.");
+  }
   out.mensagem = bits.join("\n");
   return out;
 }
@@ -444,14 +448,20 @@ async function findKommoStatus(statusName, preferPipelineId) {
 }
 
 function routingAposInscricao(out) {
-  if (!out.ok) return { stay: true, tag: "ERRO_INSCRIÇÃO" };
+  if (!out.ok) return { stay: true, tags: ["ERRO_INSCRIÇÃO"] };
   const forma = normalizeForma(out.formaIngresso);
-  if (forma === "pos") return { stay: true, tag: "POS_OK" };
-  if (forma === "enem") return { stay: true, tag: "ENEM_OK" };
+  if (forma === "pos") return { stay: true, tags: ["POS_OK"] };
+  if (forma === "enem") {
+    const completo = Number(out.enemNota) > 0;
+    return { stay: true, tags: [completo ? "ENEM_OK" : "ADICIONAR_NOTAS"] };
+  }
   if (forma === "segunda" || forma === "transferencia") {
     return { stay: false, statusName: "Em Processo" };
   }
-  if (forma === "multipla" || forma === "redacao" || forma === "merito" || forma === "vestibular") {
+  if (forma === "multipla" || forma === "redacao") {
+    return { stay: false, statusName: "Processo Seletivo", tags: ["ENVIAR_PROVA"] };
+  }
+  if (forma === "merito" || forma === "vestibular") {
     return { stay: false, statusName: "Processo Seletivo" };
   }
   return { stay: true };
@@ -503,7 +513,7 @@ async function afterKommo(lead, out) {
     if (!route.stay && route.statusName) {
       await kommoMoveLead({ ...lead, leadId }, route.statusName);
     }
-    if (route.tag) await kommoAddTag(leadId, route.tag);
+    for (const tag of route.tags || []) await kommoAddTag(leadId, tag);
   } catch (e) {
     console.error("Kommo pós-inscrição:", e.message);
   }
@@ -603,14 +613,22 @@ async function handleInscricao(body) {
 
   inflight.add(lockKey);
   try {
-    if (/^enem$/i.test(lead.formaIngresso)) {
-      if (!lead.enemNota && lead.enemFile?.uuid) {
+    if (/^enem$/i.test(lead.formaIngresso) && !lead.enemNota && lead.enemFile?.uuid) {
+      try {
         const buf = await downloadKommoFile(lead.enemFile);
         Object.assign(lead, await enemFromDocumento(buf, lead.enemFile.name));
+      } catch (e) {
+        console.error("ENEM boletim:", e.message);
       }
-      requireEnemNotas(lead);
     }
     lead.cep = requireCep(lead.cep);
+    if (isPoloMaisProximo(lead.poloRaw) && normalizeForma(lead.formaIngresso) === "pos") {
+      const err = new Error(
+        "Pós Graduação não usa polo mais próximo. Escolha o polo no campo Polo_Inscicao."
+      );
+      err.code = "POLO_POS_PROXIMO";
+      throw err;
+    }
     const vtexPostal = await assertCepExiste(lead.cep);
     const resolvedPolo = isPoloMaisProximo(lead.poloRaw)
       ? await resolvePoloMaisProximo(lead.cep, vtexPostal)

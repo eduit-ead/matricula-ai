@@ -387,11 +387,12 @@ async function runPostOrder({
     log("\n>>> getProvaUrl adiado: sem inscricaoSIAA");
   }
 
-  if (enem) {
-    const scores = enemScores || { media: 400, ano: "2022" };
+  if (enem && Number(enemScores?.media) > 0) {
     log("\n>>> PATCH OP enem nota + iniciar matrícula (statusGraduacao=1)", lead.id);
-    await patchEnemNota(lead.id, scores, headers);
-    lead = { ...lead, enemMedia: Number(scores.media ?? 400), statusGraduacao: 1 };
+    await patchEnemNota(lead.id, enemScores, headers);
+    lead = { ...lead, enemMedia: Number(enemScores.media), statusGraduacao: 1 };
+  } else if (enem) {
+    log("\n>>> PATCH ENEM omitido: sem nota — inscrição criada, matrícula não iniciada");
   }
 
   return {

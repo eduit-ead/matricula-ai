@@ -640,14 +640,7 @@ async function runInscricao(overrides = {}) {
     course.seqVest = 4;
     course.seqVestSetprices = 1;
   }
-  if (isEnem(input.formaIngresso)) {
-    const n = Number(input.enemNota);
-    if (!Number.isFinite(n) || n <= 0) {
-      const err = new Error("ENEM sem nota. Anexe o boletim no campo Resultado ENEM.");
-      err.code = "ENEM_SEM_NOTA";
-      throw err;
-    }
-  }
+  const enemComNota = isEnem(input.formaIngresso) && Number(input.enemNota) > 0;
   if (!envIsSet("CIDADE") && !overrides.cidade && resolvedPolo.cidade) {
     input.cidade = resolvedPolo.cidade;
   }
@@ -1149,7 +1142,7 @@ async function runInscricao(overrides = {}) {
         userAddressNumber: input.semNumero ? "S/N" : "",
         userNeighborhood: input.neighborhood || "Água Branca",
       },
-      enemScores: isEnem(input.formaIngresso)
+      enemScores: enemComNota
         ? {
             ano: input.enemAno || env("ENEM_ANO", ""),
             media: Number(input.enemNota),
