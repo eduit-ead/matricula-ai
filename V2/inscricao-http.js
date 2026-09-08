@@ -27,9 +27,11 @@ const {
 const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 const { writeInscricaoLog } = require("./inscricoes-log");
 const { enemFromDocumento, requireEnemNotas } = require("./enem-notas");
+const { normalizeForma } = require("./post-order-fetch");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
 const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
+const ONLY_LEAD_ID = String(process.env.INSCRICAO_ONLY_LEAD_ID || "19884275").trim();
 
 function pick(obj, keys) {
   if (!obj) return "";
@@ -280,6 +282,8 @@ async function loadKommoLead(leadId) {
   }
   const contact = contacts[0] || {};
   const mapped = leadFromKommoFields(lead, contact);
+  mapped.pipelineId = lead.pipeline_id || null;
+  mapped.statusId = lead.status_id || null;
   const mailPhone = contactEmailPhone(contact);
   if (!mapped.email && mailPhone.email) mapped.email = mailPhone.email;
   if (!mapped.telefone && mailPhone.phone) mapped.telefone = normalizePhone(mailPhone.phone);
@@ -409,6 +413,63 @@ function publicResult(lead, result, err) {
   return out;
 }
 
+let _pipelines = null;
+async function kommoPipelines() {
+  if (_pipelines) return _pipelines;
+  const data = await kommoFetch("/api/v4/leads/pipelines");
+  _pipelines = data._embedded?.pipelines || [];
+  return _pipelines;
+}
+
+async function findKommoStatus(statusName, preferPipelineId) {
+  const want = norm(statusName);
+  const pipes = await kommoPipelines();
+  const match = (p) => (p._embedded?.statuses || []).find((s) => norm(s.name) === want);
+  const preferred = preferPipelineId && pipes.find((p) => Number(p.id) === Number(preferPipelineId));
+  const hitPref = preferred && match(preferred);
+  if (hitPref) return { pipeline_id: preferred.id, status_id: hitPref.id };
+  for (const p of pipes) {
+    const hit = match(p);
+    if (hit) return { pipeline_id: p.id, status_id: hit.id };
+  }
+  return null;
+}
+
+function routingAposInscricao(out) {
+  if (!out.ok) return { stay: true, tag: "ERRO_INSCRIÇÃO" };
+  const forma = normalizeForma(out.formaIngresso);
+  if (forma === "pos") return { stay: true, tag: "POS_OK" };
+  if (forma === "enem") return { stay: true, tag: "ENEM_OK" };
+  if (forma === "segunda" || forma === "transferencia") {
+    return { stay: false, statusName: "Em Processo" };
+  }
+  if (forma === "multipla" || forma === "redacao" || forma === "merito" || forma === "vestibular") {
+    return { stay: false, statusName: "Processo Seletivo" };
+  }
+  return { stay: true };
+}
+
+async function kommoMoveLead(lead, statusName) {
+  const dest = await findKommoStatus(statusName, lead.pipelineId);
+  if (!dest) {
+    console.error(`Kommo: fase "${statusName}" não encontrada.`);
+    return;
+  }
+  const res = await fetch(`${kommoBase()}/api/v4/leads`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${process.env.KOMMO_ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([
+      { id: Number(lead.leadId), pipeline_id: dest.pipeline_id, status_id: dest.status_id },
+    ]),
+  });
+  if (!res.ok) {
+    throw new Error(`Kommo move ${res.status}: ${(await res.text()).slice(0, 180)}`);
+  }
+}
+
 async function kommoAddNote(leadId, text) {
   if (!text) return;
   const res = await fetch(`${kommoBase()}/api/v4/leads/${leadId}/notes`, {
@@ -430,7 +491,11 @@ async function afterKommo(lead, out) {
   try {
     await kommoWriteResult(lead || { leadId }, out);
     await kommoAddNote(leadId, out.mensagem);
-    if (!out.ok) await kommoAddTag(leadId, "ERRO_INSCRIÇÃO");
+    const route = routingAposInscricao(out);
+    if (!route.stay && route.statusName) {
+      await kommoMoveLead({ ...lead, leadId }, route.statusName);
+    }
+    if (route.tag) await kommoAddTag(leadId, route.tag);
   } catch (e) {
     console.error("Kommo pós-inscrição:", e.message);
   }
@@ -500,6 +565,14 @@ async function handleInscricao(body) {
       return failLog(lead, err, t0);
     }
     lead = { ...lead, ...(await loadKommoLead(leadId)), leadId };
+  }
+  if (ONLY_LEAD_ID && String(lead.leadId || "") !== ONLY_LEAD_ID) {
+    const err = new Error(`Teste: só o lead ${ONLY_LEAD_ID} pode inscrever (recebido: ${lead.leadId || "sem id"})`);
+    err.code = "LEAD_NAO_PERMITIDO";
+    const out = publicResult(lead || {}, null, err);
+    out.durationMs = Date.now() - t0;
+    await writeInscricaoLog(lead || {}, out);
+    return out;
   }
 
   if (!lead.cpf) {
