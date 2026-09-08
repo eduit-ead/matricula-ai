@@ -93,17 +93,71 @@ async function kommoFetch(pathname) {
   return text ? JSON.parse(text) : {};
 }
 
-async function downloadKommoFile(uuid) {
+let _driveUrl = null;
+async function kommoDriveBase() {
+  if (_driveUrl) return _driveUrl;
+  const acc = await kommoFetch("/api/v4/account?with=drive_url");
+  const raw = acc.drive_url || "https://drive-c.kommo.com";
+  _driveUrl = String(raw).replace(/\/$/, "");
+  return _driveUrl;
+}
+
+/** Igual ao N8N: Bearer no Drive; no redirect para outro host, sem Authorization. */
+async function downloadHref(href, token) {
+  let url = href;
+  let sendAuth = true;
+  for (let i = 0; i < 6; i++) {
+    const headers = { "User-Agent": "matricula-ai-inscricao-http" };
+    if (sendAuth && token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetch(url, { headers, redirect: "manual" });
+    if (res.status >= 300 && res.status < 400) {
+      const loc = res.headers.get("location");
+      if (!loc) break;
+      const next = new URL(loc, url).href;
+      sendAuth = new URL(next).host === new URL(url).host;
+      url = next;
+      continue;
+    }
+    return res;
+  }
+  const err = new Error("Redirect do download do Resultado ENEM sem destino.");
+  err.code = "ENEM_SEM_NOTA";
+  throw err;
+}
+
+async function resolveEnemDownloadHref(file) {
+  if (file?.downloadHref) return file.downloadHref;
+  const uuid = file?.uuid || file;
+  if (!uuid) return "";
   const token = process.env.KOMMO_ACCESS_TOKEN;
-  const meta = await kommoFetch(`/api/v4/files/${uuid}`).catch(() => null);
-  const href =
-    meta?._links?.download?.href ||
-    meta?.download_link ||
-    meta?.url ||
-    `${kommoBase()}/download/drive/${uuid}`;
-  const res = await fetch(href, {
-    headers: { Authorization: `Bearer ${token}`, "User-Agent": "matricula-ai-inscricao-http" },
+  const drive = await kommoDriveBase();
+  const metaRes = await fetch(`${drive}/v1.0/files/${encodeURIComponent(uuid)}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      "User-Agent": "matricula-ai-inscricao-http",
+    },
   });
+  if (!metaRes.ok) {
+    const err = new Error(
+      `Não li o Resultado ENEM no Drive do Kommo (${metaRes.status}). O token precisa da permissão de arquivos.`
+    );
+    err.code = "ENEM_SEM_NOTA";
+    throw err;
+  }
+  const meta = await metaRes.json();
+  return meta?._links?.download?.href || meta?._links?.download_version?.href || "";
+}
+
+async function downloadKommoFile(file) {
+  const token = process.env.KOMMO_ACCESS_TOKEN;
+  const href = await resolveEnemDownloadHref(file);
+  if (!href) {
+    const err = new Error("Drive do Kommo não devolveu o link de download do Resultado ENEM.");
+    err.code = "ENEM_SEM_NOTA";
+    throw err;
+  }
+  const res = await downloadHref(href, token);
   if (!res.ok) {
     const err = new Error(`Não baixei o arquivo do Resultado ENEM (${res.status}).`);
     err.code = "ENEM_SEM_NOTA";
@@ -470,7 +524,7 @@ async function handleInscricao(body) {
   try {
     if (/^enem$/i.test(lead.formaIngresso)) {
       if (!lead.enemNota && lead.enemFile?.uuid) {
-        const buf = await downloadKommoFile(lead.enemFile.uuid);
+        const buf = await downloadKommoFile(lead.enemFile);
         Object.assign(lead, await enemFromDocumento(buf, lead.enemFile.name));
       }
       requireEnemNotas(lead);

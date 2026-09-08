@@ -113,9 +113,14 @@ function fieldFileMeta(fields, names) {
     const v = row.value;
     if (v && typeof v === "object") {
       const uuid = v.file_uuid || v.uuid || row.file_uuid;
-      if (uuid) return { uuid, name: v.file_name || v.name || "" };
+      const downloadHref = v._links?.download?.href || v.download_url || v.download_link || "";
+      if (uuid || downloadHref) {
+        return { uuid, name: v.file_name || v.name || "", downloadHref };
+      }
     }
-    if (row.file_uuid) return { uuid: row.file_uuid, name: row.file_name || "" };
+    if (row.file_uuid) {
+      return { uuid: row.file_uuid, name: row.file_name || "", downloadHref: "" };
+    }
   }
   return null;
 }
