@@ -1142,6 +1142,9 @@ async function runInscricao(overrides = {}) {
       `16_leadUpdateAddress: 500 persistente (${addrWarn}) — seguindo; endereço vai no putLeadOrder`
     );
   }
+  const avisos = addrWarn
+    ? ["Aviso: app da loja não gravou o endereço (erro 500 deles); endereço salvo no pós-pedido."]
+    : [];
 
   let payValue = 0;
   if (pos) {
@@ -1292,6 +1295,7 @@ async function runInscricao(overrides = {}) {
       street: input.street || "Avenida Francisco Matarazzo",
       neighborhood: input.neighborhood || "Água Branca",
     },
+    avisos,
     post,
   };
 

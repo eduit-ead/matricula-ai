@@ -441,6 +441,7 @@ function publicResult(lead, result, err) {
   if (normalizeForma(out.formaIngresso) === "enem" && !(Number(out.enemNota) > 0)) {
     bits.push("Falta o boletim ENEM (Resultado ENEM) para iniciar a matrícula.");
   }
+  for (const aviso of result.avisos || []) bits.push(aviso);
   out.mensagem = bits.join("\n");
   return out;
 }
