@@ -72,6 +72,21 @@ function extractKommoLeadId(body) {
   return String(body.leadId || body.lead_id || "");
 }
 
+/** status/add = mudança de fase. update = campo/nota/tag (não pode reinscrever). */
+function kommoWebhookKind(body) {
+  const raw = body?.body || body || {};
+  if (raw.leads?.status || raw["leads[status][0][id]"]) return "status";
+  if (raw.leads?.add || raw["leads[add][0][id]"]) return "add";
+  if (raw.leads?.update || raw["leads[update][0][id]"]) return "update";
+  return "unknown";
+}
+
+async function leadNaInscricao(lead) {
+  if (!lead?.statusId) return false;
+  const dest = await findKommoStatus("Inscrição", lead.pipelineId);
+  return Boolean(dest && Number(lead.statusId) === Number(dest.status_id));
+}
+
 function kommoBase() {
   if (process.env.KOMMO_BASE_URL) return process.env.KOMMO_BASE_URL.replace(/\/$/, "");
   const sub = process.env.KOMMO_SUBDOMAIN || "admamoeduitcombr";
@@ -586,6 +601,15 @@ async function handleInscricao(body) {
       return failLog(lead, err, t0);
     }
     lead = { ...lead, ...(await loadKommoLead(leadId)), leadId };
+    const kind = kommoWebhookKind(body.body || body);
+    if (kind === "update") {
+      console.log(`webhook ignorado: update do lead ${leadId}`);
+      return { ok: true, skipped: true, reason: "KOMMO_UPDATE" };
+    }
+    if (kind !== "unknown" && !(await leadNaInscricao(lead))) {
+      console.log(`webhook ignorado: lead ${leadId} fora de Inscrição`);
+      return { ok: true, skipped: true, reason: "FORA_INSCRICAO" };
+    }
   }
   if (ONLY_LEAD_ID && String(lead.leadId || "") !== ONLY_LEAD_ID) {
     const err = new Error(`Teste: só o lead ${ONLY_LEAD_ID} pode inscrever (recebido: ${lead.leadId || "sem id"})`);
@@ -672,6 +696,10 @@ const server = http.createServer(async (req, res) => {
       return send(res, 401, { ok: false, error: "Unauthorized" });
     }
     send(res, 200, { ok: true, accepted: true });
+    if (kommoWebhookKind(body.body || body) === "update") {
+      console.log("webhook ignorado: update de campo");
+      return;
+    }
     enqueue(() => handleInscricao(body)).catch((err) => {
       console.error("Inscrição em background:", err.message);
     });
