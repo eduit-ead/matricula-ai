@@ -4,6 +4,7 @@
  */
 const { CatalogError } = require("./catalog-resolver");
 const { norm, POLO_INSCRICAO } = require("./kommo-map");
+const { poloBloqueado } = require("./polos-bloqueados"); // TEMP: polos sem cota
 
 const SUPABASE_URL = (process.env.SUPABASE_URL || "https://vtlbndvcgajcoajhcnnx.supabase.co").replace(/\/$/, "");
 const GEOCODE_URL = process.env.GOOGLE_GEOCODE_URL || "https://maps.googleapis.com/maps/api/geocode/json";
@@ -115,6 +116,7 @@ async function resolvePoloMaisProximo(cep8, vtexPostal = null) {
     const slug = slugFromNome(row.nome);
     const mapped = slug && POLO_INSCRICAO[slug];
     if (!mapped) continue;
+    if (poloBloqueado(mapped.poleId)) continue; // TEMP: pula polo sem cota, pega o 2º mais próximo
     const lat = Number(row.latitude);
     const lng = Number(row.longitude);
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;

@@ -25,6 +25,7 @@ const {
   normalizePhone,
 } = require("./kommo-map");
 const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
+const { assertPoloPermitido } = require("./polos-bloqueados"); // TEMP: polos sem cota
 const { writeInscricaoLog } = require("./inscricoes-log");
 const { enemFromDocumento } = require("./enem-notas");
 const { normalizeForma } = require("./post-order-fetch");
@@ -660,6 +661,7 @@ async function handleInscricao(body) {
     const resolvedPolo = isPoloMaisProximo(lead.poloRaw)
       ? await resolvePoloMaisProximo(lead.cep, vtexPostal)
       : resolvePoloInscricao(lead.poloRaw);
+    assertPoloPermitido(resolvedPolo.poleId); // TEMP: polos sem cota
     lead.poloPrefixo = resolvedPolo.prefixo;
     lead.poleId = resolvedPolo.poleId;
     lead.polo = resolvedPolo.prefixo;
