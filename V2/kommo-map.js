@@ -207,6 +207,28 @@ async function assertCepExiste(cep8) {
   return json;
 }
 
+/** Dígitos verificadores do CPF. A VTEX só valida no fechamento do pedido
+ *  (ORD007) — aqui a gente barra antes de gastar o fluxo inteiro. */
+function cpfDVValido(cpf) {
+  const d = String(cpf || "").replace(/\D/g, "");
+  if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
+  let s = 0;
+  for (let i = 0; i < 9; i++) s += Number(d[i]) * (10 - i);
+  let r = s % 11;
+  if (Number(d[9]) !== (r < 2 ? 0 : 11 - r)) return false;
+  s = 0;
+  for (let i = 0; i < 10; i++) s += Number(d[i]) * (11 - i);
+  r = s % 11;
+  return Number(d[10]) === (r < 2 ? 0 : 11 - r);
+}
+
+function assertCpfValido(cpf) {
+  if (cpfDVValido(cpf)) return;
+  const err = new Error(`CPF inválido: "${cpf}". Confira os dígitos no card (provável digitação errada).`);
+  err.code = "CPF_INVALIDO";
+  throw err;
+}
+
 function normalizePhone(phone) {
   let d = String(phone || "").replace(/\D/g, "");
   if (d.startsWith("55") && d.length >= 12) d = d.slice(2);
@@ -252,6 +274,8 @@ module.exports = {
   mapFormacaoTipo,
   cepDigits,
   requireCep,
+  cpfDVValido,
+  assertCpfValido,
   assertCepExiste,
   normalizePhone,
   leadFromKommoFields,

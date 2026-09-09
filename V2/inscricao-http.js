@@ -22,6 +22,7 @@ const {
   cepDigits,
   requireCep,
   assertCepExiste,
+  assertCpfValido,
   normalizePhone,
 } = require("./kommo-map");
 const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
@@ -627,6 +628,11 @@ async function handleInscricao(body) {
   if (!lead.cpf) {
     const err = new Error("CPF ausente no lead");
     err.code = "INPUT_INVALID";
+    return failLog(lead, err, t0);
+  }
+  try {
+    assertCpfValido(lead.cpf);
+  } catch (err) {
     return failLog(lead, err, t0);
   }
   if (!lead.curso || !lead.poloRaw) {
