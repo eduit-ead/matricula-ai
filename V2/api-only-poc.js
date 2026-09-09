@@ -556,6 +556,9 @@ function applyPosFromSku(course, sku) {
   course.tipoDoCursoSku = 8;
   course.tipoFormacao = "Pós Graduação";
   course.duracao = 12;
+  // SKU do Excel pode estar inativo na VTEX (ex.: Psicologia Hospitalar: Excel 4154, ativo 4267).
+  // O carrinho precisa do SKU ativo, senão o setprices responde 500.
+  if (sku.skuId) course.skuId = Number(sku.skuId);
   course.leadProductId = String(sku.skuId || course.skuId);
   course.productLabel = `${course.leadProductId} - ${course.courseName} online`;
   course.planoPagamento = Number(sku.parcelasPlano) || 18;
