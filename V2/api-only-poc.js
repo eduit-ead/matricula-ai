@@ -593,8 +593,11 @@ function buildLeadPatchIngresso(input, course, polo, orderFormId) {
     codigoDoCurso: course.codigoDoCurso,
   };
   if (isEnem(input.formaIngresso)) {
-    patch.enemNumeroInscricao = input.enemNumeroInscricao ?? null;
-    patch.enemAno = input.enemAno ?? null;
+    if (input.enemNumeroInscricao) patch.enemNumeroInscricao = input.enemNumeroInscricao;
+    if (input.enemAno) patch.enemAno = input.enemAno;
+  }
+  for (const k of Object.keys(patch)) {
+    if (patch[k] === null || patch[k] === undefined) delete patch[k];
   }
   return patch;
 }
@@ -887,12 +890,22 @@ async function runInscricao(overrides = {}) {
     }
   }
 
-  await request(
-    "6_lead_patch_ingresso",
-    "PATCH",
-    `${BASE}/v1/lead/${ctx.leadId}`,
-    buildLeadPatchIngresso(input, course, resolvedPolo, ctx.orderFormId)
-  );
+  let ingressoOk = false;
+  for (let attempt = 1; attempt <= 3 && !ingressoOk; attempt++) {
+    try {
+      await request(
+        `6_lead_patch_ingresso_try${attempt}`,
+        "PATCH",
+        `${BASE}/v1/lead/${ctx.leadId}`,
+        buildLeadPatchIngresso(input, course, resolvedPolo, ctx.orderFormId)
+      );
+      ingressoOk = true;
+    } catch (e) {
+      const retryable = e.status === 500 || e.status === 502 || e.status === 503;
+      if (!retryable || attempt === 3) throw e;
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  }
 
   await request(
     "7_addToCart",
