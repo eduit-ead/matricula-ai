@@ -241,6 +241,11 @@ function loadInput(overrides = {}) {
       : [-46.67549133300781, -23.52617073059082],
   };
   const input = { ...base, ...overrides };
+  // toOverrides envia só cepRaw — sem isto o postalCode ficava no default
+  // 05001-200 para todo lead do Kommo (endereço errado no checkout e no OP).
+  if (overrides.cepRaw && !overrides.postalCode) {
+    input.postalCode = formatCep(overrides.cepRaw);
+  }
   if (overrides.nascimento && !overrides.birthDate) {
     input.birthDate = birthISO(overrides.nascimento);
   }
@@ -1108,9 +1113,13 @@ async function runInscricao(overrides = {}) {
     await request("15_shipping_3", "POST", shippingUrl, shippingPayload(5, input, ctx, resolvedPolo), shippingHeaders);
   }
 
-  // VTEX às vezes responde 500 transitório aqui (mesmo padrão do 6_lead_patch_ingresso).
-  let addrOk = false;
-  for (let attempt = 1; attempt <= 3 && !addrOk; attempt++) {
+  // O app da loja (leadUpdateAddress) quebra com 500 para alguns CPFs
+  // (estado pré-existente no master data — ex.: CPF 55939871820, reproduzido
+  // em 09/09/2026: mesmo fluxo com outro CPF retorna 200). É bug server-side
+  // deles; o endereço é reescrito no pós-pedido (putLeadOrder), então 500
+  // persistente vira aviso e o fluxo segue. Erros não-500 continuam fatais.
+  let addrWarn = null;
+  for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       await request(
         `16_leadUpdateAddress_try${attempt}`,
@@ -1119,12 +1128,19 @@ async function runInscricao(overrides = {}) {
         { orderFormId: ctx.orderFormId, birthDate: input.birthDate },
         { Referer: `${BASE}/checkout/` }
       );
-      addrOk = true;
+      addrWarn = null;
+      break;
     } catch (e) {
       const retryable = e.status === 500 || e.status === 502 || e.status === 503;
-      if (!retryable || attempt === 3) throw e;
-      await new Promise((r) => setTimeout(r, 2000));
+      if (!retryable) throw e;
+      addrWarn = e.message;
+      if (attempt < 3) await new Promise((r) => setTimeout(r, 2000));
     }
+  }
+  if (addrWarn) {
+    console.error(
+      `16_leadUpdateAddress: 500 persistente (${addrWarn}) — seguindo; endereço vai no putLeadOrder`
+    );
   }
 
   let payValue = 0;
