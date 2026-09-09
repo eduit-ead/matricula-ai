@@ -1108,13 +1108,24 @@ async function runInscricao(overrides = {}) {
     await request("15_shipping_3", "POST", shippingUrl, shippingPayload(5, input, ctx, resolvedPolo), shippingHeaders);
   }
 
-  await request(
-    "16_leadUpdateAddress",
-    "POST",
-    `${BASE}/api/io/v1/leadUpdateAddress/${ctx.leadId}`,
-    { orderFormId: ctx.orderFormId, birthDate: input.birthDate },
-    { Referer: `${BASE}/checkout/` }
-  );
+  // VTEX às vezes responde 500 transitório aqui (mesmo padrão do 6_lead_patch_ingresso).
+  let addrOk = false;
+  for (let attempt = 1; attempt <= 3 && !addrOk; attempt++) {
+    try {
+      await request(
+        `16_leadUpdateAddress_try${attempt}`,
+        "POST",
+        `${BASE}/api/io/v1/leadUpdateAddress/${ctx.leadId}`,
+        { orderFormId: ctx.orderFormId, birthDate: input.birthDate },
+        { Referer: `${BASE}/checkout/` }
+      );
+      addrOk = true;
+    } catch (e) {
+      const retryable = e.status === 500 || e.status === 502 || e.status === 503;
+      if (!retryable || attempt === 3) throw e;
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  }
 
   let payValue = 0;
   if (pos) {
