@@ -27,6 +27,7 @@ const {
 const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 const { assertPoloPermitido } = require("./polos-bloqueados"); // TEMP: polos sem cota
 const { writeInscricaoLog } = require("./inscricoes-log");
+const { maybeSendMensagem } = require("./mensagem");
 const { enemFromDocumento } = require("./enem-notas");
 const { normalizeForma } = require("./post-order-fetch");
 
@@ -588,6 +589,7 @@ async function failLog(lead, err, t0) {
   out.durationMs = Date.now() - t0;
   if (lead?.leadId) await afterKommo(lead, out);
   await writeInscricaoLog(lead || {}, out);
+  await maybeSendMensagem(lead, out);
   return out;
 }
 
@@ -671,12 +673,14 @@ async function handleInscricao(body) {
     out.durationMs = Date.now() - t0;
     await afterKommo(lead, out);
     await writeInscricaoLog(lead, out);
+    await maybeSendMensagem(lead, out);
     return out;
   } catch (err) {
     const out = publicResult(lead, null, err);
     out.durationMs = Date.now() - t0;
     await afterKommo(lead, out);
     await writeInscricaoLog(lead, out);
+    await maybeSendMensagem(lead, out);
     return out;
   } finally {
     inflight.delete(lockKey);
