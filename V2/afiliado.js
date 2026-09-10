@@ -179,6 +179,20 @@ async function sortearAfiliado(lead, out) {
   }
 }
 
+/** Nota no card do Kommo para dar visibilidade ao envio (nunca lança). */
+async function kommoNote(leadId, text) {
+  try {
+    const token = process.env.KOMMO_ACCESS_TOKEN;
+    const base = (process.env.KOMMO_BASE_URL || `https://${process.env.KOMMO_SUBDOMAIN || "admamoeduitcombr"}.kommo.com`).replace(/\/$/, "");
+    if (!token || !leadId) return;
+    await fetch(`${base}/api/v4/leads/${leadId}/notes`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify([{ note_type: "common", params: { text } }]),
+    });
+  } catch {}
+}
+
 /** Agenda o envio para 45-90s depois. Fire-and-forget, nunca lança. */
 function agendarEnvioAfiliado(lead) {
   try {
@@ -195,8 +209,10 @@ function agendarEnvioAfiliado(lead) {
           poleId: lead.poleId,
         });
         console.log(`[afiliado] lead ${lead.leadId}: indicação enviada (polo ${lead.poleId || POLO_FALLBACK})`);
+        await kommoNote(lead.leadId, "Indicação ao programa de afiliados enviada ✔");
       } catch (e) {
         console.error(`[afiliado] lead ${lead.leadId}: falha —`, e.message);
+        await kommoNote(lead.leadId, `Falha ao enviar indicação de afiliado: ${e.message}`);
       }
     }, delay);
     t.unref?.();
