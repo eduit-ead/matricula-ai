@@ -5,8 +5,9 @@
  * de 45-90s, envia o formulário da squeeze page com os dados do lead —
  * mesmo fluxo do preenchimento manual (ver afiliados.har).
  *
- * Percentual: tabela `configuracoes` do Supabase, chave `afiliado_percentual`
- * (cache de 60s). Fallback: env AFILIADO_PERCENTUAL. Default 0 = desligado.
+ * Percentual: tabela `porcentagem_afiliados` do Supabase, chave
+ * `afiliado_percentual` (cache de 60s). Fallback: env AFILIADO_PERCENTUAL.
+ * Default 0 = desligado.
  *
  * Polo: usa o poleId (SIAA) do lead — mesmo ID que o campo aceita (ex: 50 =
  * Barra Funda). Fallback: env AFILIADO_POLO.
@@ -38,7 +39,7 @@ async function getPercentual() {
   if (!key) return fallback;
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.afiliado_percentual&select=valor`,
+      `${SUPABASE_URL}/rest/v1/porcentagem_afiliados?chave=eq.afiliado_percentual&select=valor`,
       { headers: { apikey: key, Authorization: `Bearer ${key}` } }
     );
     if (!res.ok) throw new Error(`config ${res.status}`);
