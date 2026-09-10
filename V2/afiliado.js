@@ -155,10 +155,15 @@ async function enviarAfiliado({ nome, email, telefone, cpf, curso, poleId }) {
 async function sortearAfiliado(lead, out) {
   try {
     if (!out?.ok || !out?.inscricaoSIAA) return false;
-    if (ONLY_LEAD && String(lead?.leadId || "") !== ONLY_LEAD) return false;
     if (!lead?.nome || !lead?.email || !lead?.telefone || !lead?.cpf) {
       console.log(`[afiliado] lead ${lead?.leadId}: dados incompletos — skip`);
       return false;
+    }
+    // Modo teste: com AFILIADO_ONLY_LEAD_ID, só esse lead participa — sempre 100%.
+    if (ONLY_LEAD) {
+      const match = String(lead?.leadId || "") === ONLY_LEAD;
+      if (match) console.log(`[afiliado] lead ${lead.leadId}: modo teste — 100% (AFILIADO_ONLY_LEAD_ID)`);
+      return match;
     }
     const pct = await getPercentual();
     if (!(pct > 0)) return false;
