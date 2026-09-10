@@ -5,8 +5,11 @@
  * de 45-90s, envia o formulário da squeeze page com os dados do lead —
  * mesmo fluxo do preenchimento manual (ver afiliados.har).
  *
- * Percentual: tabela `config` do Supabase, chave `afiliado_percentual`
+ * Percentual: tabela `configuracoes` do Supabase, chave `afiliado_percentual`
  * (cache de 60s). Fallback: env AFILIADO_PERCENTUAL. Default 0 = desligado.
+ *
+ * Polo: usa o poleId (SIAA) do lead — mesmo ID que o campo aceita (ex: 50 =
+ * Barra Funda). Fallback: env AFILIADO_POLO.
  *
  * Fase de teste: AFILIADO_ONLY_LEAD_ID limita o disparo a um lead.
  * Nunca lança: afiliado não pode derrubar/atrasar a inscrição.
@@ -19,7 +22,7 @@ const BV_ID = process.env.AFILIADO_BV_ID || "ROGERIO19444899";
 const TOKEN_CAMPAIGN = process.env.AFILIADO_TOKEN_CAMPAIGN || "dFhYa3Fha096RkhOakZuRGIqWmFwUT09";
 const CD_CAMPAIGN = process.env.AFILIADO_CD_CAMPAIGN || "pcGRIcXXkNztkWzCkmfR9w==";
 const CD_CUSTOMER = process.env.AFILIADO_CD_CUSTOMER || "W65IR*@ahIvKzclKX2r6cg==";
-const POLO = process.env.AFILIADO_POLO || "50";
+const POLO_FALLBACK = process.env.AFILIADO_POLO || "50";
 const ONLY_LEAD = String(process.env.AFILIADO_ONLY_LEAD_ID || "").trim();
 
 const SQUEEZE_URL = `https://account.beeviral.app/SqueezePage?code=${encodeURIComponent(TOKEN_CAMPAIGN)}&bvid=${BV_ID}`;
@@ -35,12 +38,12 @@ async function getPercentual() {
   if (!key) return fallback;
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/config?key=eq.afiliado_percentual&select=value`,
+      `${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.afiliado_percentual&select=valor`,
       { headers: { apikey: key, Authorization: `Bearer ${key}` } }
     );
     if (!res.ok) throw new Error(`config ${res.status}`);
     const rows = await res.json();
-    const pct = Number(rows?.[0]?.value);
+    const pct = Number(rows?.[0]?.valor);
     const value = Number.isFinite(pct) && pct >= 0 ? Math.min(pct, 100) : fallback;
     _pctCache = { at: now, value };
     return value;
@@ -68,7 +71,7 @@ function fmtFone(f) {
   return String(f || "");
 }
 
-async function enviarAfiliado({ nome, email, telefone, cpf, curso }) {
+async function enviarAfiliado({ nome, email, telefone, cpf, curso, poleId }) {
   const page = await fetch(SQUEEZE_URL, {
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" },
   });
@@ -84,6 +87,7 @@ async function enviarAfiliado({ nome, email, telefone, cpf, curso }) {
   const cpfFmt = fmtCpf(cpf);
   const cursoV = curso || "Administração";
   const unidade = "CRUZEIRO DO SUL - VIRTUAL";
+  const poloV = poleId != null && poleId !== "" ? String(poleId) : POLO_FALLBACK;
   const poloLabel = "Se você escolheu a Cruzeiro do Sul Virtual, informe o seu Polo:";
 
   const additional = JSON.stringify({
@@ -93,14 +97,14 @@ async function enviarAfiliado({ nome, email, telefone, cpf, curso }) {
     37833: cursoV,
     37834: "EAD",
     37876: unidade,
-    37877: POLO,
+    37877: poloV,
     Email: email,
     Telefone: fone55,
     CPF: cpfFmt,
     "Cursos de Interesse": cursoV,
     "Modalidade do Curso ": "EAD",
     "Unidade desejada": unidade,
-    [poloLabel]: POLO,
+    [poloLabel]: poloV,
   });
 
   const fd = new FormData();
@@ -111,7 +115,7 @@ async function enviarAfiliado({ nome, email, telefone, cpf, curso }) {
   fd.append("Cursos de Interesse", cursoV);
   fd.append("Modalidade do Curso ", "EAD");
   fd.append("Unidade desejada", unidade);
-  fd.append(poloLabel, POLO);
+  fd.append(poloLabel, poloV);
   fd.append("CD_CAMPAIGN", CD_CAMPAIGN);
   fd.append("CD_CUSTOMER", CD_CUSTOMER);
   fd.append("CD_CHANNEL_RECOMMENDATION", "Manual");
@@ -146,47 +150,53 @@ async function enviarAfiliado({ nome, email, telefone, cpf, curso }) {
   return json;
 }
 
-/** Sorteia e agenda o envio. Retorna na hora; o envio acontece em 45-90s. */
-function maybeAgendarAfiliado(lead, out) {
+/** Sorteio: true = lead entra no programa (chamar agendarEnvioAfiliado). Nunca lança. */
+async function sortearAfiliado(lead, out) {
   try {
-    if (!out?.ok || !out?.inscricaoSIAA) return;
-    if (ONLY_LEAD && String(lead?.leadId || "") !== ONLY_LEAD) return;
+    if (!out?.ok || !out?.inscricaoSIAA) return false;
+    if (ONLY_LEAD && String(lead?.leadId || "") !== ONLY_LEAD) return false;
     if (!lead?.nome || !lead?.email || !lead?.telefone || !lead?.cpf) {
       console.log(`[afiliado] lead ${lead?.leadId}: dados incompletos — skip`);
-      return;
+      return false;
     }
-    getPercentual()
-      .then((pct) => {
-        if (!(pct > 0)) return;
-        const roll = Math.random() * 100;
-        if (roll >= pct) {
-          console.log(`[afiliado] lead ${lead.leadId}: não sorteado (${roll.toFixed(1)} >= ${pct}%)`);
-          return;
-        }
-        const delay = 45_000 + Math.floor(Math.random() * 45_000);
-        console.log(
-          `[afiliado] lead ${lead.leadId}: sorteado (${roll.toFixed(1)} < ${pct}%), envio em ${Math.round(delay / 1000)}s`
-        );
-        const t = setTimeout(async () => {
-          try {
-            await enviarAfiliado({
-              nome: lead.nome,
-              email: lead.email,
-              telefone: lead.telefone,
-              cpf: lead.cpf,
-              curso: lead.curso,
-            });
-            console.log(`[afiliado] lead ${lead.leadId}: indicação enviada`);
-          } catch (e) {
-            console.error(`[afiliado] lead ${lead.leadId}: falha —`, e.message);
-          }
-        }, delay);
-        t.unref?.();
-      })
-      .catch(() => {});
+    const pct = await getPercentual();
+    if (!(pct > 0)) return false;
+    const roll = Math.random() * 100;
+    const sorteado = roll < pct;
+    console.log(
+      `[afiliado] lead ${lead.leadId}: ${sorteado ? "SORTEADO" : "não sorteado"} (${roll.toFixed(1)} ${sorteado ? "<" : ">="} ${pct}%)`
+    );
+    return sorteado;
+  } catch (e) {
+    console.error("[afiliado] sorteio:", e.message);
+    return false;
+  }
+}
+
+/** Agenda o envio para 45-90s depois. Fire-and-forget, nunca lança. */
+function agendarEnvioAfiliado(lead) {
+  try {
+    const delay = 45_000 + Math.floor(Math.random() * 45_000);
+    console.log(`[afiliado] lead ${lead.leadId}: envio em ${Math.round(delay / 1000)}s`);
+    const t = setTimeout(async () => {
+      try {
+        await enviarAfiliado({
+          nome: lead.nome,
+          email: lead.email,
+          telefone: lead.telefone,
+          cpf: lead.cpf,
+          curso: lead.curso,
+          poleId: lead.poleId,
+        });
+        console.log(`[afiliado] lead ${lead.leadId}: indicação enviada (polo ${lead.poleId || POLO_FALLBACK})`);
+      } catch (e) {
+        console.error(`[afiliado] lead ${lead.leadId}: falha —`, e.message);
+      }
+    }, delay);
+    t.unref?.();
   } catch (e) {
     console.error("[afiliado] agendamento:", e.message);
   }
 }
 
-module.exports = { maybeAgendarAfiliado, enviarAfiliado, getPercentual };
+module.exports = { sortearAfiliado, agendarEnvioAfiliado, enviarAfiliado, getPercentual };

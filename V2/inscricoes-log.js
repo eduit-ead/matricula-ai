@@ -61,6 +61,7 @@ async function writeInscricaoLog(lead, out) {
     polo_km: out.poloKm != null ? out.poloKm : lead.poloKm ?? null,
     order_id: out.orderId || null,
     inscricao_siaa: out.inscricaoSIAA || null,
+    afiliado: Boolean(out.afiliado),
   };
   const res = await fetch(`${SUPABASE_URL}/rest/v1/inscricoes_logs`, {
     method: "POST",
