@@ -62,6 +62,9 @@ async function writeInscricaoLog(lead, out) {
     order_id: out.orderId || null,
     inscricao_siaa: out.inscricaoSIAA || null,
     afiliado: Boolean(out.afiliado),
+    // Só envia a chave quando há erro — não quebra o insert se a coluna
+    // afiliado_erro ainda não existir na tabela.
+    ...(out.afiliadoErro ? { afiliado_erro: String(out.afiliadoErro).slice(0, 500) } : {}),
   };
   const res = await fetch(`${SUPABASE_URL}/rest/v1/inscricoes_logs`, {
     method: "POST",

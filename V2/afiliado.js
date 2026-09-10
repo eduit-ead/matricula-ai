@@ -3,8 +3,8 @@
  *
  * Fluxo: ANTES da inscrição, sorteia X% dos leads; o sorteado tem a indicação
  * enviada na hora (form da squeeze page, mesmo fluxo manual do afiliados.har)
- * e a inscrição só começa AFILIADO_DELAY_MS depois (default 55s) — simulando
- * quem entra pelo link do afiliado e se inscreve em seguida.
+ * e a inscrição só começa 55s depois — simulando quem entra pelo link do
+ * afiliado e se inscreve em seguida. Resultado (ok/erro) só vai para o banco.
  *
  * Percentual: tabela `porcentagem_afiliados` do Supabase, chave
  * `afiliado_percentual` (cache de 60s). Fallback: env AFILIADO_PERCENTUAL.
@@ -26,7 +26,7 @@ const CD_CAMPAIGN = process.env.AFILIADO_CD_CAMPAIGN || "pcGRIcXXkNztkWzCkmfR9w=
 const CD_CUSTOMER = process.env.AFILIADO_CD_CUSTOMER || "W65IR*@ahIvKzclKX2r6cg==";
 const POLO_FALLBACK = process.env.AFILIADO_POLO || "50";
 const ONLY_LEAD = String(process.env.AFILIADO_ONLY_LEAD_ID || "").trim();
-const DELAY_MS = Number(process.env.AFILIADO_DELAY_MS || 55_000);
+const DELAY_MS = 55_000; // espera fixa entre a indicação e a inscrição
 
 const SQUEEZE_URL = `https://account.beeviral.app/SqueezePage?code=${encodeURIComponent(TOKEN_CAMPAIGN)}&bvid=${BV_ID}`;
 const RECEIVE_URL = "https://account.beeviral.app/widget/ReceiveRecommendation";
@@ -180,28 +180,15 @@ async function sortearAfiliado(lead) {
   }
 }
 
-/** Nota no card do Kommo para dar visibilidade ao envio (nunca lança). */
-async function kommoNote(leadId, text) {
-  try {
-    const token = process.env.KOMMO_ACCESS_TOKEN;
-    const base = (process.env.KOMMO_BASE_URL || `https://${process.env.KOMMO_SUBDOMAIN || "admamoeduitcombr"}.kommo.com`).replace(/\/$/, "");
-    if (!token || !leadId) return;
-    await fetch(`${base}/api/v4/leads/${leadId}/notes`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify([{ note_type: "common", params: { text } }]),
-    });
-  } catch {}
-}
-
 /**
  * Fluxo pré-inscrição: sorteia; se sorteado, envia a indicação AGORA e espera
- * DELAY_MS (default 55s) antes de liberar a inscrição. Retorna true se a
- * indicação foi enviada. Nunca lança.
+ * DELAY_MS (55s) antes de liberar a inscrição. Sem nota no Kommo — o resultado
+ * vai só para o banco. Retorna { enviado, erro }. Nunca lança.
  */
 async function executarAfiliadoPreInscricao(lead) {
+  const falha = { enviado: false, erro: null };
   try {
-    if (!(await sortearAfiliado(lead))) return false;
+    if (!(await sortearAfiliado(lead))) return falha;
     try {
       await enviarAfiliado({
         nome: lead.nome,
@@ -212,18 +199,16 @@ async function executarAfiliadoPreInscricao(lead) {
         poleId: lead.poleId,
       });
       console.log(`[afiliado] lead ${lead.leadId}: indicação enviada (polo ${lead.poleId || POLO_FALLBACK})`);
-      await kommoNote(lead.leadId, "Indicação ao programa de afiliados enviada ✔");
     } catch (e) {
       console.error(`[afiliado] lead ${lead.leadId}: falha —`, e.message);
-      await kommoNote(lead.leadId, `Falha ao enviar indicação de afiliado: ${e.message}`);
-      return false; // sem indicação, sem espera
+      return { enviado: false, erro: e.message }; // sem indicação, sem espera
     }
     console.log(`[afiliado] lead ${lead.leadId}: aguardando ${Math.round(DELAY_MS / 1000)}s antes da inscrição`);
     await new Promise((r) => setTimeout(r, DELAY_MS));
-    return true;
+    return { enviado: true, erro: null };
   } catch (e) {
     console.error("[afiliado] pré-inscrição:", e.message);
-    return false;
+    return { enviado: false, erro: e.message };
   }
 }
 

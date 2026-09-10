@@ -651,6 +651,7 @@ async function handleInscricao(body) {
 
   inflight.add(lockKey);
   let afiliadoFeito = false;
+  let afiliadoErro = null;
   try {
     if (/^enem$/i.test(lead.formaIngresso) && !lead.enemNota && lead.enemFile?.uuid) {
       try {
@@ -677,11 +678,14 @@ async function handleInscricao(body) {
     lead.poleId = resolvedPolo.poleId;
     lead.polo = resolvedPolo.prefixo;
     if (resolvedPolo.km != null) lead.poloKm = resolvedPolo.km;
-    // Indicação de afiliado ANTES da inscrição: se sorteado, envia e espera ~55s.
-    afiliadoFeito = await executarAfiliadoPreInscricao(lead);
+    // Indicação de afiliado ANTES da inscrição: se sorteado, envia e espera 55s.
+    const af = await executarAfiliadoPreInscricao(lead);
+    afiliadoFeito = af.enviado;
+    afiliadoErro = af.erro;
     const result = await runInscricao(toOverrides(lead));
     const out = publicResult(lead, result, null);
     out.afiliado = afiliadoFeito;
+    if (afiliadoErro) out.afiliadoErro = afiliadoErro;
     out.durationMs = Date.now() - t0;
     await afterKommo(lead, out);
     await writeInscricaoLog(lead, out);
@@ -690,6 +694,7 @@ async function handleInscricao(body) {
   } catch (err) {
     const out = publicResult(lead, null, err);
     out.afiliado = afiliadoFeito;
+    if (afiliadoErro) out.afiliadoErro = afiliadoErro;
     out.durationMs = Date.now() - t0;
     await afterKommo(lead, out);
     await writeInscricaoLog(lead, out);
