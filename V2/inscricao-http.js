@@ -29,6 +29,7 @@ const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 const { assertPoloPermitido } = require("./polos-bloqueados"); // TEMP: polos sem cota
 const { writeInscricaoLog } = require("./inscricoes-log");
 const { maybeSendMensagem } = require("./mensagem");
+const { maybeAgendarAfiliado } = require("./afiliado");
 const { enemFromDocumento } = require("./enem-notas");
 const { normalizeForma } = require("./post-order-fetch");
 
@@ -681,6 +682,7 @@ async function handleInscricao(body) {
     await afterKommo(lead, out);
     await writeInscricaoLog(lead, out);
     await maybeSendMensagem(lead, out);
+    maybeAgendarAfiliado(lead, out);
     return out;
   } catch (err) {
     const out = publicResult(lead, null, err);

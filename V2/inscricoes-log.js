@@ -78,4 +78,4 @@ async function writeInscricaoLog(lead, out) {
   }
 }
 
-module.exports = { writeInscricaoLog, ERRO_LABEL };
+module.exports = { writeInscricaoLog, ERRO_LABEL, SUPABASE_URL, supabaseKey };
