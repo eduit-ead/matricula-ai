@@ -88,8 +88,19 @@ const FIELD = {
   resultadoEnem: ["resultado enem"],
 };
 
-function fieldExact(fields, names) {
+/** Campo duplicado no Kommo: existe "E-mail" antigo (fluxo SIAA, id 693733) e
+ *  "E-mail" do fluxo de inscrição (id 689701). Pelo nome sempre caía no antigo. */
+const FIELD_ID_PREFER = { email: 689701 };
+
+function fieldExact(fields, names, preferId) {
   if (!Array.isArray(fields) || !names?.length) return "";
+  if (preferId) {
+    const f = fields.find((x) => Number(x.field_id) === Number(preferId));
+    const v = f?.values?.[0]?.value;
+    if (v != null && String(v).trim() !== "") {
+      return typeof v === "object" ? String(v.name || v.enum || "").trim() : String(v).trim();
+    }
+  }
   const want = new Set(names.map(norm));
   for (const f of fields) {
     const label = norm(f.field_name || f.field_code || "");
@@ -247,7 +258,7 @@ function leadFromKommoFields(lead, contact = {}) {
     leadId: lead.id != null ? String(lead.id) : "",
     nome: fieldExact(all, FIELD.nome) || lead.name || contact.name || "",
     cpf: fieldExact(all, FIELD.cpf),
-    email: fieldExact(all, FIELD.email),
+    email: fieldExact(all, FIELD.email, FIELD_ID_PREFER.email),
     telefone: normalizePhone(fieldExact(all, FIELD.telefone)),
     nascimento: fieldExact(all, FIELD.nascimento),
     curso: fieldExact(all, FIELD.cursoInscricao),
