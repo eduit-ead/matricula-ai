@@ -178,6 +178,12 @@ const FORMA_FALLBACK_VEST = {
   redacao: "Vestibular Múltipla Escolha",
 };
 
+/** Múltipla/redação: o link da prova quebra quando gerado rápido demais após a
+ *  inscrição (info do time responsável). Espera antes de buscar — com o fluxo
+ *  atual (~22s), 22s aqui fecha o processo em ~45s. Ajustável por PROVA_WAIT_MS. */
+const FORMAS_PROVA_LENTA = new Set(["multipla", "redacao"]);
+const PROVA_WAIT_MS = Number(process.env.PROVA_WAIT_MS || 22_000);
+
 function fallbackFormaVestibular(forma) {
   return FORMA_FALLBACK_VEST[normalizeForma(forma)] || null;
 }
@@ -502,6 +508,11 @@ async function runPostOrder({
       log("\n>>> documentsLink adiado: sem inscricaoSIAA");
     }
   } else if (lead?.inscricaoSIAA && !enem) {
+    const formaProva = normalizeForma(lead?.formaIngresso || leadOrderPutExtras.formaIngresso);
+    if (FORMAS_PROVA_LENTA.has(formaProva) && PROVA_WAIT_MS > 0) {
+      log(`\n>>> aguardando ${Math.round(PROVA_WAIT_MS / 1000)}s antes de getProvaUrl (link quebra se gerado rápido demais)`);
+      await new Promise((r) => setTimeout(r, PROVA_WAIT_MS));
+    }
     log("\n>>> GET /v1/getProvaUrl");
     provaLink = await getProvaUrl(lead, order, headers);
     log("provaLink:", provaLink.slice(0, 80) + "…");
