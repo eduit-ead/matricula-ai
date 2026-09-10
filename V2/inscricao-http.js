@@ -29,7 +29,7 @@ const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 const { assertPoloPermitido } = require("./polos-bloqueados"); // TEMP: polos sem cota
 const { writeInscricaoLog } = require("./inscricoes-log");
 const { maybeSendMensagem } = require("./mensagem");
-const { sortearAfiliado, agendarEnvioAfiliado } = require("./afiliado");
+const { executarAfiliadoPreInscricao } = require("./afiliado");
 const { enemFromDocumento } = require("./enem-notas");
 const { normalizeForma } = require("./post-order-fetch");
 
@@ -650,6 +650,7 @@ async function handleInscricao(body) {
   }
 
   inflight.add(lockKey);
+  let afiliadoFeito = false;
   try {
     if (/^enem$/i.test(lead.formaIngresso) && !lead.enemNota && lead.enemFile?.uuid) {
       try {
@@ -676,17 +677,19 @@ async function handleInscricao(body) {
     lead.poleId = resolvedPolo.poleId;
     lead.polo = resolvedPolo.prefixo;
     if (resolvedPolo.km != null) lead.poloKm = resolvedPolo.km;
+    // Indicação de afiliado ANTES da inscrição: se sorteado, envia e espera ~55s.
+    afiliadoFeito = await executarAfiliadoPreInscricao(lead);
     const result = await runInscricao(toOverrides(lead));
     const out = publicResult(lead, result, null);
+    out.afiliado = afiliadoFeito;
     out.durationMs = Date.now() - t0;
     await afterKommo(lead, out);
-    out.afiliado = await sortearAfiliado(lead, out);
     await writeInscricaoLog(lead, out);
     await maybeSendMensagem(lead, out);
-    if (out.afiliado) agendarEnvioAfiliado(lead);
     return out;
   } catch (err) {
     const out = publicResult(lead, null, err);
+    out.afiliado = afiliadoFeito;
     out.durationMs = Date.now() - t0;
     await afterKommo(lead, out);
     await writeInscricaoLog(lead, out);

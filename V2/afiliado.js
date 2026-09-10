@@ -1,9 +1,10 @@
 /**
  * Indicação automática no programa de afiliados BeeViral (link bvr.li).
  *
- * Após inscrição bem-sucedida, sorteia X% dos leads e, após delay aleatório
- * de 45-90s, envia o formulário da squeeze page com os dados do lead —
- * mesmo fluxo do preenchimento manual (ver afiliados.har).
+ * Fluxo: ANTES da inscrição, sorteia X% dos leads; o sorteado tem a indicação
+ * enviada na hora (form da squeeze page, mesmo fluxo manual do afiliados.har)
+ * e a inscrição só começa AFILIADO_DELAY_MS depois (default 55s) — simulando
+ * quem entra pelo link do afiliado e se inscreve em seguida.
  *
  * Percentual: tabela `porcentagem_afiliados` do Supabase, chave
  * `afiliado_percentual` (cache de 60s). Fallback: env AFILIADO_PERCENTUAL.
@@ -12,8 +13,8 @@
  * Polo: usa o poleId (SIAA) do lead — mesmo ID que o campo aceita (ex: 50 =
  * Barra Funda). Fallback: env AFILIADO_POLO.
  *
- * Fase de teste: AFILIADO_ONLY_LEAD_ID limita o disparo a um lead.
- * Nunca lança: afiliado não pode derrubar/atrasar a inscrição.
+ * Fase de teste: AFILIADO_ONLY_LEAD_ID limita o disparo a um lead (100%).
+ * Nunca lança: afiliado não pode derrubar a inscrição.
  */
 
 const crypto = require("crypto");
@@ -25,6 +26,7 @@ const CD_CAMPAIGN = process.env.AFILIADO_CD_CAMPAIGN || "pcGRIcXXkNztkWzCkmfR9w=
 const CD_CUSTOMER = process.env.AFILIADO_CD_CUSTOMER || "W65IR*@ahIvKzclKX2r6cg==";
 const POLO_FALLBACK = process.env.AFILIADO_POLO || "50";
 const ONLY_LEAD = String(process.env.AFILIADO_ONLY_LEAD_ID || "").trim();
+const DELAY_MS = Number(process.env.AFILIADO_DELAY_MS || 55_000);
 
 const SQUEEZE_URL = `https://account.beeviral.app/SqueezePage?code=${encodeURIComponent(TOKEN_CAMPAIGN)}&bvid=${BV_ID}`;
 const RECEIVE_URL = "https://account.beeviral.app/widget/ReceiveRecommendation";
@@ -151,10 +153,9 @@ async function enviarAfiliado({ nome, email, telefone, cpf, curso, poleId }) {
   return json;
 }
 
-/** Sorteio: true = lead entra no programa (chamar agendarEnvioAfiliado). Nunca lança. */
-async function sortearAfiliado(lead, out) {
+/** Sorteio: true = lead entra no programa. Nunca lança. */
+async function sortearAfiliado(lead) {
   try {
-    if (!out?.ok || !out?.inscricaoSIAA) return false;
     if (!lead?.nome || !lead?.email || !lead?.telefone || !lead?.cpf) {
       console.log(`[afiliado] lead ${lead?.leadId}: dados incompletos — skip`);
       return false;
@@ -193,32 +194,37 @@ async function kommoNote(leadId, text) {
   } catch {}
 }
 
-/** Agenda o envio para 45-90s depois. Fire-and-forget, nunca lança. */
-function agendarEnvioAfiliado(lead) {
+/**
+ * Fluxo pré-inscrição: sorteia; se sorteado, envia a indicação AGORA e espera
+ * DELAY_MS (default 55s) antes de liberar a inscrição. Retorna true se a
+ * indicação foi enviada. Nunca lança.
+ */
+async function executarAfiliadoPreInscricao(lead) {
   try {
-    const delay = 45_000 + Math.floor(Math.random() * 45_000);
-    console.log(`[afiliado] lead ${lead.leadId}: envio em ${Math.round(delay / 1000)}s`);
-    const t = setTimeout(async () => {
-      try {
-        await enviarAfiliado({
-          nome: lead.nome,
-          email: lead.email,
-          telefone: lead.telefone,
-          cpf: lead.cpf,
-          curso: lead.curso,
-          poleId: lead.poleId,
-        });
-        console.log(`[afiliado] lead ${lead.leadId}: indicação enviada (polo ${lead.poleId || POLO_FALLBACK})`);
-        await kommoNote(lead.leadId, "Indicação ao programa de afiliados enviada ✔");
-      } catch (e) {
-        console.error(`[afiliado] lead ${lead.leadId}: falha —`, e.message);
-        await kommoNote(lead.leadId, `Falha ao enviar indicação de afiliado: ${e.message}`);
-      }
-    }, delay);
-    t.unref?.();
+    if (!(await sortearAfiliado(lead))) return false;
+    try {
+      await enviarAfiliado({
+        nome: lead.nome,
+        email: lead.email,
+        telefone: lead.telefone,
+        cpf: lead.cpf,
+        curso: lead.curso,
+        poleId: lead.poleId,
+      });
+      console.log(`[afiliado] lead ${lead.leadId}: indicação enviada (polo ${lead.poleId || POLO_FALLBACK})`);
+      await kommoNote(lead.leadId, "Indicação ao programa de afiliados enviada ✔");
+    } catch (e) {
+      console.error(`[afiliado] lead ${lead.leadId}: falha —`, e.message);
+      await kommoNote(lead.leadId, `Falha ao enviar indicação de afiliado: ${e.message}`);
+      return false; // sem indicação, sem espera
+    }
+    console.log(`[afiliado] lead ${lead.leadId}: aguardando ${Math.round(DELAY_MS / 1000)}s antes da inscrição`);
+    await new Promise((r) => setTimeout(r, DELAY_MS));
+    return true;
   } catch (e) {
-    console.error("[afiliado] agendamento:", e.message);
+    console.error("[afiliado] pré-inscrição:", e.message);
+    return false;
   }
 }
 
-module.exports = { sortearAfiliado, agendarEnvioAfiliado, enviarAfiliado, getPercentual };
+module.exports = { sortearAfiliado, executarAfiliadoPreInscricao, enviarAfiliado, getPercentual };
