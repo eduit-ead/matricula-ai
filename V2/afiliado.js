@@ -160,14 +160,18 @@ async function sortearAfiliado(lead) {
       console.log(`[afiliado] lead ${lead?.leadId}: dados incompletos — skip`);
       return false;
     }
+    // Chave geral: percentual 0 no Supabase desliga tudo — inclusive o modo teste.
+    const pct = await getPercentual();
+    if (!(pct > 0)) {
+      console.log(`[afiliado] lead ${lead.leadId}: desligado (afiliado_percentual = 0)`);
+      return false;
+    }
     // Modo teste: com AFILIADO_ONLY_LEAD_ID, só esse lead participa — sempre 100%.
     if (ONLY_LEAD) {
       const match = String(lead?.leadId || "") === ONLY_LEAD;
       if (match) console.log(`[afiliado] lead ${lead.leadId}: modo teste — 100% (AFILIADO_ONLY_LEAD_ID)`);
       return match;
     }
-    const pct = await getPercentual();
-    if (!(pct > 0)) return false;
     const roll = Math.random() * 100;
     const sorteado = roll < pct;
     console.log(
