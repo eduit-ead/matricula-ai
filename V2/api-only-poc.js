@@ -36,6 +36,12 @@ const { runPostOrder, consultarInscricoesSIAA, inscricoesDaForma, formaTemLimite
 const BASE = "https://cruzeirodosul.myvtex.com";
 const BINDING_ID = "b609c118-0b5f-4ae9-b099-d94f79af4a58";
 
+// Pausas entre fases: simulam o tempo humano preenchendo a ficha e evitam
+// que o SIAA/VTEX receba tudo rápido demais (link da prova quebrava por isso).
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const PASSO_2S = 2_000;
+const PASSO_5S = 5_000;
+
 const GQL_QS = `workspace=master&maxAge=long&appsEtag=remove&domain=store&locale=pt-BR&__bindingId=${BINDING_ID}`;
 const GQL_QS_ZERO = `workspace=master&maxAge=zero&appsEtag=remove&domain=store&locale=pt-BR&__bindingId=${BINDING_ID}`;
 
@@ -874,6 +880,8 @@ async function runInscricao(overrides = {}) {
     leadRes.json?.DocumentId ||
     String(leadRes.json?.Id || "").replace(/^OP-/, "");
   if (!ctx.leadId) throw new Error("leadId ausente");
+  console.log("pausa 2s após criação do lead");
+  await sleep(PASSO_2S);
 
   await request(
     "4_lead_patch_polo",
@@ -914,6 +922,8 @@ async function runInscricao(overrides = {}) {
       await new Promise((r) => setTimeout(r, 2000));
     }
   }
+  console.log("pausa 2s após atualização do lead");
+  await sleep(PASSO_2S);
 
   await request(
     "7_addToCart",
@@ -921,6 +931,8 @@ async function runInscricao(overrides = {}) {
     `${BASE}/_v/private/graphql/v1?${GQL_QS}`,
     buildAddToCartBody(ctx.leadId, course, resolvedPolo, input)
   );
+  console.log("pausa 2s após addToCart");
+  await sleep(PASSO_2S);
 
   const spQs = new URLSearchParams({
     unidade: "Virtual",
@@ -1197,6 +1209,8 @@ async function runInscricao(overrides = {}) {
   const orderGroup =
     txRes.json?.orderGroup || txRes.text?.match(/"orderGroup"\s*:\s*"(\d+)"/)?.[1];
   if (!orderGroup) throw new Error("orderGroup ausente após transaction");
+  console.log("pausa 5s após transaction");
+  await sleep(PASSO_5S);
 
   if (pos) {
     const vault = posVaultPaymentsPayload(txRes.json, payValue);

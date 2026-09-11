@@ -179,10 +179,13 @@ const FORMA_FALLBACK_VEST = {
 };
 
 /** Múltipla/redação: o link da prova quebra quando gerado rápido demais após a
- *  inscrição (info do time responsável). Espera antes de buscar — com o fluxo
- *  atual (~22s), 22s aqui fecha o processo em ~45s. Ajustável por PROVA_WAIT_MS. */
+ *  inscrição (info do time responsável). Como o fluxo agora já tem pausas
+ *  distribuídas (2s lead, 2s patch, 2s addToCart, 5s transaction, 5s
+ *  leadOrderPut), entre a transaction e o getProvaUrl já passam ~12-15s —
+ *  aqui ficam só 8s de margem para fechar o gap de ~22s que resolvia o bug.
+ *  Ajustável por PROVA_WAIT_MS. */
 const FORMAS_PROVA_LENTA = new Set(["multipla", "redacao"]);
-const PROVA_WAIT_MS = Number(process.env.PROVA_WAIT_MS || 22_000);
+const PROVA_WAIT_MS = Number(process.env.PROVA_WAIT_MS || 8_000);
 
 function fallbackFormaVestibular(forma) {
   return FORMA_FALLBACK_VEST[normalizeForma(forma)] || null;
@@ -462,6 +465,8 @@ async function runPostOrder({
 
   log("\n>>> PUT /_v/leadOrderPut/ (fechamento ficha)", lead.id);
   await putLeadOrder(lead, orderId, putExtras, headers);
+  log(">>> pausa 5s após leadOrderPut");
+  await new Promise((r) => setTimeout(r, 5_000));
   const leads = await getLeadOrder(email, headers);
   lead = selectLead(leads, { leadId: lead.id, orderId }) || lead;
   if (lead?.inscricaoSIAA && inscricaoDeOutraForma(leads, lead.inscricaoSIAA, formaAtual)) {
