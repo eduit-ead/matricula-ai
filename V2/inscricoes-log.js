@@ -27,6 +27,7 @@ const ERRO_LABEL = {
   IN_FLIGHT: "Mesmo CPF/forma já em execução",
   EMAIL_JA_CADASTRADO: "E-mail já tem cadastro na loja com outro CPF",
   INSCRICAO_FAILED: "Falha no checkout VTEX/SIAA",
+  INSCRICAO_DESLIGADA: "Inscrição automática desligada — só indicação de afiliado ativa",
   CATALOG_ERROR: "Erro de catálogo",
 };
 

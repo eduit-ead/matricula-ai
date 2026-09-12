@@ -187,9 +187,10 @@ async function sortearAfiliado(lead) {
 /**
  * Fluxo pré-inscrição: sorteia; se sorteado, envia a indicação AGORA e espera
  * DELAY_MS (55s) antes de liberar a inscrição. Sem nota no Kommo — o resultado
- * vai só para o banco. Retorna { enviado, erro }. Nunca lança.
+ * vai só para o banco. Com { esperar: false } pula a espera (usado quando a
+ * inscrição está desligada). Retorna { enviado, erro }. Nunca lança.
  */
-async function executarAfiliadoPreInscricao(lead) {
+async function executarAfiliadoPreInscricao(lead, { esperar = true } = {}) {
   const falha = { enviado: false, erro: null };
   try {
     if (!(await sortearAfiliado(lead))) return falha;
@@ -207,8 +208,10 @@ async function executarAfiliadoPreInscricao(lead) {
       console.error(`[afiliado] lead ${lead.leadId}: falha —`, e.message);
       return { enviado: false, erro: e.message }; // sem indicação, sem espera
     }
-    console.log(`[afiliado] lead ${lead.leadId}: aguardando ${Math.round(DELAY_MS / 1000)}s antes da inscrição`);
-    await new Promise((r) => setTimeout(r, DELAY_MS));
+    if (esperar) {
+      console.log(`[afiliado] lead ${lead.leadId}: aguardando ${Math.round(DELAY_MS / 1000)}s antes da inscrição`);
+      await new Promise((r) => setTimeout(r, DELAY_MS));
+    }
     return { enviado: true, erro: null };
   } catch (e) {
     console.error("[afiliado] pré-inscrição:", e.message);

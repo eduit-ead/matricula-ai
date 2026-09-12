@@ -27,7 +27,7 @@ const {
 } = require("./kommo-map");
 const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 const { assertPoloPermitido } = require("./polos-bloqueados"); // TEMP: polos sem cota
-const { writeInscricaoLog } = require("./inscricoes-log");
+const { writeInscricaoLog, SUPABASE_URL, supabaseKey } = require("./inscricoes-log");
 const { maybeSendMensagem } = require("./mensagem");
 const { executarAfiliadoPreInscricao } = require("./afiliado");
 const { enemFromDocumento } = require("./enem-notas");
@@ -36,6 +36,34 @@ const { normalizeForma } = require("./post-order-fetch");
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
 const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
 const ONLY_LEAD_ID = String(process.env.INSCRICAO_ONLY_LEAD_ID || "").trim();
+
+// Chave geral da inscrição automática: tabela porcentagem_afiliados (Supabase),
+// chave "inscricao_ativa" — "0" desliga a inscrição e TUDO que vem com ela
+// (tags, mudança de fase, notas, mensagem); só o afiliado continua rodando.
+// Linha ausente ou erro de leitura = ATIVA (fail-safe). Cache de 60s.
+let _inscAtivaCache = { at: 0, value: null };
+async function isInscricaoAtiva() {
+  const now = Date.now();
+  if (_inscAtivaCache.value != null && now - _inscAtivaCache.at < 60_000) return _inscAtivaCache.value;
+  let value = true;
+  const key = supabaseKey();
+  if (key) {
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/porcentagem_afiliados?chave=eq.inscricao_ativa&select=valor`,
+        { headers: { apikey: key, Authorization: `Bearer ${key}` } }
+      );
+      if (res.ok) {
+        const rows = await res.json();
+        if (rows?.length) value = String(rows[0].valor).trim() !== "0";
+      }
+    } catch (e) {
+      console.error("inscricao_ativa config:", e.message);
+    }
+  }
+  _inscAtivaCache = { at: now, value };
+  return value;
+}
 
 function pick(obj, keys) {
   if (!obj) return "";
@@ -623,6 +651,28 @@ async function handleInscricao(body) {
     const out = publicResult(lead || {}, null, err);
     out.durationMs = Date.now() - t0;
     await writeInscricaoLog(lead || {}, out);
+    return out;
+  }
+
+  // Inscrição desligada: roda SÓ o afiliado (sem espera de 55s, sem tags,
+  // sem mudança de fase, sem nota, sem mensagem) e registra no log do banco.
+  if (!(await isInscricaoAtiva())) {
+    try {
+      const resolvedPolo = isPoloMaisProximo(lead.poloRaw)
+        ? await resolvePoloMaisProximo(lead)
+        : resolvePoloInscricao(lead.poloRaw);
+      lead.poleId = resolvedPolo.poleId;
+      lead.polo = resolvedPolo.prefixo;
+    } catch {} // afiliado tem fallback de polo interno
+    const af = await executarAfiliadoPreInscricao(lead, { esperar: false });
+    const err = new Error("Inscrição automática desligada — só indicação de afiliado ativa");
+    err.code = "INSCRICAO_DESLIGADA";
+    const out = publicResult(lead, null, err);
+    out.afiliado = af.enviado;
+    if (af.erro) out.afiliadoErro = af.erro;
+    out.durationMs = Date.now() - t0;
+    await writeInscricaoLog(lead, out);
+    console.log(`lead ${lead.leadId}: inscrição desligada — só afiliado (enviado=${af.enviado})`);
     return out;
   }
 
