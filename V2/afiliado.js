@@ -20,7 +20,7 @@
 const crypto = require("crypto");
 const { SUPABASE_URL, supabaseKey } = require("./inscricoes-log");
 
-const BV_ID = process.env.AFILIADO_BV_ID || "ROGERIO19444899";
+const BV_ID = process.env.AFILIADO_BV_ID || "EDUARDO19442321";
 const TOKEN_CAMPAIGN = process.env.AFILIADO_TOKEN_CAMPAIGN || "dFhYa3Fha096RkhOakZuRGIqWmFwUT09";
 const CD_CAMPAIGN = process.env.AFILIADO_CD_CAMPAIGN || "pcGRIcXXkNztkWzCkmfR9w==";
 const CD_CUSTOMER = process.env.AFILIADO_CD_CUSTOMER || "W65IR*@ahIvKzclKX2r6cg==";
