@@ -203,7 +203,7 @@ async function executarAfiliadoPreInscricao(lead, { esperar = true } = {}) {
         curso: lead.curso,
         poleId: lead.poleId,
       });
-      console.log(`[afiliado] lead ${lead.leadId}: indicação enviada (polo ${lead.poleId || POLO_FALLBACK})`);
+      console.log(`[afiliado] lead ${lead.leadId}: indicação enviada (bvid ${BV_ID}, polo ${lead.poleId || POLO_FALLBACK})`);
     } catch (e) {
       console.error(`[afiliado] lead ${lead.leadId}: falha —`, e.message);
       return { enviado: false, erro: e.message }; // sem indicação, sem espera
