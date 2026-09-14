@@ -264,6 +264,12 @@ function loadInput(overrides = {}) {
   if (overrides.cpf && !overrides.cpfDigits) {
     input.cpfDigits = cpfDigits(overrides.cpf);
   }
+  // CPF sempre só dígitos para a VTEX: card com formato errado (ex: "/"
+  // no lugar do "-", como 379.165.398/96) passava na validação de dígitos
+  // mas a VTEX rejeitava no transaction com ORD007 (documento inválido).
+  if (input.cpf && cpfDigits(input.cpf)) {
+    input.cpf = cpfDigits(input.cpf);
+  }
   return input;
 }
 
