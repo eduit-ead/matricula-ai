@@ -39,8 +39,8 @@ const BINDING_ID = "b609c118-0b5f-4ae9-b099-d94f79af4a58";
 // Pausas entre fases: simulam o tempo humano preenchendo a ficha e evitam
 // que o SIAA/VTEX receba tudo rápido demais (link da prova quebrava por isso).
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const PASSO_2S = 2_000;
-const PASSO_5S = 5_000;
+const PASSO_2S = Number(process.env.PASSO_2S_MS || 2_000);
+const PASSO_5S = Number(process.env.PASSO_5S_MS || 5_000);
 
 const GQL_QS = `workspace=master&maxAge=long&appsEtag=remove&domain=store&locale=pt-BR&__bindingId=${BINDING_ID}`;
 const GQL_QS_ZERO = `workspace=master&maxAge=zero&appsEtag=remove&domain=store&locale=pt-BR&__bindingId=${BINDING_ID}`;
