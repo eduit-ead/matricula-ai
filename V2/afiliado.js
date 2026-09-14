@@ -219,4 +219,4 @@ async function executarAfiliadoPreInscricao(lead, { esperar = true } = {}) {
   }
 }
 
-module.exports = { sortearAfiliado, executarAfiliadoPreInscricao, enviarAfiliado, getPercentual };
+module.exports = { sortearAfiliado, executarAfiliadoPreInscricao, enviarAfiliado, getPercentual, BV_ID };

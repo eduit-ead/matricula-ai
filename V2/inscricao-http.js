@@ -29,7 +29,7 @@ const { isPoloMaisProximo, resolvePoloMaisProximo } = require("./polo-proximo");
 const { assertPoloPermitido } = require("./polos-bloqueados"); // TEMP: polos sem cota
 const { writeInscricaoLog, SUPABASE_URL, supabaseKey } = require("./inscricoes-log");
 const { maybeSendMensagem } = require("./mensagem");
-const { executarAfiliadoPreInscricao } = require("./afiliado");
+const { executarAfiliadoPreInscricao, BV_ID: AFILIADO_BV_ID } = require("./afiliado");
 const { enemFromDocumento } = require("./enem-notas");
 const { normalizeForma } = require("./post-order-fetch");
 
@@ -758,7 +758,12 @@ async function handleInscricao(body) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://localhost");
   if (req.method === "GET" && url.pathname === "/health") {
-    return send(res, 200, { ok: true, kommo: Boolean(process.env.KOMMO_ACCESS_TOKEN && kommoBase()) });
+    return send(res, 200, {
+      ok: true,
+      kommo: Boolean(process.env.KOMMO_ACCESS_TOKEN && kommoBase()),
+      version: "2026-09-14-health-bvid",
+      afiliadoBvid: AFILIADO_BV_ID,
+    });
   }
   if (req.method !== "POST" || (url.pathname !== "/inscricao" && url.pathname !== "/webhook")) {
     return send(res, 404, { ok: false, error: "Use POST /inscricao ou POST /webhook" });
