@@ -23,7 +23,9 @@ const { SUPABASE_URL, supabaseKey } = require("./inscricoes-log");
 const BV_ID = process.env.AFILIADO_BV_ID || "EDUARDO19442321";
 const TOKEN_CAMPAIGN = process.env.AFILIADO_TOKEN_CAMPAIGN || "dFhYa3Fha096RkhOakZuRGIqWmFwUT09";
 const CD_CAMPAIGN = process.env.AFILIADO_CD_CAMPAIGN || "pcGRIcXXkNztkWzCkmfR9w==";
-const CD_CUSTOMER = process.env.AFILIADO_CD_CUSTOMER || "W65IR*@ahIvKzclKX2r6cg==";
+// Fallback só — o CD_CUSTOMER real é extraído da SqueezePage (campo CD_PEOPLE),
+// porque é ELE que identifica o afiliado dono da indicação, não o BV_ID.
+const CD_CUSTOMER = process.env.AFILIADO_CD_CUSTOMER || "KnuFEDEaK6KfsbWDEwkasw==";
 const POLO_FALLBACK = process.env.AFILIADO_POLO || "50";
 const ONLY_LEAD = String(process.env.AFILIADO_ONLY_LEAD_ID || "").trim();
 const DELAY_MS = 55_000; // espera fixa entre a indicação e a inscrição
@@ -83,6 +85,13 @@ async function enviarAfiliado({ nome, email, telefone, cpf, curso, poleId }) {
     html.match(/id="payload"[^>]*value="([^"]+)"/) ||
     html.match(/value="([^"]+)"[^>]*id="payload"/);
   if (!m) throw new Error("payload não encontrado na squeeze page");
+  // A página preenche CD_CUSTOMER com o CD_PEOPLE do dono do link
+  // (data.append('CD_CUSTOMER', $("#CD_PEOPLE").val())) — é isso que define
+  // em qual painel a indicação cai.
+  const mPeople =
+    html.match(/id="CD_PEOPLE"[^>]*value="([^"]+)"/) ||
+    html.match(/value="([^"]+)"[^>]*id="CD_PEOPLE"/);
+  const cdCustomer = mPeople?.[1] || CD_CUSTOMER;
 
   const uuid = crypto.randomUUID();
   const foneFmt = fmtFone(telefone);
@@ -120,7 +129,7 @@ async function enviarAfiliado({ nome, email, telefone, cpf, curso, poleId }) {
   fd.append("Unidade desejada", unidade);
   fd.append(poloLabel, poloV);
   fd.append("CD_CAMPAIGN", CD_CAMPAIGN);
-  fd.append("CD_CUSTOMER", CD_CUSTOMER);
+  fd.append("CD_CUSTOMER", cdCustomer);
   fd.append("CD_CHANNEL_RECOMMENDATION", "Manual");
   fd.append("NM_REFERRAL", nome);
   fd.append("ISCREATERANDOMEMAIL", "Y");
