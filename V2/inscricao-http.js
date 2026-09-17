@@ -511,7 +511,7 @@ function routingAposInscricao(out) {
     return { stay: true, tags: [completo ? "ENEM_OK" : "ADICIONAR_NOTAS"] };
   }
   if (forma === "segunda" || forma === "transferencia") {
-    return { stay: false, statusName: "Em Processo" };
+    return { stay: false, statusName: "Em Processo", tags: ["ANEXAR_DOC"] };
   }
   if (forma === "multipla" || forma === "redacao") {
     return { stay: false, statusName: "Processo Seletivo", tags: ["ENVIAR_PROVA"] };
