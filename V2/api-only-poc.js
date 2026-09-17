@@ -39,8 +39,8 @@ const BINDING_ID = "b609c118-0b5f-4ae9-b099-d94f79af4a58";
 // Pausas entre fases: simulam o tempo humano preenchendo a ficha e evitam
 // que o SIAA/VTEX receba tudo rápido demais (link da prova quebrava por isso).
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-// Pausa igual entre as etapas: 5 × 20s + ~20s de fluxo = inscrição em ~2min.
-const PASSO_MS = Number(process.env.PASSO_MS || 20_000);
+// Pausa igual entre as etapas: 5 × 38s + ~20s de fluxo = inscrição em ~3min30.
+const PASSO_MS = Number(process.env.PASSO_MS || 38_000);
 
 const GQL_QS = `workspace=master&maxAge=long&appsEtag=remove&domain=store&locale=pt-BR&__bindingId=${BINDING_ID}`;
 const GQL_QS_ZERO = `workspace=master&maxAge=zero&appsEtag=remove&domain=store&locale=pt-BR&__bindingId=${BINDING_ID}`;

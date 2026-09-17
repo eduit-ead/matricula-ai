@@ -180,7 +180,7 @@ const FORMA_FALLBACK_VEST = {
 
 /** Múltipla/redação: o link da prova quebrava quando gerado rápido demais após
  *  a inscrição. Com as pausas de 20s entre etapas (transaction → leadOrderPut
- *  → +20s), o getProvaUrl já acontece ~40s+ depois do pedido — não precisa de
+ *  → +38s), o getProvaUrl já acontece ~76s+ depois do pedido — não precisa de
  *  espera extra. Se um dia precisar, ajustável por PROVA_WAIT_MS. */
 const FORMAS_PROVA_LENTA = new Set(["multipla", "redacao"]);
 const PROVA_WAIT_MS = Number(process.env.PROVA_WAIT_MS || 0);
@@ -410,6 +410,43 @@ async function getProvaUrl(lead, order, headers = {}) {
   throw new Error("getProvaUrl não retornou provaUrl");
 }
 
+const BFF_LTI =
+  "https://externo-bff-api.cruzeirodosul.edu.br/acd-prova-agendada-digital/plataforma/obterDadosIntegracaoLti";
+
+/** Confirma que o token abre de verdade no Grupo A (evita enviar link que fica girando). */
+async function verifyProvaLti(provaUrl) {
+  const token = new URL(provaUrl).searchParams.get("token");
+  if (!token) return false;
+  const r = await fetch(`${BFF_LTI}?token=${encodeURIComponent(token)}`, {
+    headers: { Accept: "application/json" },
+  });
+  if (!r.ok) return false;
+  const data = await r.json();
+  if (!data?.url || !data?.parameters) return false;
+  const form = new URLSearchParams();
+  for (const [k, v] of Object.entries(data.parameters)) form.set(k, String(v));
+  const launch = await fetch(data.url, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: form.toString(),
+    redirect: "manual",
+  });
+  return launch.status === 301 || launch.status === 302;
+}
+
+async function waitProvaLti(provaUrl, { maxMs = 90000, intervalMs = 5000, log = () => {} } = {}) {
+  const start = Date.now();
+  while (Date.now() - start < maxMs) {
+    try {
+      if (await verifyProvaLti(provaUrl)) return true;
+    } catch (e) {
+      log("LTI ainda não pronto:", e.message);
+    }
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  return false;
+}
+
 const POS_PAYMENT_LINK =
   "https://siaa.cruzeirodosul.edu.br/vestibular-inscricao/resultado/index.jsf?codigoEmpresa=7";
 
@@ -463,7 +500,7 @@ async function runPostOrder({
 
   log("\n>>> PUT /_v/leadOrderPut/ (fechamento ficha)", lead.id);
   await putLeadOrder(lead, orderId, putExtras, headers);
-  const passoMs = Number(process.env.PASSO_MS || 20_000);
+  const passoMs = Number(process.env.PASSO_MS || 38_000);
   log(`>>> pausa ${Math.round(passoMs / 1000)}s após leadOrderPut`);
   await new Promise((r) => setTimeout(r, passoMs));
   const leads = await getLeadOrder(email, headers);
@@ -520,6 +557,11 @@ async function runPostOrder({
     log("\n>>> GET /v1/getProvaUrl");
     provaLink = await getProvaUrl(lead, order, headers);
     log("provaLink:", provaLink.slice(0, 80) + "…");
+    log(">>> confirmando LTI da prova (até 90s)…");
+    if (!(await waitProvaLti(provaLink, { log }))) {
+      log("LTI não confirmou — não enviar link que fica carregando");
+      provaLink = null;
+    }
   } else if (enem) {
     log("\n>>> getProvaUrl omitido: formaIngresso ENEM");
   } else {
@@ -592,6 +634,8 @@ module.exports = {
   run,
   mapTipoProva,
   resolveNumeroProva,
+  getProvaUrl,
+  waitProvaLti,
   consultarInscricoesSIAA,
   inscricoesDaForma,
   inscricoesMesmoCursoPos,

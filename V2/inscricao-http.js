@@ -462,6 +462,10 @@ function publicResult(lead, result, err) {
     bits.push(out.poloKm != null ? `Polo: ${out.polo} (${out.poloKm} km)` : `Polo: ${out.polo}`);
   }
   if (out.provaLink) bits.push(`Prova: ${out.provaLink}`);
+  const formaProva = normalizeForma(out.formaIngresso);
+  if (out.ok && !out.provaLink && (formaProva === "multipla" || formaProva === "redacao")) {
+    bits.push("Prova ainda não disponível na plataforma — o link não foi enviado para não ficar carregando.");
+  }
   if (out.paymentLink) bits.push(`Pagamento (informe o CPF ${out.cpf || "—"}): ${out.paymentLink}`);
   if (out.documentsLink) {
     bits.push(
@@ -732,8 +736,16 @@ async function handleInscricao(body) {
     const af = await executarAfiliadoPreInscricao(lead);
     afiliadoFeito = af.enviado;
     afiliadoErro = af.erro;
-    const result = await runInscricao(toOverrides(lead));
-    const out = publicResult(lead, result, null);
+    let result = await runInscricao(toOverrides(lead));
+    let out = publicResult(lead, result, null);
+    if (out.code === "SEM_SIAA") {
+      console.log(`lead ${lead.leadId}: SEM_SIAA no pedido ${out.orderId} — 2ª tentativa`);
+      result = await runInscricao(toOverrides(lead));
+      out = publicResult(lead, result, null);
+      if (out.ok) {
+        out.mensagem = `Pedido anterior sem SIAA; inscrição gerada na 2ª tentativa.\n${out.mensagem}`;
+      }
+    }
     out.afiliado = afiliadoFeito;
     if (afiliadoErro) out.afiliadoErro = afiliadoErro;
     out.durationMs = Date.now() - t0;
