@@ -12,6 +12,7 @@ const ERRO_LABEL = {
   COURSE_NOT_FOUND: "Curso não existe no catálogo",
   COURSE_AMBIGUOUS: "Nome do curso bate em mais de um card",
   SEM_SIAA: "Pedido VTEX criado, SIAA não gerou número",
+  SEM_PROVA: "Inscrição feita, mas a prova não foi enviada (plataforma não liberou o link)",
   JA_INSCRITO_FORMA: "Já existe inscrição dessa forma no ciclo (vestibular, ENEM, segunda ou transferência)",
   JA_INSCRITO_CURSO: "Já existe pós neste mesmo curso no ciclo",
   POLO_POS_PROXIMO: "Pós não aceita polo mais próximo — escolha o polo",
@@ -50,10 +51,10 @@ async function writeInscricaoLog(lead, out) {
     ok: Boolean(out.ok),
     forma_ingresso: out.formaIngresso || lead.formaIngresso || null,
     department: out.department || lead.department || null,
-    error_code: out.ok ? null : code,
-    error_message: out.ok
-      ? null
-      : ERRO_LABEL[code] || out.error || out.mensagem || code,
+    error_code: code,
+    error_message: code
+      ? ERRO_LABEL[code] || out.error || out.mensagem || code
+      : null,
     lead_id: out.leadId || lead.leadId || null,
     cpf: out.cpf || lead.cpf || null,
     email: out.email || lead.email || null,

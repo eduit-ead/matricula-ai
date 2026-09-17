@@ -464,6 +464,7 @@ function publicResult(lead, result, err) {
   if (out.provaLink) bits.push(`Prova: ${out.provaLink}`);
   const formaProva = normalizeForma(out.formaIngresso);
   if (out.ok && !out.provaLink && (formaProva === "multipla" || formaProva === "redacao")) {
+    out.code = "SEM_PROVA";
     bits.push("Prova ainda não disponível na plataforma — o link não foi enviado para não ficar carregando.");
   }
   if (out.paymentLink) bits.push(`Pagamento (informe o CPF ${out.cpf || "—"}): ${out.paymentLink}`);
