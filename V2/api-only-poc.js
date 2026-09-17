@@ -876,12 +876,25 @@ async function runInscricao(overrides = {}) {
     }
   }
 
-  const leadRes = await request(
-    "3_lead_post",
-    "POST",
-    `${BASE}/v1/lead/`,
-    buildLeadPost(input, course, resolvedPolo, ctx.orderFormId)
-  );
+  // 500 "Connection refused" e 404 "Not Found" no lead POST são instabilidade
+  // do app VTEX (pod interno cai / rota some por uns segundos). Já vimos
+  // retry no patch de ingresso; sem isso a inscrição morre no primeiro 500/404.
+  let leadRes = null;
+  for (let attempt = 1; attempt <= 3 && !leadRes; attempt++) {
+    try {
+      leadRes = await request(
+        `3_lead_post_try${attempt}`,
+        "POST",
+        `${BASE}/v1/lead/`,
+        buildLeadPost(input, course, resolvedPolo, ctx.orderFormId)
+      );
+    } catch (e) {
+      const retryable = e.status === 404 || e.status === 500 || e.status === 502 || e.status === 503;
+      if (!retryable || attempt === 3) throw e;
+      console.log(`3_lead_post HTTP ${e.status} — nova tentativa ${attempt + 1}/3`);
+      await sleep(2000 * attempt);
+    }
+  }
   ctx.leadId =
     leadRes.json?.DocumentId ||
     String(leadRes.json?.Id || "").replace(/^OP-/, "");
