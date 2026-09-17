@@ -410,43 +410,6 @@ async function getProvaUrl(lead, order, headers = {}) {
   throw new Error("getProvaUrl não retornou provaUrl");
 }
 
-const BFF_LTI =
-  "https://externo-bff-api.cruzeirodosul.edu.br/acd-prova-agendada-digital/plataforma/obterDadosIntegracaoLti";
-
-/** Confirma que o token abre de verdade no Grupo A (evita enviar link que fica girando). */
-async function verifyProvaLti(provaUrl) {
-  const token = new URL(provaUrl).searchParams.get("token");
-  if (!token) return false;
-  const r = await fetch(`${BFF_LTI}?token=${encodeURIComponent(token)}`, {
-    headers: { Accept: "application/json" },
-  });
-  if (!r.ok) return false;
-  const data = await r.json();
-  if (!data?.url || !data?.parameters) return false;
-  const form = new URLSearchParams();
-  for (const [k, v] of Object.entries(data.parameters)) form.set(k, String(v));
-  const launch = await fetch(data.url, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: form.toString(),
-    redirect: "manual",
-  });
-  return launch.status === 301 || launch.status === 302;
-}
-
-async function waitProvaLti(provaUrl, { maxMs = 90000, intervalMs = 5000, log = () => {} } = {}) {
-  const start = Date.now();
-  while (Date.now() - start < maxMs) {
-    try {
-      if (await verifyProvaLti(provaUrl)) return true;
-    } catch (e) {
-      log("LTI ainda não pronto:", e.message);
-    }
-    await new Promise((r) => setTimeout(r, intervalMs));
-  }
-  return false;
-}
-
 const POS_PAYMENT_LINK =
   "https://siaa.cruzeirodosul.edu.br/vestibular-inscricao/resultado/index.jsf?codigoEmpresa=7";
 
@@ -555,11 +518,11 @@ async function runPostOrder({
       await new Promise((r) => setTimeout(r, PROVA_WAIT_MS));
     }
     log("\n>>> GET /v1/getProvaUrl");
-    provaLink = await getProvaUrl(lead, order, headers);
-    log("provaLink:", provaLink.slice(0, 80) + "…");
-    log(">>> confirmando LTI da prova (até 90s)…");
-    if (!(await waitProvaLti(provaLink, { log }))) {
-      log("LTI não confirmou — não enviar link que fica carregando");
+    try {
+      provaLink = await getProvaUrl(lead, order, headers);
+      log("provaLink:", provaLink.slice(0, 80) + "…");
+    } catch (e) {
+      log("getProvaUrl falhou:", e.message);
       provaLink = null;
     }
   } else if (enem) {
@@ -635,7 +598,6 @@ module.exports = {
   mapTipoProva,
   resolveNumeroProva,
   getProvaUrl,
-  waitProvaLti,
   consultarInscricoesSIAA,
   inscricoesDaForma,
   inscricoesMesmoCursoPos,
