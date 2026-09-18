@@ -262,13 +262,22 @@ async function getOrder14(orderGroup, headers = {}, { maxMs = 45000, intervalMs 
 }
 
 async function getLeadOrder(email, headers = {}) {
-  try {
-    const data = await fetchJson(`${BASE}/_v/leadOrder/${email}`, { headers });
-    return data?.data || [];
-  } catch (err) {
-    if (err.status === 404) return [];
-    throw err;
+  const url = `${BASE}/_v/leadOrder/${encodeURIComponent(email)}`;
+  let lastErr = null;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const data = await fetchJson(url, { headers });
+      return data?.data || [];
+    } catch (err) {
+      lastErr = err;
+      if (err.status === 404) return [];
+      const retryable = err.status === 500 || err.status === 502 || err.status === 503;
+      if (!retryable || attempt === 3) throw err;
+      console.log(`leadOrder HTTP ${err.status} — nova tentativa ${attempt + 1}/3`);
+      await new Promise((r) => setTimeout(r, 2000 * attempt));
+    }
   }
+  throw lastErr;
 }
 
 async function getLeadDocument(leadId, headers = {}, fields = "id,inscricaoSIAA,orderId,status,cpf,passoFicha,formaIngresso,statusGraduacao") {
