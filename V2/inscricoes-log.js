@@ -11,7 +11,7 @@ const ERRO_LABEL = {
   COURSE_DEPT_MISMATCH: "Curso de graduação usado com forma de pós (ou o inverso)",
   COURSE_NOT_FOUND: "Curso não existe no catálogo",
   COURSE_AMBIGUOUS: "Nome do curso bate em mais de um card",
-  SEM_SIAA: "Pedido VTEX criado, SIAA não gerou número",
+  SEM_SIAA: "Pedido VTEX criado, SIAA não confirmou a inscrição",
   SEM_PROVA: "Inscrição feita, mas a prova não foi enviada (plataforma não liberou o link)",
   JA_INSCRITO_FORMA: "Já existe inscrição dessa forma no ciclo (vestibular, ENEM, segunda ou transferência)",
   JA_INSCRITO_CURSO: "Já existe pós neste mesmo curso no ciclo",

@@ -112,6 +112,82 @@ async function confirmarInscricaoVtex(lead, headers = {}) {
   return summarizeInscricao({ ...lead, ...doc });
 }
 
+const SIAA_BASE = "https://siaa.cruzeirodosul.edu.br";
+const SIAA_UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36";
+const SIAA_CONFIRM_MS = Number(process.env.SIAA_CONFIRM_MS || 90_000);
+const SIAA_CONFIRM_INTERVAL_MS = Number(process.env.SIAA_CONFIRM_INTERVAL_MS || 5_000);
+
+function codigoEmpresaSiaa(lead, fallback = "12") {
+  return String(lead?.codigoIes || lead?.marca || lead?.iesNumber || fallback);
+}
+
+async function fetchSiaaMatriculaHtml(cpf, codigoEmpresa = "12") {
+  const digits = cpfDigits(cpf);
+  if (digits.length !== 11) return "";
+  const url =
+    `${SIAA_BASE}/vestibular-inscricao/resultado/matricula-unificada.jsf` +
+    `?inicio=1&codigoEmpresa=${encodeURIComponent(codigoEmpresa)}&cpfCandidato=${digits}`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 15_000);
+  try {
+    const r = await fetch(url, {
+      headers: { "User-Agent": SIAA_UA, Accept: "text/html" },
+      signal: ctrl.signal,
+    });
+    return await r.text();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function siaaPageTemNumero(html, numero) {
+  if (!html || !numero) return false;
+  const n = String(numero).replace(/\D/g, "");
+  if (n.length < 6) return false;
+  if (/n[aã]o existem inscri[cç][oõ]es abertas/i.test(html) && !html.includes(n)) return false;
+  return html.includes(n);
+}
+
+async function confirmarInscricaoSiaa({ cpf, numero, codigoEmpresa = "12", cache } = {}) {
+  const digits = cpfDigits(cpf);
+  const n = String(numero || "").replace(/\D/g, "");
+  if (digits.length !== 11 || n.length < 6) return null;
+  const key = `${digits}:${codigoEmpresa}`;
+  let html = cache?.get(key);
+  if (html == null) {
+    html = await fetchSiaaMatriculaHtml(digits, codigoEmpresa);
+    cache?.set(key, html || "");
+  }
+  return siaaPageTemNumero(html, n) ? { numero: n, cpf: digits } : null;
+}
+
+async function pollConfirmacaoSiaa({
+  cpf,
+  numero,
+  codigoEmpresa = "12",
+  maxMs = SIAA_CONFIRM_MS,
+  intervalMs = SIAA_CONFIRM_INTERVAL_MS,
+  log = () => {},
+} = {}) {
+  const start = Date.now();
+  let attempt = 0;
+  while (Date.now() - start < maxMs) {
+    attempt += 1;
+    try {
+      const hit = await confirmarInscricaoSiaa({ cpf, numero, codigoEmpresa });
+      if (hit) return hit;
+      log(`SIAA ainda sem ${numero} (tentativa ${attempt})`);
+    } catch (err) {
+      log(`confirmação SIAA falhou: ${err.message}`);
+    }
+    const left = maxMs - (Date.now() - start);
+    if (left <= 0) break;
+    await new Promise((r) => setTimeout(r, Math.min(intervalMs, left)));
+  }
+  return null;
+}
+
 async function getLeadsByCpf(cpf, headers = {}) {
   const digits = cpfDigits(cpf);
   if (digits.length !== 11) return [];
@@ -138,11 +214,27 @@ async function consultarInscricoesSIAA({ email, cpf = "", cookie = "" }) {
     leads.push(lead);
   }
   const comSiaa = [];
+  const siaaCache = new Map();
   for (const lead of leads) {
     if (!lead?.inscricaoSIAA) continue;
     const hit = await confirmarInscricaoVtex(lead, headers);
     if (!hit) continue;
     if (cpf && !sameCpf(hit.cpf, cpf)) continue;
+    const empresa = codigoEmpresaSiaa(hit);
+    let noSiaa = false;
+    try {
+      const siaa = await confirmarInscricaoSiaa({
+        cpf: hit.cpf || cpf,
+        numero: hit.inscricaoSIAA,
+        codigoEmpresa: empresa,
+        cache: siaaCache,
+      });
+      if (!siaa) noSiaa = true;
+    } catch (err) {
+      console.log("consulta SIAA real falhou:", err.message);
+      noSiaa = true;
+    }
+    if (noSiaa) continue;
     comSiaa.push(hit);
   }
   return {
@@ -498,6 +590,26 @@ async function runPostOrder({
   log("lead id:", lead?.id);
   log("inscricaoSIAA:", lead?.inscricaoSIAA || null);
 
+  const siaaVtex = lead?.inscricaoSIAA || null;
+  let siaaConfirmado = false;
+  if (lead?.inscricaoSIAA) {
+    const empresa = codigoEmpresaSiaa(lead, posPayment ? "7" : "12");
+    log("\n>>> confirmando inscrição no SIAA (matricula-unificada)");
+    const confirmed = await pollConfirmacaoSiaa({
+      cpf: lead.cpf || leadOrderPutExtras.cpf,
+      numero: lead.inscricaoSIAA,
+      codigoEmpresa: empresa,
+      log,
+    });
+    if (confirmed) {
+      siaaConfirmado = true;
+      log("SIAA confirmou", lead.inscricaoSIAA);
+    } else {
+      log("SIAA não confirmou", lead.inscricaoSIAA, "— tratando como SEM_SIAA");
+      lead = { ...lead, inscricaoSIAA: null };
+    }
+  }
+
   let provaLink = null;
   let paymentLink = null;
   let documentsLink = null;
@@ -553,6 +665,8 @@ async function runPostOrder({
     orderId,
     numeroInscricao,
     inscricaoSIAA: lead?.inscricaoSIAA || null,
+    siaaVtex,
+    siaaConfirmado,
     numeroProvaUsado: lead?.inscricaoSIAA || null,
     sequence: order?.sequence || null,
     provaLink,
@@ -608,6 +722,7 @@ module.exports = {
   resolveNumeroProva,
   getProvaUrl,
   consultarInscricoesSIAA,
+  confirmarInscricaoSiaa,
   inscricoesDaForma,
   inscricoesMesmoCursoPos,
   normalizeForma,

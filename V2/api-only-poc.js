@@ -1330,6 +1330,7 @@ async function runInscricao(overrides = {}) {
     },
     avisos,
     post,
+    siaaVtex: post?.siaaVtex || null,
   };
 
   console.log("\n========================================");
@@ -1345,6 +1346,7 @@ async function runInscricao(overrides = {}) {
     poloNome: input.poloNome,
     email: input.email,
     inscricaoSIAA: post?.inscricaoSIAA || null,
+    siaaVtex: post?.siaaVtex || null,
     enemMedia: post?.lead?.enemMedia || null,
     statusGraduacao: post?.lead?.statusGraduacao ?? null,
     provaLink: post?.provaLink || null,

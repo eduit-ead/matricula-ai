@@ -448,7 +448,10 @@ function publicResult(lead, result, err) {
   if (out.ok && !out.inscricaoSIAA) {
     out.ok = false;
     out.code = "SEM_SIAA";
-    out.mensagem = `Pedido ${out.orderId || "—"} criado, mas sem inscrição SIAA (forma ${out.formaIngresso}).`;
+    const vtexN = result.siaaVtex || post.siaaVtex || null;
+    out.mensagem = vtexN
+      ? `Pedido ${out.orderId || "—"} criado. A VTEX gravou ${vtexN}, mas o SIAA não confirmou a inscrição (forma ${out.formaIngresso}).`
+      : `Pedido ${out.orderId || "—"} criado, mas sem inscrição SIAA (forma ${out.formaIngresso}).`;
     return out;
   }
   const bits = [];
