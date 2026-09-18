@@ -575,13 +575,36 @@ async function afterKommo(lead, out) {
   }
 }
 
-let queue = Promise.resolve();
 const inflight = new Set();
+const pending = [];
+let queueRunning = false;
+let queueSeq = 0;
 
+/** FIFO: quem entra primeiro é processado primeiro. Um por vez. */
 function enqueue(fn) {
-  const run = queue.then(fn, fn);
-  queue = run.catch(() => {});
-  return run;
+  const id = ++queueSeq;
+  const entered = Date.now();
+  return new Promise((resolve, reject) => {
+    pending.push({ id, entered, fn, resolve, reject });
+    console.log(`fila: entrou #${id} (aguardando ${pending.length})`);
+    pumpQueue();
+  });
+}
+
+async function pumpQueue() {
+  if (queueRunning) return;
+  queueRunning = true;
+  while (pending.length) {
+    const job = pending.shift();
+    const waited = Math.round((Date.now() - job.entered) / 1000);
+    console.log(`fila: processando #${job.id} (esperou ${waited}s, ${pending.length} atrás)`);
+    try {
+      job.resolve(await job.fn());
+    } catch (e) {
+      job.reject(e);
+    }
+  }
+  queueRunning = false;
 }
 
 function readBody(req) {
