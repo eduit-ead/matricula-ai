@@ -300,11 +300,23 @@ async function kommoWriteResult(lead, out) {
   }
 }
 
+let _tagCache = null;
+async function kommoAllTags() {
+  if (_tagCache) return _tagCache;
+  const all = [];
+  for (let page = 1; page <= 10; page += 1) {
+    const data = await kommoFetch(`/api/v4/leads/tags?limit=250&page=${page}`);
+    const tags = data._embedded?.tags || [];
+    all.push(...tags);
+    if (tags.length < 250) break;
+  }
+  _tagCache = all;
+  return all;
+}
+
 async function kommoFindTag(tagName) {
-  const q = encodeURIComponent(tagName);
-  const data = await kommoFetch(`/api/v4/leads/tags?limit=50&query=${q}`);
-  const tags = data._embedded?.tags || [];
   const want = norm(tagName);
+  const tags = await kommoAllTags();
   return tags.find((t) => norm(t.name) === want) || tags.find((t) => t.name === tagName) || null;
 }
 
@@ -565,16 +577,25 @@ async function kommoAddNote(leadId, text) {
 async function afterKommo(lead, out) {
   const leadId = lead?.leadId || out.leadId;
   if (!leadId || !process.env.KOMMO_ACCESS_TOKEN || !kommoBase()) return;
-  try {
-    await kommoWriteResult(lead || { leadId }, out);
-    await kommoAddNote(leadId, out.mensagem);
-    const route = routingAposInscricao(out);
-    if (!route.stay && route.statusName) {
-      await kommoMoveLead({ ...lead, leadId }, route.statusName);
+  const route = routingAposInscricao(out);
+  const steps = [
+    () => kommoWriteResult(lead || { leadId }, out),
+    () => kommoAddNote(leadId, out.mensagem),
+    async () => {
+      if (!route.stay && route.statusName) {
+        await kommoMoveLead({ ...lead, leadId }, route.statusName);
+      }
+    },
+    async () => {
+      for (const tag of route.tags || []) await kommoAddTag(leadId, tag);
+    },
+  ];
+  for (const step of steps) {
+    try {
+      await step();
+    } catch (e) {
+      console.error("Kommo pós-inscrição:", e.message);
     }
-    for (const tag of route.tags || []) await kommoAddTag(leadId, tag);
-  } catch (e) {
-    console.error("Kommo pós-inscrição:", e.message);
   }
 }
 
