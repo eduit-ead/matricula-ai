@@ -115,7 +115,7 @@ async function confirmarInscricaoVtex(lead, headers = {}) {
 const SIAA_BASE = "https://siaa.cruzeirodosul.edu.br";
 const SIAA_UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36";
-const SIAA_CONFIRM_MS = Number(process.env.SIAA_CONFIRM_MS || 90_000);
+const SIAA_CONFIRM_MS = Number(process.env.SIAA_CONFIRM_MS || 180_000);
 const SIAA_CONFIRM_INTERVAL_MS = Number(process.env.SIAA_CONFIRM_INTERVAL_MS || 5_000);
 
 function codigoEmpresaSiaa(lead, fallback = "12") {
@@ -162,6 +162,23 @@ async function confirmarInscricaoSiaa({ cpf, numero, codigoEmpresa = "12", cache
   return siaaPageTemNumero(html, n) ? { numero: n, cpf: digits } : null;
 }
 
+function numerosSiaaNaPagina(html) {
+  if (!html) return [];
+  const hits = [];
+  const re = /N[ºo°]\s*de\s*inscri[cç][aã]o[^0-9]{0,40}(\d{6,12})/gi;
+  let m;
+  while ((m = re.exec(html))) hits.push(m[1]);
+  return [...new Set(hits)];
+}
+
+async function listarNumerosSiaa(cpf, codigoEmpresa = "12") {
+  const html = await fetchSiaaMatriculaHtml(cpf, codigoEmpresa);
+  if (/n[aã]o existem inscri[cç][oõ]es abertas/i.test(html) && !numerosSiaaNaPagina(html).length) {
+    return [];
+  }
+  return numerosSiaaNaPagina(html);
+}
+
 async function pollConfirmacaoSiaa({
   cpf,
   numero,
@@ -170,20 +187,31 @@ async function pollConfirmacaoSiaa({
   intervalMs = SIAA_CONFIRM_INTERVAL_MS,
   log = () => {},
 } = {}) {
+  const want = String(numero || "").replace(/\D/g, "");
   const start = Date.now();
   let attempt = 0;
+  let seenFirst = null;
+  let lastNums = [];
   while (Date.now() - start < maxMs) {
     attempt += 1;
     try {
-      const hit = await confirmarInscricaoSiaa({ cpf, numero, codigoEmpresa });
+      const hit = await confirmarInscricaoSiaa({ cpf, numero: want, codigoEmpresa });
       if (hit) return hit;
-      log(`SIAA ainda sem ${numero} (tentativa ${attempt})`);
+      lastNums = await listarNumerosSiaa(cpf, codigoEmpresa);
+      if (seenFirst == null) seenFirst = new Set(lastNums);
+      log(`SIAA ainda sem ${want} (tentativa ${attempt})`);
     } catch (err) {
       log(`confirmação SIAA falhou: ${err.message}`);
     }
     const left = maxMs - (Date.now() - start);
     if (left <= 0) break;
     await new Promise((r) => setTimeout(r, Math.min(intervalMs, left)));
+  }
+  const novos = lastNums.filter((n) => n !== want && !(seenFirst && seenFirst.has(n)));
+  if (novos.length) {
+    const alt = novos[novos.length - 1];
+    log(`SIAA não tem ${want}, mas nasceu ${alt} — usando esse`);
+    return { numero: alt, cpf: cpfDigits(cpf) };
   }
   return null;
 }
@@ -345,11 +373,12 @@ async function getOrder14(orderGroup, headers = {}, { maxMs = 45000, intervalMs 
       return await fetchJson(url, { headers });
     } catch (err) {
       lastErr = err;
-      if (err.status !== 404) throw err;
+      const retryable = err.status === 404 || err.status === 500 || err.status === 502 || err.status === 503;
+      if (!retryable) throw err;
       await new Promise((r) => setTimeout(r, intervalMs));
     }
   }
-  console.log(`order14 ainda 404 após ${maxMs}ms — seguindo com ${orderId}`);
+  console.log(`order14 ainda ${lastErr?.status || "falha"} após ${maxMs}ms — seguindo com ${orderId}`);
   return null;
 }
 
@@ -430,11 +459,23 @@ async function putLeadOrder(lead, orderId, extras = {}, headers = {}) {
       .replace(/\s-\s(pending|finished)(?:\s-\s[\d-]+)?$/i, "")
       .concat(` - finished - ${orderId}`),
   };
-  return fetchJson(`${BASE}/_v/leadOrderPut/`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json", ...headers },
-    body: JSON.stringify(body),
-  });
+  let lastErr = null;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      return await fetchJson(`${BASE}/_v/leadOrderPut/`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", ...headers },
+        body: JSON.stringify(body),
+      });
+    } catch (err) {
+      lastErr = err;
+      const retryable = err.status === 500 || err.status === 502 || err.status === 503;
+      if (!retryable || attempt === 3) throw err;
+      console.log(`leadOrderPut HTTP ${err.status} — nova tentativa ${attempt + 1}/3`);
+      await new Promise((r) => setTimeout(r, 2000 * attempt));
+    }
+  }
+  throw lastErr;
 }
 
 async function pollInscricaoSIAA(email, orderId, { leadId, headers = {}, formaAtual = "", maxMs = 90000, intervalMs = 3000 } = {}) {
@@ -603,7 +644,12 @@ async function runPostOrder({
     });
     if (confirmed) {
       siaaConfirmado = true;
-      log("SIAA confirmou", lead.inscricaoSIAA);
+      if (String(confirmed.numero) !== String(lead.inscricaoSIAA)) {
+        log("SIAA confirmou outro número", confirmed.numero, "(VTEX tinha", lead.inscricaoSIAA, ")");
+        lead = { ...lead, inscricaoSIAA: confirmed.numero };
+      } else {
+        log("SIAA confirmou", lead.inscricaoSIAA);
+      }
     } else {
       log("SIAA não confirmou", lead.inscricaoSIAA, "— tratando como SEM_SIAA");
       lead = { ...lead, inscricaoSIAA: null };
