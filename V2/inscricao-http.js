@@ -31,7 +31,7 @@ const { writeInscricaoLog, SUPABASE_URL, supabaseKey } = require("./inscricoes-l
 const { maybeSendMensagem } = require("./mensagem");
 const { executarAfiliadoPreInscricao, BV_ID: AFILIADO_BV_ID } = require("./afiliado");
 const { enemFromDocumento } = require("./enem-notas");
-const { normalizeForma } = require("./post-order-fetch");
+const { normalizeForma, pollConfirmacaoSiaa, finalizarLinksSiaa } = require("./post-order-fetch");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
 const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
@@ -393,6 +393,7 @@ function toOverrides(lead) {
     polo_prefixo: lead.poloPrefixo || lead.polo,
     department: posLead ? "Pós-Graduação" : lead.department,
     formaIngresso: posLead ? "Pós Graduação" : lead.formaIngresso || "Vestibular Múltipla Escolha",
+    awaitSiaa: false,
   };
   if (lead.email) o.email = lead.email;
   if (lead.telefone) o.phone = lead.telefone;
@@ -676,6 +677,54 @@ async function failLog(lead, err, t0) {
   return out;
 }
 
+async function finishSiaaBackground({ lead, result, t0, afiliadoFeito, afiliadoErro, lockKey }) {
+  const post = result.post || {};
+  const vtexN = result.siaaVtex || post.siaaVtex;
+  try {
+    const empresa = String(post.lead?.marca || (normalizeForma(lead.formaIngresso) === "pos" ? 7 : 12));
+    console.log(`lead ${lead.leadId}: background SIAA ${vtexN}`);
+    const confirmed = await pollConfirmacaoSiaa({
+      cpf: lead.cpf || post.lead?.cpf,
+      numero: vtexN,
+      codigoEmpresa: empresa,
+      log: console.log.bind(console),
+    });
+    if (confirmed) {
+      post.inscricaoSIAA = confirmed.numero;
+      post.siaaConfirmado = true;
+      result.inscricaoSIAA = confirmed.numero;
+      if (post.lead) post.lead.inscricaoSIAA = confirmed.numero;
+      await finalizarLinksSiaa(post);
+    } else {
+      post.inscricaoSIAA = null;
+      result.inscricaoSIAA = null;
+    }
+    const out = publicResult(lead, result, null);
+    out.afiliado = afiliadoFeito;
+    if (afiliadoErro) out.afiliadoErro = afiliadoErro;
+    out.durationMs = Date.now() - t0;
+    await afterKommo(lead, out);
+    await writeInscricaoLog(lead, out);
+    await maybeSendMensagem(lead, out);
+    console.log(`lead ${lead.leadId}: background SIAA ${out.ok ? "ok" : out.code}`);
+    return out;
+  } catch (e) {
+    console.error(`lead ${lead.leadId}: background SIAA falhou:`, e.message);
+    post.inscricaoSIAA = null;
+    result.inscricaoSIAA = null;
+    const out = publicResult(lead, result, null);
+    out.afiliado = afiliadoFeito;
+    if (afiliadoErro) out.afiliadoErro = afiliadoErro;
+    out.durationMs = Date.now() - t0;
+    await afterKommo(lead, out);
+    await writeInscricaoLog(lead, out);
+    await maybeSendMensagem(lead, out);
+    return out;
+  } finally {
+    inflight.delete(lockKey);
+  }
+}
+
 async function handleInscricao(body) {
   const t0 = Date.now();
   let lead = fromPlainBody(body.body || body);
@@ -754,6 +803,7 @@ async function handleInscricao(body) {
   inflight.add(lockKey);
   let afiliadoFeito = false;
   let afiliadoErro = null;
+  let holdInflight = false;
   try {
     if (/^enem$/i.test(lead.formaIngresso) && !lead.enemNota && lead.enemFile?.uuid) {
       try {
@@ -795,6 +845,14 @@ async function handleInscricao(body) {
       }
     } else if (out.code === "SEM_SIAA") {
       const n = result.siaaVtex || result.post?.siaaVtex;
+      if (n && !result.post?.siaaConfirmado) {
+        holdInflight = true;
+        console.log(`lead ${lead.leadId}: fila liberada; SIAA ${n} em background`);
+        setImmediate(() =>
+          finishSiaaBackground({ lead, result, t0, afiliadoFeito, afiliadoErro, lockKey })
+        );
+        return { ok: true, pendingSiaa: true, siaaVtex: n, leadId: lead.leadId };
+      }
       console.log(`lead ${lead.leadId}: SEM_SIAA com número VTEX ${n} — sem 2ª inscrição`);
     }
     out.afiliado = afiliadoFeito;
@@ -814,7 +872,7 @@ async function handleInscricao(body) {
     await maybeSendMensagem(lead, out);
     return out;
   } finally {
-    inflight.delete(lockKey);
+    if (!holdInflight) inflight.delete(lockKey);
   }
 }
 

@@ -565,6 +565,28 @@ function isTransferencia(forma) {
   return /transfer/i.test(String(forma || ""));
 }
 
+async function finalizarLinksSiaa(post) {
+  const lead = {
+    ...(post.lead || {}),
+    inscricaoSIAA: post.inscricaoSIAA,
+    email: post.lead?.email || post.email,
+  };
+  const forma = normalizeForma(lead.formaIngresso);
+  if (forma === "pos") {
+    post.paymentLink = POS_PAYMENT_LINK;
+  } else if (forma === "segunda" || forma === "transferencia") {
+    post.documentsLink = SEGUNDA_UPLOAD_LINK;
+  } else if (forma !== "enem" && post.inscricaoSIAA) {
+    try {
+      post.provaLink = await getProvaUrl(lead, { orderId: post.orderId });
+    } catch (e) {
+      console.log("getProvaUrl falhou:", e.message);
+      post.provaLink = null;
+    }
+  }
+  return post;
+}
+
 async function runPostOrder({
   orderGroup,
   email,
@@ -575,6 +597,7 @@ async function runPostOrder({
   silent = false,
   posPayment = false,
   segundaGrad = false,
+  awaitSiaa = true,
 }) {
   const log = silent ? () => {} : console.log.bind(console);
   const headers = withHeaders(cookie);
@@ -635,13 +658,11 @@ async function runPostOrder({
   let siaaConfirmado = false;
   if (lead?.inscricaoSIAA) {
     const empresa = codigoEmpresaSiaa(lead, posPayment ? "7" : "12");
+    const cpf = lead.cpf || leadOrderPutExtras.cpf;
     log("\n>>> confirmando inscrição no SIAA (matricula-unificada)");
-    const confirmed = await pollConfirmacaoSiaa({
-      cpf: lead.cpf || leadOrderPutExtras.cpf,
-      numero: lead.inscricaoSIAA,
-      codigoEmpresa: empresa,
-      log,
-    });
+    const confirmed = awaitSiaa
+      ? await pollConfirmacaoSiaa({ cpf, numero: lead.inscricaoSIAA, codigoEmpresa: empresa, log })
+      : await confirmarInscricaoSiaa({ cpf, numero: lead.inscricaoSIAA, codigoEmpresa: empresa });
     if (confirmed) {
       siaaConfirmado = true;
       if (String(confirmed.numero) !== String(lead.inscricaoSIAA)) {
@@ -650,8 +671,11 @@ async function runPostOrder({
       } else {
         log("SIAA confirmou", lead.inscricaoSIAA);
       }
-    } else {
+    } else if (awaitSiaa) {
       log("SIAA não confirmou", lead.inscricaoSIAA, "— tratando como SEM_SIAA");
+      lead = { ...lead, inscricaoSIAA: null };
+    } else {
+      log("SIAA ainda sem", lead.inscricaoSIAA, "— fila segue; confirmação em background");
       lead = { ...lead, inscricaoSIAA: null };
     }
   }
@@ -727,6 +751,9 @@ async function runPostOrder({
           formaIngresso: lead.formaIngresso,
           pole: lead.pole,
           cpf: lead.cpf,
+          email: lead.email || email,
+          name: lead.name,
+          marca: lead.marca || lead.iesNumber || lead.codigoIes,
           inscricaoSIAA: lead.inscricaoSIAA,
           enemMedia: lead.enemMedia || null,
           statusGraduacao: lead.statusGraduacao ?? null,
@@ -769,6 +796,8 @@ module.exports = {
   getProvaUrl,
   consultarInscricoesSIAA,
   confirmarInscricaoSiaa,
+  pollConfirmacaoSiaa,
+  finalizarLinksSiaa,
   inscricoesDaForma,
   inscricoesMesmoCursoPos,
   normalizeForma,

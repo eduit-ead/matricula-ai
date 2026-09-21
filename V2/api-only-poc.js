@@ -1298,6 +1298,7 @@ async function runInscricao(overrides = {}) {
         : null,
       posPayment: pos,
       segundaGrad: segunda || transferencia,
+      awaitSiaa: input.awaitSiaa !== false,
     });
   }
 
