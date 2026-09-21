@@ -786,13 +786,16 @@ async function handleInscricao(body) {
     afiliadoErro = af.erro;
     let result = await runInscricao(toOverrides(lead));
     let out = publicResult(lead, result, null);
-    if (out.code === "SEM_SIAA") {
-      console.log(`lead ${lead.leadId}: SEM_SIAA no pedido ${out.orderId} — 2ª tentativa`);
+    if (out.code === "SEM_SIAA" && !result.siaaVtex && !result.post?.siaaVtex) {
+      console.log(`lead ${lead.leadId}: SEM_SIAA sem número VTEX no pedido ${out.orderId} — 2ª tentativa`);
       result = await runInscricao(toOverrides(lead));
       out = publicResult(lead, result, null);
       if (out.ok) {
         out.mensagem = `Pedido anterior sem SIAA; inscrição gerada na 2ª tentativa.\n${out.mensagem}`;
       }
+    } else if (out.code === "SEM_SIAA") {
+      const n = result.siaaVtex || result.post?.siaaVtex;
+      console.log(`lead ${lead.leadId}: SEM_SIAA com número VTEX ${n} — sem 2ª inscrição`);
     }
     out.afiliado = afiliadoFeito;
     if (afiliadoErro) out.afiliadoErro = afiliadoErro;
