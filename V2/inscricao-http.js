@@ -7,7 +7,7 @@
  * POST /webhook   — mesmo handler; URL para o Kommo (responde 200 na hora)
  * GET  /health
  *
- * Env: INSCRICAO_HTTP_PORT (8787), INSCRICAO_HTTP_TOKEN,
+ * Env: INSCRICAO_HTTP_PORT (8787),
  *      KOMMO_SUBDOMAIN ou KOMMO_BASE_URL, KOMMO_ACCESS_TOKEN
  */
 const http = require("http");
@@ -34,7 +34,6 @@ const { enemFromDocumento } = require("./enem-notas");
 const { normalizeForma, pollConfirmacaoSiaa, finalizarLinksSiaa } = require("./post-order-fetch");
 
 const PORT = Number(process.env.PORT || process.env.INSCRICAO_HTTP_PORT || 8787);
-const AUTH = process.env.INSCRICAO_HTTP_TOKEN || "";
 const ONLY_LEAD_ID = String(process.env.INSCRICAO_ONLY_LEAD_ID || "").trim();
 
 // Chave geral da inscrição automática: tabela porcentagem_afiliados (Supabase),
@@ -661,13 +660,6 @@ function send(res, status, payload) {
   res.end(body);
 }
 
-function authorized(req) {
-  if (!AUTH) return true;
-  const hdr = req.headers.authorization || "";
-  const q = new URL(req.url, "http://localhost").searchParams.get("token");
-  return hdr === `Bearer ${AUTH}` || q === AUTH;
-}
-
 async function failLog(lead, err, t0) {
   const out = publicResult(lead || {}, null, err);
   out.durationMs = Date.now() - t0;
@@ -892,9 +884,6 @@ const server = http.createServer(async (req, res) => {
 
   try {
     const body = await readBody(req);
-    if (!authorized(req) && !extractKommoLeadId(body.body || body)) {
-      return send(res, 401, { ok: false, error: "Unauthorized" });
-    }
     send(res, 200, { ok: true, accepted: true });
     if (kommoWebhookKind(body.body || body) === "update") {
       console.log("webhook ignorado: update de campo");
