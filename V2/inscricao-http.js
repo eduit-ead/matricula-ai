@@ -362,14 +362,16 @@ function fromPlainBody(body) {
     pick(body, ["tipoInscricao", "Tipo_Inscrição", "formaIngresso", "forma"])
   );
   return {
-    leadId: String(pick(body, ["leadId", "lead_id"]) || ""),
-    nome: pick(body, ["nome", "Nome", "name"]),
+    leadId: String(pick(body, ["leadId", "lead_id", "id_do_negocio", "id"]) || ""),
+    nome: pick(body, ["nome", "Nome", "name", "nome_completo"]),
     cpf: pick(body, ["cpf", "CPF"]),
-    email: pick(body, ["email", "E-mail"]),
-    telefone: normalizePhone(pick(body, ["telefone", "Telefone Inscricao", "phone"])),
+    email: pick(body, ["email", "E-mail", "e_mail", "e-mail"]),
+    telefone: normalizePhone(
+      pick(body, ["telefone", "Telefone Inscricao", "phone", "telefone_da_inscricao"])
+    ),
     nascimento: pick(body, ["nascimento", "Data de Nascimento"]),
     curso: pick(body, ["curso", "Curso Inscrição", "Curso Inscricao"]),
-    poloRaw: pick(body, ["poloRaw", "Polo_Inscicao", "polo_inscicao", "polo"]),
+    poloRaw: pick(body, ["poloRaw", "Polo_Inscicao", "polo_inscicao", "polo_de_inscricao", "polo"]),
     department,
     formaIngresso,
     cep: cepDigits(pick(body, ["cep", "CEP"])),
@@ -717,7 +719,44 @@ async function finishSiaaBackground({ lead, result, t0, afiliadoFeito, afiliadoE
   }
 }
 
+async function somenteAfiliado(lead, t0) {
+  try {
+    if (lead.poloRaw && !isPoloMaisProximo(lead.poloRaw)) {
+      const resolvedPolo = resolvePoloInscricao(lead.poloRaw);
+      lead.poleId = resolvedPolo.poleId;
+      lead.polo = resolvedPolo.prefixo;
+    }
+  } catch (e) {
+    console.log(`[afiliado] polo ignorado: ${e.message}`);
+  }
+  const af = await executarAfiliadoPreInscricao(lead, { esperar: false });
+  const out = {
+    ok: true,
+    code: null,
+    leadId: lead.leadId || null,
+    cpf: lead.cpf || null,
+    email: lead.email || null,
+    curso: lead.curso || null,
+    polo: lead.polo || lead.poloRaw || null,
+    formaIngresso: lead.formaIngresso || null,
+    afiliado: af.enviado,
+    durationMs: Date.now() - t0,
+  };
+  if (af.erro) out.afiliadoErro = af.erro;
+  await writeInscricaoLog(lead, out);
+  console.log(
+    `[afiliado] lead ${lead.leadId || "-"} enviado=${af.enviado} nome=${lead.nome || "-"} email=${lead.email || "-"} fone=${lead.telefone || "-"} cpf=${lead.cpf || "-"} curso=${lead.curso || "-"} polo=${lead.polo || lead.poloRaw || "-"}`
+  );
+  return out;
+}
+
 async function handleInscricao(body) {
+  const t0 = Date.now();
+  const lead = fromPlainBody(body.body || body);
+  return somenteAfiliado(lead, t0);
+}
+
+async function handleInscricaoCompleta(body) {
   const t0 = Date.now();
   let lead = fromPlainBody(body.body || body);
   if (!hasLeadFields(lead)) {
